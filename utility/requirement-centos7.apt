@@ -1,0 +1,6 @@
+#sudo yum install python-devel postgresql-devel postgresql-libs gcc
+
+python-devel 
+postgresql-devel 
+postgresql-libs 
+gcc
