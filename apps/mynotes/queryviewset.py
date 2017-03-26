@@ -34,8 +34,9 @@ class DefaultQueryFilter(object):
         return qset
 
     def create_filter_from_query_params(self, request, aqset=None):
-    
-        return self.create_filter_from_params(dict(request.query_params), aqset)
+
+        return self.create_filter_from_params(
+            dict(request.query_params), aqset)
 
     def add_qset(self, qset, name, value):
 

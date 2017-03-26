@@ -1,8 +1,5 @@
 #!/usr/bin/env python
-import asyncio
-import aiohttp
 import base64
-import gevent
 import logging
 import re
 import sys
@@ -12,46 +9,35 @@ from optparse import OptionParser
 import requests
 import time
 
-requests.packages.urllib3.disable_warnings()
-
 stdlogger = logging.getLogger(__name__)
 
+requests.packages.urllib3.disable_warnings()
 
-def task_img(link, page_url, hdr):
-    image_url = urljoin(page_url, link['src'])
-    # stdlogger.info("loading image " + image_url)
-    image = requests.get(image_url, headers=hdr, verify=False)
-    stdlogger.info(str(image.status_code) + ' ' +
-                   image.headers['content-type'] +
-                   ' ' + image_url)
-    encoded = base64.b64encode(image.content)
-    link['src'] = "data:image/png;base64," + encoded.decode()
-    return link
+
+class CrawlData():
+    title = ''
+    url = ''
+    html = ''
+
+    def __init__(self, url):
+        self.url = url
 
 
 class Crawler():
 
     hdr = {'User-Agent': 'Mozilla/5.0'}
-    html = ''
-    title = ''
-    url = ''
 
     def crawl(self, page_url):
-
-        self.url = page_url
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        # crawlResult = CrawlResult(page_url)
-        tmps1 = time.time()
-        loop.run_until_complete(self.convert_url_to_html(page_url))
-        tmps2 = time.time() - tmps1
-        stdlogger.info("Time crawling %d(s) for %s \n" % (tmps2, page_url))
+        crawlData = CrawlData(page_url)
+        crawlData.html = self.convert_url_to_html(page_url)
+        return crawlData
 
     def __url_can_be_converted_to_data(self, tag):
         return tag.name.lower() == "img" and \
             tag.has_attr('src') and not re.match('^data:', tag['src'])
 
     def crawl_title(self, page_url):
+        crawlData = CrawlData(page_url)
 
         try:
             stdlogger.info("Reading page " + page_url)
@@ -61,7 +47,7 @@ class Crawler():
 
             title = soup.find('title')
             if title is not None:
-                self.title = title.text
+                crawlData.title = title.text
             else:
                 stdlogger.info("No title found!")
 
@@ -71,7 +57,8 @@ class Crawler():
             stdlogger.error("Error in crawl_url method, stack %s" % (e))
             stdlogger.error(e, exc_info=True)
 
-    @asyncio.coroutine
+        return crawlData
+
     def convert_url_to_html(self, page_url):
 
         try:
@@ -79,48 +66,27 @@ class Crawler():
             page = requests.get(page_url, headers=self.hdr, verify=False)
             stdlogger.info("Page load complete, processing")
             soup = BeautifulSoup(page.content, "html.parser")
-            # taks = []
-            # convert all images in base64
-            conn = aiohttp.TCPConnector(verify_ssl=False)
-            session = aiohttp.ClientSession(connector=conn)
+
             for link in soup.findAll(self.__url_can_be_converted_to_data):
                 image_url = urljoin(page_url, link['src'])
-                image = yield from session.request('GET', image_url, headers=self.hdr)
+                stdlogger.info("loading image " + image_url)
+                image = requests.get(image_url, headers=self.hdr, verify=False)
 
-                stdlogger.info(str(image.status) + ' ' +
-                               image.headers['content-type'] +
-                               ' ' + image_url)
-                content = yield from image.read()
-                encoded = base64.b64encode(content)
+                encoded = base64.b64encode(image.content)
                 link['src'] = "data:image/png;base64," + encoded.decode()
 
-            # write all external css in one tag <style></style>
-
+            new_style_tag = soup.new_tag("style")
+            soup.head.append(new_style_tag)
             for link in soup.findAll("link"):
                 if "stylesheet" in link.get("rel", []):
-                    new_style_tag = soup.new_tag("style")
-
-                    if soup.head is not None:
-                        soup.head.append(new_style_tag)
-                    else:
-                        soup.html.append(new_style_tag)
                     css_url = urljoin(page_url, link['href'])
-                    css_data = yield from session.get(
-                        css_url, headers=self.hdr)
+                    css_data = requests.get(
+                        css_url, headers=self.hdr, verify=False)
+                    new_style_tag.string = css_data.content.decode()
+                    stdlogger.info(css_url)
 
-                    content = yield from css_data.read()
-
-                    new_style_tag.string = '/*' + css_url + ' */' + \
-                        content.decode()
-                    stdlogger.info(str(css_data.status) + ' ' +
-                                   css_data.headers['content-type'] +
-                                   ' ' + css_url)
-
-            self.html = soup.prettify(formatter="html")
-
-            yield from session.close()
-
-            return self.html
+            html = soup.prettify(formatter="html")
+            return html
 
         except Exception as e:
             exc_type, exc_value, exc_traceback = sys.exc_info()
@@ -151,11 +117,13 @@ if __name__ == "__main__":
                         (logging.ERROR if options.quiet else logging.INFO))
 
     for page_url in args:
-
         soup = Crawler()
-        soup.crawl(page_url)
+        tmps1 = time.time()
+        html = soup.convert_url_to_html(page_url)
+        tmps2 = time.time() - tmps1
+        print("Temps d'execution = %d\n" % (tmps2))
+
         output_filename = options.output
-        if soup.html is not '':
-            stdlogger.info("Writing results to " + output_filename)
-            with open(output_filename, "w") as file:
-                file.write(soup.html)
+        stdlogger.info("Writing results to " + output_filename)
+        with open(output_filename, "w") as file:
+            file.write(html)

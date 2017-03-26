@@ -21,6 +21,13 @@ from rest_framework.response import Response
 stdlogger = logging.getLogger(__name__)
 
 
+def get_or_none(classmodel, **kwargs):
+    try:
+        return classmodel.objects.get(**kwargs)
+    except classmodel.DoesNotExist:
+        return None
+
+
 class AggregatePaginationReponseMixin(object):
 
     pagination_class = AggregateResultsViewSetPagination
@@ -51,7 +58,7 @@ class AggregateModelViewSet(AggregatePaginationReponseMixin,
 
 
 class NoteViewSet(AggregateModelViewSet, DefaultsAuthentificationMixin):
-    queryset = models.Note.objects.all()
+    queryset = models.Note.objects.all().prefetch_related('archive').prefetch_related('tags')
     serializer_class = serializers.NoteSerializer
     filter_backends = (filters.DjangoFilterBackend, filters.OrderingFilter)
     # filter_fields = ('id', 'title', 'public', 'description', )
@@ -62,6 +69,26 @@ class NoteViewSet(AggregateModelViewSet, DefaultsAuthentificationMixin):
             return serializers.NoteListSerializer
 
         return serializers.NoteSerializer
+
+    @detail_route(methods=['get'])
+    def crawl(self, request, pk):
+        note = self.get_object()
+        stdlogger.debug(pk)
+        crawler = Crawler()
+        # url = base64.b64decode(pk)
+        # stdlogger.info(url.decode())
+        result = crawler.crawl(note.url)
+
+        Archive = get_or_none(models.Archive, note_id=note.id)
+
+        if Archive is None:
+            Archive = models.Archive.create(note, crawler.html.encode())
+        else:
+            Archive.data = crawler.html.encode()
+
+        Archive.save()
+        serializer = serializers.CrawlSerializer(result)
+        return Response(serializer.data)
 
 
 class TagViewSet(AggregateModelViewSet, DefaultsAuthentificationMixin):
@@ -110,11 +137,16 @@ class FileUploaderViewSet(DefaultsAuthentificationMixin,
         return qs
 
 
+class ArchiveViewSet(AggregateModelViewSet):
+    filter_backends = (filters.DjangoFilterBackend,)
+    queryset = models.Archive.objects.all()
+    serializer_class = serializers.ArchiveSerializer
+
+
 class CrawlerViewSet(viewsets.ViewSet):
 
-    def retrieve(self, request, pk=None):
+    def retrieve(self, request, pk):
         crawler = Crawler()
-
         stdlogger.debug(pk)
         url = base64.b64decode(pk)
         stdlogger.info(url.decode())
@@ -129,6 +161,6 @@ class CrawlerViewSet(viewsets.ViewSet):
         stdlogger.debug(pk)
         url = base64.b64decode(pk)
         stdlogger.info(url.decode())
-        data = crawler.crawl_title(url.decode())
-        serializer = serializers.CrawlSerializer(data)
+        crawler.crawl_title(url.decode())
+        serializer = serializers.CrawlSerializer(crawler)
         return Response(serializer.data)

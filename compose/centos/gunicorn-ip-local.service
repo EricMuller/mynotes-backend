@@ -8,7 +8,7 @@ User=webdev
 Group=webdev
 RuntimeDirectory=gunicorn
 WorkingDirectory=/www/mynotes-backend
-Environment=sitedir=/www/mynotes-backend
+Environment=DJANGO_DEBUG=false
 ExecStartPre=chdir /www/mynotes-backend
 ExecStart=/www/mynotes-backend/env/bin/gunicorn --pid /run/gunicorn/pid  -w 9 --threads 9 --env DJANGO_SETTINGS_MODULE=config.settings.local config.wsgi
 ExecReload=/bin/kill -s HUP $MAINPID

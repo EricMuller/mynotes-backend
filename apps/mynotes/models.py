@@ -1,12 +1,13 @@
-from apps.users.models import User
+import base64
 from apps.mynotes.managers import NoteManager
+from apps.mynotes.managers import TagManager
+from apps.users.models import User
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-# Create your models here.
+from django.template.defaultfilters import slugify
 # from mptt.managers import TreeManager
 from mptt.models import MPTTModel, TreeForeignKey
 from simple_history.models import HistoricalRecords
-from apps.mynotes.managers import TagManager
 
 
 class Tag(models.Model):
@@ -38,6 +39,7 @@ class Model(MPTTModel):
 
     def __str__(self):
         return self.libelle
+
 
 class Search(models.Model):
     name = models.CharField(max_length=256)
@@ -97,6 +99,8 @@ class Note(models.Model):
         User, related_name='%(class)s_user_cre', default=None)
     user_upd = models.ForeignKey(
         User, related_name='%(class)s_user_upd', default=None, blank=True)
+    archived_dt = models.DateTimeField(null=True)
+
     rate = models.IntegerField(default=0)
     # type = models.ForeignKey(
     #     TypeNote, verbose_name='TypeNote', null=True,
@@ -134,6 +138,42 @@ class Note(models.Model):
 
     def __str__(self):
         return str(self.id) + ' ' + self.title + ' ' + self.status
+
+
+class Archive(models.Model):
+    name = models.SlugField(max_length=255)
+    url = models.SlugField(max_length=255)
+    # note = models.ForeignKey(Note)
+    content_type = models.CharField(max_length=255)
+    updated_dt = models.DateTimeField(auto_now=True)
+    created_dt = models.DateTimeField(auto_now_add=True)
+    data = models.TextField(
+        db_column='data',
+        blank=True)
+    note = models.OneToOneField(
+        Note,
+        on_delete=models.CASCADE,
+        primary_key=True,
+        related_name='archive',
+    )
+
+    @classmethod
+    def create(cls, note, data):
+        slug = slugify(note.url)
+        archive = cls(name=slug, url=note.url, note=note, data=data)
+        return archive
+
+    # _data = models.TextField(
+    #     db_column='data',
+    #     blank=True)
+
+    # def set_data(self, data):
+    #     self._data = base64.encodestring(data)
+
+    # def get_data(self):
+    #     return base64.decodestring(self._data)
+
+    # data = property(get_data, set_data)
 
 
 class NoteAttachement(models.Model):
