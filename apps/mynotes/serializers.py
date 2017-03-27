@@ -20,16 +20,17 @@ class ArchiveSerializer(serializers.ModelSerializer):
         model = models.Archive
         fields = ('name', 'url', 'note',
                   # 'user_cre', 'user_upd',
-                  'created_dt', 'updated_dt')
+                  'created_dt', 'updated_dt', 'note')
 
 
 class CrawlSerializer(serializers.Serializer):
     url = serializers.CharField()
     html = serializers.CharField()
     title = serializers.CharField()
+    content_type = serializers.CharField()
 
     class Meta:
-        fields = ('url', 'html', 'title')
+        fields = ('url', 'html', 'title', 'content_type')
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -54,7 +55,8 @@ class TagSerializer(serializers.ModelSerializer):
 class NoteListSerializer(serializers.ModelSerializer):
 
     tags = TagSerializer(read_only=False, many=True)
-    archive_id = serializers.IntegerField(source='archive.note.id')
+    archive_id = serializers.IntegerField(
+        source='archive.note.id', required=False)
 
     def get_archive_id(self, obj):
 
@@ -74,7 +76,8 @@ class NoteSerializer(serializers.ModelSerializer):
     schedule_dt = TimestampField()
     created_dt = TimestampField()
     updated_dt = TimestampField()
-    archive_id = serializers.IntegerField(source='archive.note.id')
+    archive_id = serializers.IntegerField(
+        source='archive.note.id', read_only=True)
 
     class Meta:
         model = models.Note
@@ -82,7 +85,7 @@ class NoteSerializer(serializers.ModelSerializer):
                   'user_cre', 'user_upd', 'created_dt', 'updated_dt',
                   'tags', 'status', 'schedule_dt', 'archived_dt', 'archive_id')
         read_only_fields = ('created_dt', 'updated_dt',
-                            'archived_dt', 'archive')
+                            'archived_dt', 'archive_id')
         # https://github.com/tomchristie/django-rest-framework/issues/2760
         # extra_kwargs = {'url': {'view_name': 'internal_apis:user-detail'}}
 

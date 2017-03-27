@@ -158,9 +158,10 @@ class Archive(models.Model):
     )
 
     @classmethod
-    def create(cls, note, data):
+    def create(cls, note, content_type, data):
         slug = slugify(note.url)
-        archive = cls(name=slug, url=note.url, note=note, data=data)
+        archive = cls(name=slug, url=note.url, note=note,
+                      content_type=content_type, data=data)
         return archive
 
     # _data = models.TextField(

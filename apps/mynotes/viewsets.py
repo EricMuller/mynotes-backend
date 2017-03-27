@@ -9,6 +9,8 @@ from apps.mynotes.filters import NoteFilter
 from apps.mynotes.managers import AggregateList
 from apps.mynotes.paginators import AggregateResultsViewSetPagination
 
+from django.shortcuts import get_object_or_404
+
 from rest_framework import filters
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route
@@ -16,6 +18,9 @@ from rest_framework.decorators import list_route
 from rest_framework.parsers import FormParser
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
+from rest_framework.renderers import JSONRenderer
+from rest_framework.renderers import BrowsableAPIRenderer
+from rest_framework.renderers import StaticHTMLRenderer
 
 
 stdlogger = logging.getLogger(__name__)
@@ -58,7 +63,8 @@ class AggregateModelViewSet(AggregatePaginationReponseMixin,
 
 
 class NoteViewSet(AggregateModelViewSet, DefaultsAuthentificationMixin):
-    queryset = models.Note.objects.all().prefetch_related('archive').prefetch_related('tags')
+    queryset = models.Note.objects.all().prefetch_related(
+        'archive').prefetch_related('tags')
     serializer_class = serializers.NoteSerializer
     filter_backends = (filters.DjangoFilterBackend, filters.OrderingFilter)
     # filter_fields = ('id', 'title', 'public', 'description', )
@@ -71,23 +77,36 @@ class NoteViewSet(AggregateModelViewSet, DefaultsAuthentificationMixin):
         return serializers.NoteSerializer
 
     @detail_route(methods=['get'])
-    def crawl(self, request, pk):
+    def title(self, request, pk=None):
+        crawler = Crawler()
+
+        stdlogger.debug(pk)
+        url = base64.b64decode(pk)
+        stdlogger.info(url.decode())
+        crawler.crawl_title(url.decode())
+        serializer = serializers.CrawlSerializer(crawler)
+        return Response(serializer.data)
+
+    @detail_route(methods=['get'])
+    def archive(self, request, pk):
         note = self.get_object()
         stdlogger.debug(pk)
         crawler = Crawler()
         # url = base64.b64decode(pk)
         # stdlogger.info(url.decode())
-        result = crawler.crawl(note.url)
+        crawler.crawl(note.url)
 
-        Archive = get_or_none(models.Archive, note_id=note.id)
+        archive = get_or_none(models.Archive, note_id=note.id)
 
-        if Archive is None:
-            Archive = models.Archive.create(note, crawler.html.encode())
+        if archive is None:
+            archive = models.Archive.create(
+                note, crawler.content_type, crawler.html.encode())
         else:
-            Archive.data = crawler.html.encode()
+            archive.data = crawler.html.encode()
+            archive.content_type = crawler.content_type
 
-        Archive.save()
-        serializer = serializers.CrawlSerializer(result)
+        archive.save()
+        serializer = serializers.ArchiveSerializer(archive)
         return Response(serializer.data)
 
 
@@ -141,6 +160,29 @@ class ArchiveViewSet(AggregateModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     queryset = models.Archive.objects.all()
     serializer_class = serializers.ArchiveSerializer
+
+    renderer_classes = (JSONRenderer, BrowsableAPIRenderer,
+                        StaticHTMLRenderer,)
+
+    def retrieve(self, request, pk, format=None):
+        archive = get_object_or_404(models.Archive, pk=pk)
+        if request.accepted_renderer.format == 'html':
+            return Response(archive.data)
+
+        serializer = self.serializer_class(archive)
+        return Response(serializer.data)
+
+    # def download_file(request):
+    #     gcode = "/home/bradman/Documents/Programming/DjangoWebProjects/3dprinceprod/fullprince/media/uploads/tmp/skull.gcode"
+    #     resp = HttpResponse('')
+
+    #     with open(gcode, 'r') as tmp:
+    #         filename = tmp.name.split('/')[-1]
+    #         resp = HttpResponse(
+    #             tmp, content_type='application/text;charset=UTF-8')
+    #         resp['Content-Disposition'] = "attachment; filename=%s" % filename
+
+    # return resp
 
 
 class CrawlerViewSet(viewsets.ViewSet):

@@ -35,6 +35,7 @@ class Crawler():
     html = ''
     title = ''
     url = ''
+    content_type = ''
 
     def crawl(self, page_url):
 
@@ -78,6 +79,7 @@ class Crawler():
             stdlogger.info("Reading page " + page_url)
             page = requests.get(page_url, headers=self.hdr, verify=False)
             stdlogger.info("Page load complete, processing")
+            self.content_type = page.headers['content-type']
             soup = BeautifulSoup(page.content, "html.parser")
             # taks = []
             # convert all images in base64
