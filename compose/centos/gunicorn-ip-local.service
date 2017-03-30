@@ -7,10 +7,10 @@ PIDFile=/run/gunicorn/pid
 User=webdev
 Group=webdev
 RuntimeDirectory=gunicorn
+#EnvironmentFile=/www/mynotes-backend/compose/centos/gunicorn-ip-local.env
 WorkingDirectory=/www/mynotes-backend
-Environment=sitedir=/www/mynotes-backend
 ExecStartPre=chdir /www/mynotes-backend
-ExecStart=/www/mynotes-backend/env/bin/gunicorn --pid /run/gunicorn/pid  -w 9 --threads 9 --env DJANGO_SETTINGS_MODULE=config.settings.local config.wsgi
+ExecStart=/www/mynotes-backend/env/bin/gunicorn --pid /run/gunicorn/pid  -w 9 --threads 9 --env DJANGO_DEBUG=False --env DJANGO_SETTINGS_MODULE=config.settings.local config.wsgi
 ExecReload=/bin/kill -s HUP $MAINPID
 ExecStop=/bin/kill -s TERM $MAINPID
 PrivateTmp=true
