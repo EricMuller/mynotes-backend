@@ -9,6 +9,8 @@ from apps.mynotes.filters import NoteFilter
 from apps.mynotes.managers import AggregateList
 from apps.mynotes.paginators import AggregateResultsViewSetPagination
 
+from django.shortcuts import get_object_or_404
+
 from rest_framework import filters
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route
@@ -16,9 +18,19 @@ from rest_framework.decorators import list_route
 from rest_framework.parsers import FormParser
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
+from rest_framework.renderers import JSONRenderer
+from rest_framework.renderers import BrowsableAPIRenderer
+from rest_framework.renderers import StaticHTMLRenderer
 
 
 stdlogger = logging.getLogger(__name__)
+
+
+def get_or_none(classmodel, **kwargs):
+    try:
+        return classmodel.objects.get(**kwargs)
+    except classmodel.DoesNotExist:
+        return None
 
 
 class AggregatePaginationReponseMixin(object):
@@ -51,17 +63,54 @@ class AggregateModelViewSet(AggregatePaginationReponseMixin,
 
 
 class NoteViewSet(AggregateModelViewSet, DefaultsAuthentificationMixin):
-    queryset = models.Note.objects.all()
+
+    queryset = models.Note.objects.prefetch_related('tags')
+
+    # .prefetch_related(
+    #    'tags').prefetch_related('archive').values_list('title','rate')
+    # queryset = models.Note.objects.prefetch_related('tags').values('archive__note', 'id', 'title', 'url', 'description', 'updated_dt', 'created_dt',
+    #    'user_cre', 'user_upd', 'archived_dt', 'rate', 'type', 'status', 'public', 'schedule_dt')
+
     serializer_class = serializers.NoteSerializer
     filter_backends = (filters.DjangoFilterBackend, filters.OrderingFilter)
     # filter_fields = ('id', 'title', 'public', 'description', )
     filter_class = NoteFilter
 
     def get_serializer_class(self):
-        if self.action == 'list':
-            return serializers.NoteListSerializer
+
+        # if self.action == 'list':
+        #    return serializers.NoteListSerializer
 
         return serializers.NoteSerializer
+
+    @detail_route(methods=['get'])
+    def title(self, request, pk=None):
+        crawler = Crawler()
+
+        stdlogger.debug(pk)
+        url = base64.b64decode(pk)
+        stdlogger.info(url.decode())
+        crawler.crawl_title(url.decode())
+        serializer = serializers.CrawlSerializer(crawler)
+        return Response(serializer.data)
+
+    @detail_route(methods=['get'])
+    def archive(self, request, pk):
+        note = self.get_object()
+        stdlogger.debug(pk)
+        crawler = Crawler()
+        # url = base64.b64decode(pk)
+        # stdlogger.info(url.decode())
+        crawler.crawl(note.url)
+
+        archive = models.Archive.create(
+            note, crawler.content_type, crawler.html.encode())
+
+        archive.save()
+        note.archive_id = archive.id
+        note.save()
+        serializer = serializers.ArchiveSerializer(archive)
+        return Response(serializer.data)
 
 
 class TagViewSet(AggregateModelViewSet, DefaultsAuthentificationMixin):
@@ -110,11 +159,40 @@ class FileUploaderViewSet(DefaultsAuthentificationMixin,
         return qs
 
 
+class ArchiveViewSet(AggregateModelViewSet):
+    filter_backends = (filters.DjangoFilterBackend,)
+    queryset = models.Archive.objects.all()
+    serializer_class = serializers.ArchiveSerializer
+
+    renderer_classes = (JSONRenderer, BrowsableAPIRenderer,
+                        StaticHTMLRenderer,)
+
+    def retrieve(self, request, pk, format=None):
+        archive = get_object_or_404(models.Archive, pk=pk)
+        if request.accepted_renderer.format == 'html':
+            return Response(archive.data)
+
+        serializer = self.serializer_class(archive)
+        response = Response(serializer.data)
+        response['Cache-Control'] = 'no-cache'
+        return response
+
+    # def download_file(request):
+    #     gcode = "/home/bradman/Documents/Programming/DjangoWebProjects/3dprinceprod/fullprince/media/uploads/tmp/skull.gcode"
+    #     resp = HttpResponse('')
+    #     with open(gcode, 'r') as tmp:
+    #         filename = tmp.name.split('/')[-1]
+    #         resp = HttpResponse(
+    #             tmp, content_type='application/text;charset=UTF-8')
+    #   resp['Content-Disposition'] = "attachment; filename=%s" % filename
+
+    # return resp
+
+
 class CrawlerViewSet(viewsets.ViewSet):
 
-    def retrieve(self, request, pk=None):
+    def retrieve(self, request, pk):
         crawler = Crawler()
-
         stdlogger.debug(pk)
         url = base64.b64decode(pk)
         stdlogger.info(url.decode())
@@ -129,6 +207,6 @@ class CrawlerViewSet(viewsets.ViewSet):
         stdlogger.debug(pk)
         url = base64.b64decode(pk)
         stdlogger.info(url.decode())
-        data = crawler.crawl_title(url.decode())
-        serializer = serializers.CrawlSerializer(data)
+        crawler.crawl_title(url.decode())
+        serializer = serializers.CrawlSerializer(crawler)
         return Response(serializer.data)

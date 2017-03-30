@@ -1,6 +1,5 @@
 from django.db import models
 from django.db import connection
-from itertools import *
 
 
 class AggregateList(list):
@@ -33,6 +32,13 @@ class QueryMixin():
             row_dict = dict(izip(col_names, row))
             yield row_dict
         return
+
+
+class ScrapingManager(models.Manager):
+    def create_scraping(self, name):
+        scraping = self.create(name=name)
+        # todo others fields
+        return scraping
 
 
 class NoteManager(models.Manager):

@@ -1,12 +1,12 @@
-from apps.users.models import User
 from apps.mynotes.managers import NoteManager
+from apps.mynotes.managers import TagManager
+from apps.users.models import User
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-# Create your models here.
+from django.template.defaultfilters import slugify
 # from mptt.managers import TreeManager
 from mptt.models import MPTTModel, TreeForeignKey
 from simple_history.models import HistoricalRecords
-from apps.mynotes.managers import TagManager
 
 
 class Tag(models.Model):
@@ -38,6 +38,7 @@ class Model(MPTTModel):
 
     def __str__(self):
         return self.libelle
+
 
 class Search(models.Model):
     name = models.CharField(max_length=256)
@@ -97,6 +98,8 @@ class Note(models.Model):
         User, related_name='%(class)s_user_cre', default=None)
     user_upd = models.ForeignKey(
         User, related_name='%(class)s_user_upd', default=None, blank=True)
+    archived_dt = models.DateTimeField(null=True)
+
     rate = models.IntegerField(default=0)
     # type = models.ForeignKey(
     #     TypeNote, verbose_name='TypeNote', null=True,
@@ -111,9 +114,10 @@ class Note(models.Model):
     tags = models.ManyToManyField(Tag, related_name="tags", blank=True)
 
     schedule_dt = models.DateTimeField(null=True)
-    # taggs = models.CharField(max_length=2000, default=None, null=True)
 
     history = HistoricalRecords()
+
+    archive_id = models.IntegerField(null=True)
 
     def get_status_libelle(self):
         t = [item for item in self.STATUS if item[0] == self.status]
@@ -134,6 +138,28 @@ class Note(models.Model):
 
     def __str__(self):
         return str(self.id) + ' ' + self.title + ' ' + self.status
+
+
+class Archive(models.Model):
+    name = models.SlugField(max_length=255)
+    url = models.SlugField(max_length=255)
+    # note = models.ForeignKey(Note)
+    content_type = models.CharField(max_length=255)
+    updated_dt = models.DateTimeField(auto_now=True)
+    created_dt = models.DateTimeField(auto_now_add=True)
+    data = models.TextField(
+        db_column='data',
+        blank=True)
+
+    note = models.ForeignKey(
+        Note, related_name='archives', default=None, blank=True)
+
+    @classmethod
+    def create(cls, note, content_type, data):
+        slug = slugify(note.url)
+        archive = cls(name=slug, url=note.url, note=note,
+                      content_type=content_type, data=data)
+        return archive
 
 
 class NoteAttachement(models.Model):

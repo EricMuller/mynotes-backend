@@ -6,24 +6,34 @@ from rest_framework import serializers
 
 
 class TimestampField(serializers.ReadOnlyField):
+    """"fields must be a models.DateTimeField"""
 
     def to_representation(self, value):
         return int(time.mktime(value.timetuple()) * 1000)
+
+
+class ArchiveSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Archive
+        fields = ('name', 'url', 'note',
+                  'data',  # 'user_cre', 'user_upd',
+                  'created_dt', 'updated_dt')
 
 
 class CrawlSerializer(serializers.Serializer):
     url = serializers.CharField()
     html = serializers.CharField()
     title = serializers.CharField()
+    content_type = serializers.CharField()
 
     class Meta:
-        fields = ('url', 'html', 'title')
+        fields = ('url', 'html', 'title', 'content_type')
 
 
 class TagSerializer(serializers.ModelSerializer):
 
     id = serializers.IntegerField(required=False)
-    # id = serializers.ReadOnlyField()
 
     class Meta:
         model = models.Tag
@@ -39,30 +49,22 @@ class TagSerializer(serializers.ModelSerializer):
         return validated_data
 
 
-class NoteListSerializer(serializers.ModelSerializer):
-
-    tags = TagSerializer(read_only=False, many=True)
-
-    class Meta:
-        model = models.Note
-        fields = ('id', 'url', 'title', 'type', 'rate', 'user_cre', 'user_upd',
-                  'created_dt', 'updated_dt', 'tags', 'status', 'schedule_dt')
-
-
 class NoteSerializer(serializers.ModelSerializer):
 
-    tags = TagSerializer(read_only=False, many=True)
-    # Source must be a models.DateTimeField
+    # fields must be a models.DateTimeField
     schedule_dt = TimestampField()
     created_dt = TimestampField()
     updated_dt = TimestampField()
+    # relations many
+    tags = TagSerializer(read_only=False, many=True)
 
     class Meta:
         model = models.Note
         fields = ('id', 'url', 'title', 'type', 'rate', 'description',
                   'user_cre', 'user_upd', 'created_dt', 'updated_dt',
-                  'tags', 'status', 'schedule_dt')
-        read_only_fields = ('created_dt', 'updated_dt',)
+                  'tags', 'status', 'schedule_dt', 'archived_dt', 'archive_id')
+        read_only_fields = ('created_dt', 'updated_dt',
+                            'archived_dt', 'archive_id')
         # https://github.com/tomchristie/django-rest-framework/issues/2760
         # extra_kwargs = {'url': {'view_name': 'internal_apis:user-detail'}}
 

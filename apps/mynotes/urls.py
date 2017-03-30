@@ -16,6 +16,7 @@ apiRouter.register(r'tags-cloud', viewsets.TagCloudViewSet,
 apiRouter.register(r'tags', viewsets.TagViewSet)
 apiRouter.register(r'upload', viewsets.FileUploaderViewSet)
 apiRouter.register(r'crawler', viewsets.CrawlerViewSet, base_name='crawler')
+apiRouter.register(r'archive', viewsets.ArchiveViewSet, base_name='archive')
 
 urlpatterns = [
     # API
