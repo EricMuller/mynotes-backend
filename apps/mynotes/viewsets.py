@@ -63,16 +63,23 @@ class AggregateModelViewSet(AggregatePaginationReponseMixin,
 
 
 class NoteViewSet(AggregateModelViewSet, DefaultsAuthentificationMixin):
-    queryset = models.Note.objects.all().prefetch_related(
-        'archive').prefetch_related('tags')
+
+    queryset = models.Note.objects.prefetch_related('tags')
+
+    # .prefetch_related(
+    #    'tags').prefetch_related('archive').values_list('title','rate')
+    # queryset = models.Note.objects.prefetch_related('tags').values('archive__note', 'id', 'title', 'url', 'description', 'updated_dt', 'created_dt',
+    #    'user_cre', 'user_upd', 'archived_dt', 'rate', 'type', 'status', 'public', 'schedule_dt')
+
     serializer_class = serializers.NoteSerializer
     filter_backends = (filters.DjangoFilterBackend, filters.OrderingFilter)
     # filter_fields = ('id', 'title', 'public', 'description', )
     filter_class = NoteFilter
 
     def get_serializer_class(self):
-        if self.action == 'list':
-            return serializers.NoteListSerializer
+
+        # if self.action == 'list':
+        #    return serializers.NoteListSerializer
 
         return serializers.NoteSerializer
 
@@ -96,16 +103,12 @@ class NoteViewSet(AggregateModelViewSet, DefaultsAuthentificationMixin):
         # stdlogger.info(url.decode())
         crawler.crawl(note.url)
 
-        archive = get_or_none(models.Archive, note_id=note.id)
-
-        if archive is None:
-            archive = models.Archive.create(
-                note, crawler.content_type, crawler.html.encode())
-        else:
-            archive.data = crawler.html.encode()
-            archive.content_type = crawler.content_type
+        archive = models.Archive.create(
+            note, crawler.content_type, crawler.html.encode())
 
         archive.save()
+        note.archive_id = archive.id
+        note.save()
         serializer = serializers.ArchiveSerializer(archive)
         return Response(serializer.data)
 
@@ -170,17 +173,18 @@ class ArchiveViewSet(AggregateModelViewSet):
             return Response(archive.data)
 
         serializer = self.serializer_class(archive)
-        return Response(serializer.data)
+        response = Response(serializer.data)
+        response['Cache-Control'] = 'no-cache'
+        return response
 
     # def download_file(request):
     #     gcode = "/home/bradman/Documents/Programming/DjangoWebProjects/3dprinceprod/fullprince/media/uploads/tmp/skull.gcode"
     #     resp = HttpResponse('')
-
     #     with open(gcode, 'r') as tmp:
     #         filename = tmp.name.split('/')[-1]
     #         resp = HttpResponse(
     #             tmp, content_type='application/text;charset=UTF-8')
-    #         resp['Content-Disposition'] = "attachment; filename=%s" % filename
+    #   resp['Content-Disposition'] = "attachment; filename=%s" % filename
 
     # return resp
 

@@ -26,3 +26,19 @@ class ObtainAuthToken(APIView):
 
 
 obtain_auth_token = ObtainAuthToken.as_view()
+
+
+class seachNoteView(APIView):
+    throttle_classes = ()
+    permission_classes = (EverybodyCanAuthentication)
+    parser_classes = ( parsers.JSONParser,)
+    renderer_classes = (renderers.JSONRenderer,)
+    serializer_class = AuthTokenSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+
+        return Response({'token': })

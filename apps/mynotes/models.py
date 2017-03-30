@@ -1,4 +1,3 @@
-import base64
 from apps.mynotes.managers import NoteManager
 from apps.mynotes.managers import TagManager
 from apps.users.models import User
@@ -115,9 +114,10 @@ class Note(models.Model):
     tags = models.ManyToManyField(Tag, related_name="tags", blank=True)
 
     schedule_dt = models.DateTimeField(null=True)
-    # taggs = models.CharField(max_length=2000, default=None, null=True)
 
     history = HistoricalRecords()
+
+    archive_id = models.IntegerField(null=True)
 
     def get_status_libelle(self):
         t = [item for item in self.STATUS if item[0] == self.status]
@@ -150,12 +150,9 @@ class Archive(models.Model):
     data = models.TextField(
         db_column='data',
         blank=True)
-    note = models.OneToOneField(
-        Note,
-        on_delete=models.CASCADE,
-        primary_key=True,
-        related_name='archive',
-    )
+
+    note = models.ForeignKey(
+        Note, related_name='archives', default=None, blank=True)
 
     @classmethod
     def create(cls, note, content_type, data):
@@ -163,18 +160,6 @@ class Archive(models.Model):
         archive = cls(name=slug, url=note.url, note=note,
                       content_type=content_type, data=data)
         return archive
-
-    # _data = models.TextField(
-    #     db_column='data',
-    #     blank=True)
-
-    # def set_data(self, data):
-    #     self._data = base64.encodestring(data)
-
-    # def get_data(self):
-    #     return base64.decodestring(self._data)
-
-    # data = property(get_data, set_data)
 
 
 class NoteAttachement(models.Model):

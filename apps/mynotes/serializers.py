@@ -6,6 +6,7 @@ from rest_framework import serializers
 
 
 class TimestampField(serializers.ReadOnlyField):
+    """"fields must be a models.DateTimeField"""
 
     def to_representation(self, value):
         return int(time.mktime(value.timetuple()) * 1000)
@@ -13,14 +14,11 @@ class TimestampField(serializers.ReadOnlyField):
 
 class ArchiveSerializer(serializers.ModelSerializer):
 
-    # url = models.SlugField(max_length=255)
-    # note = models.ForeignKey(Note)
-
     class Meta:
         model = models.Archive
         fields = ('name', 'url', 'note',
-                  # 'user_cre', 'user_upd',
-                  'created_dt', 'updated_dt', 'note')
+                  'data',  # 'user_cre', 'user_upd',
+                  'created_dt', 'updated_dt')
 
 
 class CrawlSerializer(serializers.Serializer):
@@ -36,7 +34,6 @@ class CrawlSerializer(serializers.Serializer):
 class TagSerializer(serializers.ModelSerializer):
 
     id = serializers.IntegerField(required=False)
-    # id = serializers.ReadOnlyField()
 
     class Meta:
         model = models.Tag
@@ -52,32 +49,14 @@ class TagSerializer(serializers.ModelSerializer):
         return validated_data
 
 
-class NoteListSerializer(serializers.ModelSerializer):
-
-    tags = TagSerializer(read_only=False, many=True)
-    archive_id = serializers.IntegerField(
-        source='archive.note.id', required=False)
-
-    def get_archive_id(self, obj):
-
-        return None if obj.archive is None else obj.archive.note_id
-
-    class Meta:
-        model = models.Note
-        fields = ('id', 'url', 'title', 'type', 'rate', 'user_cre', 'user_upd',
-                  'created_dt', 'updated_dt', 'tags', 'status', 'schedule_dt',
-                  'archived_dt', 'archive_id')
-
-
 class NoteSerializer(serializers.ModelSerializer):
 
-    tags = TagSerializer(read_only=False, many=True)
-    # Source must be a models.DateTimeField
+    # fields must be a models.DateTimeField
     schedule_dt = TimestampField()
     created_dt = TimestampField()
     updated_dt = TimestampField()
-    archive_id = serializers.IntegerField(
-        source='archive.note.id', read_only=True)
+    # relations many
+    tags = TagSerializer(read_only=False, many=True)
 
     class Meta:
         model = models.Note
