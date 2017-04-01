@@ -1,5 +1,6 @@
 import base64
 import logging
+import tempfile
 from abc import ABCMeta, abstractmethod
 from apps.mynotes import models
 from apps.mynotes import serializers
@@ -9,6 +10,7 @@ from apps.mynotes.filters import NoteFilter
 from apps.mynotes.managers import AggregateList
 from apps.mynotes.paginators import AggregateResultsViewSetPagination
 
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 
 from rest_framework import filters
@@ -177,16 +179,15 @@ class ArchiveViewSet(AggregateModelViewSet):
         response['Cache-Control'] = 'no-cache'
         return response
 
-    # def download_file(request):
-    #     gcode = "/home/bradman/Documents/Programming/DjangoWebProjects/3dprinceprod/fullprince/media/uploads/tmp/skull.gcode"
-    #     resp = HttpResponse('')
-    #     with open(gcode, 'r') as tmp:
-    #         filename = tmp.name.split('/')[-1]
-    #         resp = HttpResponse(
-    #             tmp, content_type='application/text;charset=UTF-8')
-    #   resp['Content-Disposition'] = "attachment; filename=%s" % filename
-
-    # return resp
+    @detail_route(methods=['get'])
+    def download(self, request, pk):
+        archive = get_object_or_404(models.Archive, pk=pk)
+        # tmp = tempfile.NamedTemporaryFile(suffix=".note")
+        filename = archive.name.split('/')[-1]
+        resp = HttpResponse(
+            archive.data, content_type='application/text;charset=UTF-8')
+        resp['Content-Disposition'] = "attachment; filename=%s" % filename
+        return resp
 
 
 class CrawlerViewSet(viewsets.ViewSet):
