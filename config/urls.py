@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from allauth.socialaccount.providers.facebook.views import login_by_token
-
+from allauth.account.views import confirm_email as allauthemailconfirmation
 from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
@@ -12,6 +12,9 @@ from django.views import defaults as default_views
 from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework_swagger.views import get_swagger_view
+
+schema_view = get_swagger_view(title='MyNotes API')
 
 urlpatterns = [
     url(r'^about/$',
@@ -29,14 +32,21 @@ urlpatterns = [
     url(r'^mynotes/', include('apps.mynotes.urls', namespace='mynotes-back')),
     # url(r'^mynotes/',
     #    include('apps.mynotes-frontend.urls', namespace='mynotes')),
+    url(r'^swagger/$', schema_view),
     url(r'^$',
         TemplateView.as_view(template_name='index.html'), name='index'),
     # Ajout authentification pour browsable api
     url(r'^api-auth/', include('rest_framework.urls',
                                namespace='rest_framework')),
     url(r'^api-token-auth/', obtain_auth_token),
-    # url(r'^rest-auth/', include('rest_auth.urls')),
-    # url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
+
+    # http://django-rest-auth.readthedocs.io/en/latest/installation.html
+    url(r'^rest-auth/', include('rest_auth.urls')),
+    url(r'^rest-auth/registration/account-confirm-email/(?P<key>[\s\d\w().+-_,:&]+)/$',
+        allauthemailconfirmation, name="account_confirm_email"),
+    url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
+
+
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

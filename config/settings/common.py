@@ -47,19 +47,21 @@ THIRD_PARTY_APPS = (
     # http://django-allauth.readthedocs.io/en/latest/providers.html
     'allauth.account',
     'rest_auth.registration',
-    'allauth.socialaccount',
     # https://console.developers.google.com/apis?project=snappy-bucksaw-146613
+    'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.facebook',
     # 'allauth.socialaccount.providers.dropbox_oauth2',
     'jsonify',
     'mptt',
     'simple_history',
+    'rest_framework_swagger',
     # 'easy_select2',
     # rest social authent
     # 'oauth2_provider',
     # 'social.apps.django_app.default',
     # 'rest_framework_social_oauth2',
+
 )
 
 # Apps specific for this project go here.
@@ -96,8 +98,7 @@ MIGRATION_MODULES = {
 # DEBUG
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#debug
-DEBUG = env.bool('DJANGO_DEBUG', False)
-
+DEBUG = env.bool('DJANGO_DEBUG', default=False)
 # FIXTURE CONFIGURATION
 # ------------------------------------------------------------------------------
 # See:
@@ -214,8 +215,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 STATIC_ROOT = str(ROOT_DIR('staticfiles'))
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-url
-# STATIC_URL = '/static/'
-STATIC_URL = 'http://192.168.0.100/static/mynotes/'
+STATIC_URL = '/static/'
+#STATIC_URL = 'http://192.168.0.100/static/mynotes/'
 
 # See:
 # https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
@@ -253,16 +254,15 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-
 #
-
+SITE_ID = 1
 
 # Some really nice defaults
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 # ACCOUNT_EMAIL_VERIFICATION = 'none'
-# LOGIN_REDIRECT_URLNAME = "/"
+LOGIN_REDIRECT_URLNAME = "/"
 
 ACCOUNT_ALLOW_REGISTRATION = env.bool(
     'DJANGO_ACCOUNT_ALLOW_REGISTRATION', True)
@@ -273,7 +273,8 @@ SOCIALACCOUNT_ADAPTER = 'apps.users.adapters.SocialAccountAdapter'
 # Select the correct user model
 AUTH_USER_MODEL = 'users.User'
 # LOGIN_REDIRECT_URL = 'users:redirect'
-LOGIN_URL = 'account_login'
+#LOGIN_URL = 'account_login'
+LOGIN_URL = '/login'
 
 LOGIN_REDIRECT_URL = "/mynotes"
 # test
@@ -328,12 +329,6 @@ STORE_ROOT = '/ged/store/'
 #     ),
 # }
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'rest_framework.authentication.SessionAuthentication',
-#         'rest_framework.authentication.TokenAuthentication',
-#     )
-# }
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
@@ -344,7 +339,9 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ),
     'PAGE_SIZE': 20,
+    'EXCEPTION_HANDLER': 'apps.handlers.custom_exception_handler'
 }
+
 
 # LOGGING CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -354,7 +351,7 @@ REST_FRAMEWORK = {
 # the site admins on every HTTP 500 error when DEBUG=False.
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
-DEBUG = env.bool('DJANGO_DEBUG', default=True)
+
 
 if  DEBUG:
 

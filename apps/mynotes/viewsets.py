@@ -78,6 +78,10 @@ class NoteViewSet(AggregateModelViewSet, DefaultsAuthentificationMixin):
     # filter_fields = ('id', 'title', 'public', 'description', )
     filter_class = NoteFilter
 
+    def get_queryset(self, *args, **kwargs):
+
+        return models.Note.objects.prefetch_related('tags').filter(user_cre_id=self.request.user.id)
+
     def get_serializer_class(self):
 
         # if self.action == 'list':

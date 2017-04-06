@@ -24,7 +24,6 @@ if not DEBUG:
     print ("env variable DJANGO_DEBUG is False !!!")
     # start django with --insecure for static file
 
-
 # SECRET CONFIGURATION
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key

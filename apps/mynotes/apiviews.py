@@ -31,7 +31,7 @@ obtain_auth_token = ObtainAuthToken.as_view()
 class seachNoteView(APIView):
     throttle_classes = ()
     permission_classes = (EverybodyCanAuthentication)
-    parser_classes = ( parsers.JSONParser,)
+    parser_classes = (parsers.JSONParser,)
     renderer_classes = (renderers.JSONRenderer,)
     serializer_class = AuthTokenSerializer
 
@@ -41,4 +41,4 @@ class seachNoteView(APIView):
         user = serializer.validated_data['user']
         token, created = Token.objects.get_or_create(user=user)
 
-        return Response({'token': })
+        return Response({'token': token})
