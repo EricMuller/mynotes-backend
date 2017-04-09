@@ -1,46 +1,50 @@
-
-from rest_framework import authentication
-from rest_framework import permissions
-from rest_framework.authentication import SessionAuthentication
-from rest_framework.parsers import JSONParser
-from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
 from allauth.socialaccount.helpers import complete_social_login
 from allauth.socialaccount.models import SocialLogin
 from allauth.socialaccount.models import SocialToken
 from allauth.socialaccount.models import SocialApp
 from allauth.socialaccount.providers.facebook.views import fb_complete_login
 
-
-class DefaultsAuthentificationMixin(object):
-    """Default settings for view authentication, permissions,
-    filtering and pagination."""
-
-    authentication_classes = (
-        authentication.BasicAuthentication,
-        authentication.TokenAuthentication,
-
-    )
-    permission_classes = (
-        permissions.IsAuthenticated,
-    )
+from apps.authentication.authentification import EverybodyCanAuthentication
+from rest_framework import parsers, renderers
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.parsers import JSONParser
+from rest_framework.permissions import AllowAny
+# from rest_framework.response import Response
 
 
-class EverybodyCanAuthentication(SessionAuthentication):
-    def authenticate(self, request):
-        return None
+class ObtainAuthToken(APIView):
+    throttle_classes = ()
+    # permission_classes = (EverybodyCanAuthentication,)
+    parser_classes = (parsers.JSONParser,)
+    renderer_classes = (renderers.JSONRenderer,)
+    serializer_class = AuthTokenSerializer
+    authentication_classes = (EverybodyCanAuthentication,)
+
+    def post(self, request, *args, **kwargs):
+
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+
+        return Response({'token': token.key, 'username': user.username, })
+
+
+obtain_auth_token = ObtainAuthToken.as_view()
+
 
 # Add a user to the system based on facebook token
-
-
 class FacebookLoginOrSignup(APIView):
 
     permission_classes = (AllowAny,)
 
     # this is a public api!!!
     authentication_classes = (EverybodyCanAuthentication,)
+
+    serializer_class = AuthTokenSerializer
 
     def dispatch(self, *args, **kwargs):
         return super(FacebookLoginOrSignup, self).dispatch(*args, **kwargs)

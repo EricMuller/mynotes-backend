@@ -70,6 +70,7 @@ LOCAL_APPS = (
     'apps.users.apps.UsersConfig',
     # Your stuff: custom apps go here
     'apps.mynotes.apps.MynotesConfig',
+    'apps.authentication.apps.AuthenticationConfig',
     # 'apps.mynotes-frontend.apps.MynotesViewConfig',
 )
 
@@ -331,7 +332,7 @@ STORE_ROOT = '/ged/store/'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
 
     ),

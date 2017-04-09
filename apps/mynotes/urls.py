@@ -1,12 +1,20 @@
-from apps.mynotes import authentification
+from apps.authentication import authentification
 from apps.mynotes import viewsets
 # from apps.mynotes.apiviews import obtain_auth_token
 from django.conf.urls import include
 from django.conf.urls import url
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import routers
-from rest_framework.authtoken.views import obtain_auth_token
 
+# from rest_framework.decorators import api_view, renderer_classes
+# from rest_framework import response, schemas
+# from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
+
+# @api_view()
+# @renderer_classes([OpenAPIRenderer, SwaggerUIRenderer])
+# def schema_view(request):
+#     generator = schemas.SchemaGenerator(title='MyNotes API')
+#     return response.Response(generator.get_schema(request=request))
 
 apiRouter = routers.DefaultRouter()
 apiRouter.register(r'notes', viewsets.NoteViewSet)
@@ -22,10 +30,8 @@ urlpatterns = [
     # API
     url(r'^api/v1/', include(apiRouter.urls, namespace='external_apis')),
 
-    url(r'^api/v1/signup/facebook$',
-        csrf_exempt(authentification.FacebookLoginOrSignup.as_view()),
-        name='facebook-login-signup'),
     # url(r'^api/authenticate', obtain_auth_token),
-    url(r'^api-token-auth/', obtain_auth_token),
+    # url(r'^api-token-auth/', obtain_auth_token),
+    # url(r'^docs/', schema_view),
     # url(r'^auth/', include('rest_framework_social_oauth2.urls')),
 ]

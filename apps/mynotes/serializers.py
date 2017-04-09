@@ -62,7 +62,7 @@ class NoteSerializer(serializers.ModelSerializer):
         model = models.Note
         fields = ('id', 'url', 'title', 'type', 'rate', 'description',
                   'user_cre', 'user_upd', 'created_dt', 'updated_dt',
-                  'tags', 'status', 'schedule_dt', 'archived_dt', 'archive_id')
+                  'tags', 'status', 'schedule_dt', 'archived_dt', 'archive_id','favorite')
         read_only_fields = ('created_dt', 'updated_dt',
                             'archived_dt', 'archive_id')
         # https://github.com/tomchristie/django-rest-framework/issues/2760

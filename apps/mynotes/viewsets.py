@@ -2,9 +2,9 @@ import base64
 import logging
 import tempfile
 from abc import ABCMeta, abstractmethod
+from apps.authentication.authentification import DefaultsAuthentificationMixin
 from apps.mynotes import models
 from apps.mynotes import serializers
-from apps.mynotes.authentification import DefaultsAuthentificationMixin
 from apps.mynotes.crawler import Crawler
 from apps.mynotes.filters import NoteFilter
 from apps.mynotes.managers import AggregateList
@@ -79,7 +79,7 @@ class NoteViewSet(AggregateModelViewSet, DefaultsAuthentificationMixin):
     filter_class = NoteFilter
 
     def get_queryset(self, *args, **kwargs):
-
+        print('user_id=' + str(self.request.user.id))
         return models.Note.objects.prefetch_related('tags').filter(user_cre_id=self.request.user.id)
 
     def get_serializer_class(self):

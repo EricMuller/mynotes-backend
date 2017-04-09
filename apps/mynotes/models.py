@@ -101,6 +101,7 @@ class Note(models.Model):
     archived_dt = models.DateTimeField(null=True)
 
     rate = models.IntegerField(default=0)
+    favorite = models.BooleanField(default=False)
     # type = models.ForeignKey(
     #     TypeNote, verbose_name='TypeNote', null=True,
     #     default=None, blank=True, related_name='TypeNote')
@@ -118,6 +119,8 @@ class Note(models.Model):
     history = HistoricalRecords()
 
     archive_id = models.IntegerField(null=True)
+
+
 
     def get_status_libelle(self):
         t = [item for item in self.STATUS if item[0] == self.status]
