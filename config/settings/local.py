@@ -20,7 +20,8 @@ DEBUG = env.bool('DJANGO_DEBUG', default=True)
 TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
 
 if not DEBUG:
-    ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['localhost','127.0.0.1','192.168.0.100'])
+    ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=[
+                             'localhost', '127.0.0.1', '192.168.0.100'])
     print ("env variable DJANGO_DEBUG is False !!!")
     # start django with --insecure for static file
 
@@ -28,7 +29,8 @@ if not DEBUG:
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 # Note: This key only used for development and testing.
-SECRET_KEY = env('DJANGO_SECRET_KEY', default='r(f_)4bp@%ritjy#gq19f0_z+c8+#zr=0b@)w8)_-f=+)*k0j0')
+SECRET_KEY = env('DJANGO_SECRET_KEY',
+                 default='r(f_)4bp@%ritjy#gq19f0_z+c8+#zr=0b@)w8)_-f=+)*k0j0')
 
 # Mail settings
 # ------------------------------------------------------------------------------
@@ -40,13 +42,31 @@ EMAIL_HOST = env("EMAIL_HOST", default='localhost')
 
 # CACHING
 # ------------------------------------------------------------------------------
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+#         'LOCATION': ''
+#     }
+# }
+# CACHING
+# ------------------------------------------------------------------------------
+REDIS_LOCATION = "redis://{}:{}/0".format(
+    env('REDIS_ENDPOINT_ADDRESS', default='127.0.0.1'),
+    env('REDIS_PORT', default=6379)
+)
+
+# Heroku URL does not pass the DB number, so we parse it in
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': ''
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': REDIS_LOCATION,
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'IGNORE_EXCEPTIONS': True,  # mimics memcache behavior.
+                                        # http://niwinz.github.io/django-redis/latest/#_memcached_exceptions_behavior
+        }
     }
 }
-
 # django-debug-toolbar
 # ------------------------------------------------------------------------------
 MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
@@ -73,10 +93,11 @@ INSTALLED_APPS += ('django_extensions', )
 # ------------------------------------------------------------------------------
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
-########## CELERY
-# In development, all tasks will be executed locally by blocking until the task returns
+# CELERY
+# In development, all tasks will be executed locally by blocking until the
+# task returns
 CELERY_ALWAYS_EAGER = True
-########## END CELERY
+# END CELERY
 
 # Your local stuff: Below this line define 3rd party library settings
 # ------------------------------------------------------------------------------

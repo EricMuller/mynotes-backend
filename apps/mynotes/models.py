@@ -120,8 +120,6 @@ class Note(models.Model):
 
     archive_id = models.IntegerField(null=True)
 
-
-
     def get_status_libelle(self):
         t = [item for item in self.STATUS if item[0] == self.status]
         return '' if t is None else t[0][1]
@@ -175,3 +173,5 @@ class NoteAttachement(models.Model):
     def create(cls, name, note):
         attachement = cls(name=name, note=note)
         return attachement
+
+

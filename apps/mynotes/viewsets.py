@@ -5,6 +5,7 @@ from abc import ABCMeta, abstractmethod
 from apps.authentication.authentification import DefaultsAuthentificationMixin
 from apps.mynotes import models
 from apps.mynotes import serializers
+from apps.mynotes.cache import CustomListKeyConstructor
 from apps.mynotes.crawler import Crawler
 from apps.mynotes.filters import NoteFilter
 from apps.mynotes.managers import AggregateList
@@ -23,6 +24,7 @@ from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
 from rest_framework.renderers import BrowsableAPIRenderer
 from rest_framework.renderers import StaticHTMLRenderer
+from rest_framework_extensions.cache.decorators import cache_response
 
 
 stdlogger = logging.getLogger(__name__)
@@ -64,22 +66,28 @@ class AggregateModelViewSet(AggregatePaginationReponseMixin,
     pass
 
 
-class NoteViewSet(AggregateModelViewSet, DefaultsAuthentificationMixin):
+class NoteViewSet(AggregateModelViewSet,
+                  DefaultsAuthentificationMixin):
 
     queryset = models.Note.objects.prefetch_related('tags')
 
     # .prefetch_related(
     #    'tags').prefetch_related('archive').values_list('title','rate')
-    # queryset = models.Note.objects.prefetch_related('tags').values('archive__note', 'id', 'title', 'url', 'description', 'updated_dt', 'created_dt',
-    #    'user_cre', 'user_upd', 'archived_dt', 'rate', 'type', 'status', 'public', 'schedule_dt')
+    # queryset = models.Note.objects.prefetch_related('tags').values
+    # ('archive__note', 'id', 'title', 'url', 'description', 'updated_dt', 'created_dt',
+    # 'user_cre', 'user_upd', 'archived_dt', 'rate', 'type', 'status', 'public', 'schedule_dt')
 
     serializer_class = serializers.NoteSerializer
     filter_backends = (filters.DjangoFilterBackend, filters.OrderingFilter)
     # filter_fields = ('id', 'title', 'public', 'description', )
     filter_class = NoteFilter
 
+    @cache_response(key_func=CustomListKeyConstructor())
+    def list(self, *args, **kwargs):
+        return super(NoteViewSet, self).list(*args, **kwargs)
+
     def get_queryset(self, *args, **kwargs):
-        print('user_id=' + str(self.request.user.id))
+        # print('user_id=' + str(self.request.user.id))
         return models.Note.objects.prefetch_related('tags').filter(user_cre_id=self.request.user.id)
 
     def get_serializer_class(self):
