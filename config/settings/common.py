@@ -34,6 +34,7 @@ DJANGO_APPS = (
 
     # Admin
     'django.contrib.admin',
+    'channels',
 )
 
 THIRD_PARTY_APPS = (
@@ -69,8 +70,8 @@ LOCAL_APPS = (
     # custom users app
     'apps.users.apps.UsersConfig',
     # Your stuff: custom apps go here
-    'apps.mynotes.apps.MynotesConfig',
     'apps.authentication.apps.AuthenticationConfig',
+    'apps.mynotes.apps.MynotesConfig',
     # 'apps.mynotes-frontend.apps.MynotesViewConfig',
 )
 
@@ -99,7 +100,7 @@ MIGRATION_MODULES = {
 # DEBUG
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#debug
-DEBUG = env.bool('DJANGO_DEBUG', default=False)
+DEBUG = env.bool('DJANGO_DEBUG', default=True)
 # FIXTURE CONFIGURATION
 # ------------------------------------------------------------------------------
 # See:
@@ -385,12 +386,12 @@ if  DEBUG:
         'loggers': {
             'django': {
                 'handlers': ['console'],
-                'level': 'DEBUG',
+                'level': 'ERROR',
                  'propagate': True
             },
             'apps': {
                 'handlers': ['console'],
-                'level': 'DEBUG',
+                'level': 'INFO',
                  'propagate': True
             },
             'django.request': {

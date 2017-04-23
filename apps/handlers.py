@@ -9,7 +9,6 @@ def custom_exception_handler(exc, context):
     response = exception_handler(exc, context)
     # Now add the HTTP status code to the response.
     # print(response.data)
-
     if response is not None:
         fields = []
         for field, value in response.data.items():

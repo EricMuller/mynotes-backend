@@ -28,6 +28,9 @@ class Tag(models.Model):
     def __unicode__(self):
         return str(self.name)
 
+    class Meta:
+        unique_together = ('name', 'user_cre',)
+
 
 class Model(MPTTModel):
 
@@ -138,13 +141,17 @@ class Note(models.Model):
         return note
 
     def __str__(self):
-        return str(self.id) + ' ' + self.title + ' ' + self.status
+        return 'id=' + str(self.id) + ';title=' + \
+            self.title + ';status=' + self.status
+
+    class Meta:
+        # ws_serializer_class =
+        pass
 
 
 class Archive(models.Model):
     name = models.SlugField(max_length=255)
     url = models.SlugField(max_length=255)
-    # note = models.ForeignKey(Note)
     content_type = models.CharField(max_length=255)
     updated_dt = models.DateTimeField(auto_now=True)
     created_dt = models.DateTimeField(auto_now_add=True)
@@ -173,5 +180,3 @@ class NoteAttachement(models.Model):
     def create(cls, name, note):
         attachement = cls(name=name, note=note)
         return attachement
-
-

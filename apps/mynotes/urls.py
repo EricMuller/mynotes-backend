@@ -1,4 +1,3 @@
-from apps.authentication import authentification
 from apps.mynotes import viewsets
 # from apps.mynotes.apiviews import obtain_auth_token
 from django.conf.urls import include

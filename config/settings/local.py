@@ -19,9 +19,9 @@ from .common import *  # noqa
 DEBUG = env.bool('DJANGO_DEBUG', default=True)
 TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
 
+ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=[
+    'localhost', '127.0.0.1', '192.168.0.100'])
 if not DEBUG:
-    ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=[
-                             'localhost', '127.0.0.1', '192.168.0.100'])
     print ("env variable DJANGO_DEBUG is False !!!")
     # start django with --insecure for static file
 
@@ -67,6 +67,26 @@ CACHES = {
         }
     }
 }
+
+# django-channels
+# ------------------------------------------------------------------------------
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "asgiref.inmemory.ChannelLayer",
+        "ROUTING": "config.routing.channel_routing",
+    },
+}
+
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "asgi_redis.RedisChannelLayer",
+#         "ROUTING": "config.routing.channel_routing",
+#         # "CONFIG": {
+#         #     "hosts": [("redis-channel-1", 6379), ("redis-channel-2", 6379)],
+#         # },
+#     },
+# }
+
 # django-debug-toolbar
 # ------------------------------------------------------------------------------
 MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)

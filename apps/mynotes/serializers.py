@@ -31,6 +31,13 @@ class CrawlSerializer(serializers.Serializer):
         fields = ('url', 'html', 'title', 'content_type')
 
 
+class ModelSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+
+    class Meta:
+        fields = ('id')
+
+
 class TagSerializer(serializers.ModelSerializer):
 
     id = serializers.IntegerField(required=False)
@@ -41,12 +48,31 @@ class TagSerializer(serializers.ModelSerializer):
 
     def validate(self, validated_data):
 
+        import ipdb
+        ipdb.set_trace()
         if 'id' not in validated_data:
             validated_data['user_cre'] = self.context['request'].user
 
         validated_data['user_upd'] = self.context['request'].user
 
+        try:
+            models.Tag.objects.get(name=validated_data[
+                                   'name'], user_cre=validated_data['user_cre'])
+        except models.Tag.DoesNotExist:
+            pass
+        else:
+            raise serializers.ValidationError('Tag already exists')
+
         return validated_data
+
+
+class NoteTagSerializer(serializers.ModelSerializer):
+
+    id = serializers.IntegerField(required=False)
+
+    class Meta:
+        model = models.Tag
+        fields = ('id', 'name', 'public')
 
 
 class NoteSerializer(serializers.ModelSerializer):
@@ -56,13 +82,13 @@ class NoteSerializer(serializers.ModelSerializer):
     created_dt = TimestampField()
     updated_dt = TimestampField()
     # relations many
-    tags = TagSerializer(read_only=False, many=True)
+    tags = NoteTagSerializer(read_only=False, many=True)
 
     class Meta:
         model = models.Note
         fields = ('id', 'url', 'title', 'type', 'rate', 'description',
                   'user_cre', 'user_upd', 'created_dt', 'updated_dt',
-                  'tags', 'status', 'schedule_dt', 'archived_dt', 'archive_id','favorite')
+                  'tags', 'status', 'schedule_dt', 'archived_dt', 'archive_id', 'favorite')
         read_only_fields = ('created_dt', 'updated_dt',
                             'archived_dt', 'archive_id')
         # https://github.com/tomchristie/django-rest-framework/issues/2760
@@ -78,6 +104,7 @@ class NoteSerializer(serializers.ModelSerializer):
         return validated_data
 
     def create(self, validated_data):
+
         tags_data = validated_data.pop('tags')
         instance = super(NoteSerializer, self).create(validated_data)
         # obj.save(foo=validated_data['foo'])

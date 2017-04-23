@@ -1,9 +1,6 @@
 import datetime
 from django.core.cache import cache
 from django.utils.encoding import force_text
-from django.db.models.signals import post_delete
-from django.db.models.signals import post_save
-from apps.mynotes.models import Note
 
 from rest_framework_extensions.key_constructor.constructors import (
     DefaultKeyConstructor
@@ -32,10 +29,5 @@ class CustomListKeyConstructor(DefaultKeyConstructor):
     updated_at = UpdatedAtKeyBit()
 
 
-def change_api_updated_at(sender=None, instance=None, *args, **kwargs):
+def cache_updated_api_at(sender=None, instance=None, *args, **kwargs):
     cache.set('api_updated_at_timestamp', datetime.datetime.utcnow())
-
-
-for model in [Note]:
-    post_save.connect(receiver=change_api_updated_at, sender=model)
-    post_delete.connect(receiver=change_api_updated_at, sender=model)
