@@ -48,8 +48,6 @@ class TagSerializer(serializers.ModelSerializer):
 
     def validate(self, validated_data):
 
-        import ipdb
-        ipdb.set_trace()
         if 'id' not in validated_data:
             validated_data['user_cre'] = self.context['request'].user
 
