@@ -15,6 +15,17 @@ from rest_framework.permissions import AllowAny
 # from rest_framework.response import Response
 
 
+def confirm_email(self, request, email_address):
+    """
+    Marks the email address as confirmed on the db
+    """
+    email_address.verified = True
+    email_address.set_as_primary(conditional=True)
+    email_address.save()
+
+    return Response({'token': 'OK'})
+
+
 class ObtainAuthToken(APIView):
     throttle_classes = ()
     # permission_classes = (EverybodyCanAuthentication,)

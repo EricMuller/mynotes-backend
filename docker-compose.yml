@@ -44,7 +44,7 @@ services:
     depends_on:
      - postgres
      - redis
-    command: celery -A mynotes.taskapp worker -l INFO
+    command: celery -A mywebmarks.taskapp worker -l INFO
 
   celerybeat:
     build:
@@ -55,5 +55,5 @@ services:
     depends_on:
       - postgres
       - redis
-    command: celery -A mynotes.taskapp beat -l INFO
+    command: celery -A mywebmarks.taskapp beat -l INFO
 

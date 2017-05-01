@@ -12,7 +12,7 @@ from __future__ import absolute_import, unicode_literals
 
 import environ
 
-# (mynotes/config/settings/common.py - 3 = mynotes/)
+# (mywebmarks/config/settings/common.py - 3 = mywebmarks/)
 ROOT_DIR = environ.Path(__file__) - 3
 APPS_DIR = ROOT_DIR.path('apps')
 
@@ -71,8 +71,8 @@ LOCAL_APPS = (
     'apps.users.apps.UsersConfig',
     # Your stuff: custom apps go here
     'apps.authentication.apps.AuthenticationConfig',
-    'apps.mynotes.apps.MynotesConfig',
-    # 'apps.mynotes-frontend.apps.MynotesViewConfig',
+    'apps.mywebmarks.apps.MyWebmarksConfig',
+    # 'apps.mywebmarks-frontend.apps.MynotesViewConfig',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -122,7 +122,7 @@ EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND',
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#admins
 ADMINS = (
-    ("""Eric Muller""", 'admin@01notes.com'),
+    ("""Eric Muller""", 'admin@webmarks.online'),
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#managers
@@ -134,7 +134,7 @@ MANAGERS = ADMINS
 # postgres://mynotes:mynotes@localhost:5432/mynotes
 # postgres:///mynotes
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='postgres://mynotes:mynotes@192.168.1.100:5432/mynotes'),
+    'default': env.db('DATABASE_URL', default='postgres://mynotes:mynotes@192.168.1.100:5432/mywebmarks'),
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
 
@@ -218,7 +218,7 @@ STATIC_ROOT = str(ROOT_DIR('staticfiles'))
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-url
 STATIC_URL = '/static/'
-#STATIC_URL = 'http://192.168.0.100/static/mynotes/'
+# STATIC_URL = 'http://192.168.0.100/static/mywebmarks/'
 
 # See:
 # https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
@@ -275,11 +275,13 @@ SOCIALACCOUNT_ADAPTER = 'apps.users.adapters.SocialAccountAdapter'
 # Select the correct user model
 AUTH_USER_MODEL = 'users.User'
 # LOGIN_REDIRECT_URL = 'users:redirect'
-#LOGIN_URL = 'account_login'
+# LOGIN_URL = 'account_login'
 LOGIN_URL = '/login'
 
-LOGIN_REDIRECT_URL = "/mynotes"
+
+LOGIN_REDIRECT_URL = "/login"
 # test
+EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/login'
 # SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
 # SOCIALACCOUNT_EMAIL_REQUIRED = False
 # SOCIALACCOUNT_QUERY_EMAIL = False
@@ -333,8 +335,8 @@ STORE_ROOT = '/ged/store/'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
 
     ),
     'DEFAULT_PERMISSION_CLASSES': (
@@ -344,6 +346,11 @@ REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'apps.handlers.custom_exception_handler'
 }
 
+
+SWAGGER_SETTINGS = {
+    # for swagger / browsable api  should include('rest_framework.urls')
+    'LOGIN_URL': 'rest_framework:login',
+}
 
 # LOGGING CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -355,7 +362,7 @@ REST_FRAMEWORK = {
 # more details on how to customize your logging configuration.
 
 
-if  DEBUG:
+if DEBUG:
 
     LOGGING = {
         'version': 1,
@@ -387,12 +394,17 @@ if  DEBUG:
             'django': {
                 'handlers': ['console'],
                 'level': 'ERROR',
-                 'propagate': True
+                'propagate': True
+            },
+            'django.db.backends': {
+                'handlers': ['console'],
+                'level': 'DEBUG',
+                'propagate': False,
             },
             'apps': {
                 'handlers': ['console'],
                 'level': 'INFO',
-                 'propagate': True
+                'propagate': True
             },
             'django.request': {
                 'handlers': ['mail_admins'],

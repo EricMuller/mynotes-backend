@@ -14,6 +14,11 @@ urlpatterns = [
     # url(r'^api/authenticate', obtain_auth_token),
     # url(r'^api-token-auth/', apiviews.obtain_auth_token),
     # url(r'^auth/', include('rest_framework_social_oauth2.urls')),
+
+    # dont remove
+    # otherwise -->Reverse for 'account_email_verification_sent' not found.
+    # 'account_email_verification_sent' is not a valid view function or ...
+    url(r'^accounts/', include('allauth.urls')),
     url(r'^rest-auth/', include('rest_auth.urls')),
     url(r'^rest-auth/registration/account-confirm-email/(?P<key>[\s\d\w().+-_,:&]+)/$',
         allauthemailconfirmation, name="account_confirm_email"),

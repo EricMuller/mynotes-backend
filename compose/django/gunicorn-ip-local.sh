@@ -1,7 +1,7 @@
 #!/bin/sh
 
 NAME="mynotes_app-local"                               # Name of the application
-DJANGODIR=/www/mynotes-backend                   # Django project directory
+DJANGODIR=/www/mywebmarks-backend                   # Django project directory
 USER=webdev                                      # the user to run as
 GROUP=webdev                                     # the group to run as
 NUM_WORKERS=4                                    # how many worker processes should Gunicorn spawn

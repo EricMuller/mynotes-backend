@@ -9,31 +9,35 @@ from django.views.generic import TemplateView
 from django.views import defaults as default_views
 # from django.views.decorators.csrf import csrf_exempt
 
-from rest_framework.authtoken.views import obtain_auth_token
+# from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework_swagger.views import get_swagger_view
 
-schema_view = get_swagger_view(title='Django API')
+schema_view_swagger = get_swagger_view(title='Django API')
+
 
 urlpatterns = [
     # url(r'^about/$',
-    #     TemplateView.as_view(template_name='pages/about.html'), name='about'),
+    # TemplateView.as_view(template_name='pages/about.html'), name='about'),
     # url(r'^test/$',
     #     TemplateView.as_view(template_name='pages/test.html'), name='test'),
     # Django Admin, use {% url 'admin:index' %}
     url(settings.ADMIN_URL, include(admin.site.urls)),
     # url(r'^account/facebook/login/token/$', csrf_exempt(login_by_token)),
     # Your stuff: custom urls includes go here
-    url(r'^authentication/', include('apps.authentication.urls',
-                                     namespace='authentication-back')),
-    url(r'^mynotes/', include('apps.mynotes.urls', namespace='mynotes-back')),
-    url(r'^swagger/$', schema_view),
+    # User management
+    url(r'^users/', include('apps.users.urls', namespace='users')),
+    
+    url(r'^mywebmarks/', include('apps.mywebmarks.urls',
+                                 namespace='mywebmarks-back')),
+    url(r'^swagger/$', schema_view_swagger),
     url(r'^$',
         TemplateView.as_view(template_name='index.html'), name='index'),
-    # Ajout authentification pour browsable api
-    # url(r'^api-auth/', include('rest_framework.urls',
-    #                            namespace='rest_framework')),
-    # http://django-rest-auth.readthedocs.io/en/latest/installation.html
 
+    # Ajout authentification pour browsable api need
+    # include('rest_framework.urls')
+    url(r'^rest_framework/', include('rest_framework.urls')),
+    # http://django-rest-auth.readthedocs.io/en/latest/installation.html
+    url(r'^authentication/', include('apps.authentication.urls')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

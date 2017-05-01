@@ -12,7 +12,7 @@ if not settings.configured:
                           'config.settings.local')  # pragma: no cover
 
 
-app = Celery('mynotes')
+app = Celery('mywebmarks')
 
 
 class CeleryConfig(AppConfig):
