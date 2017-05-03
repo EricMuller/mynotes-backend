@@ -11,6 +11,7 @@ settings.configure(
     ROOT_URLCONF=sys.modules[__name__],
 )
 
+
 def index(request):
     return HttpResponse('Hello, World')
 
