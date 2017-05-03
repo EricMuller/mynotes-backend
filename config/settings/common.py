@@ -296,7 +296,7 @@ SOCIALACCOUNT_PROVIDERS = \
 AUTOSLUG_SLUGIFY_FUNCTION = 'slugify.slugify'
 
 # CELERY
-INSTALLED_APPS += ('apps.webmarks.tasks.celery.CeleryConfig',)
+INSTALLED_APPS += ('apps.mywebmarks.tasks.celery.CeleryConfig',)
 # if you are not using the django database broker (e.g. rabbitmq, redis,
 # memcached), you can remove the next line.
 INSTALLED_APPS += ('kombu.transport.django',)
