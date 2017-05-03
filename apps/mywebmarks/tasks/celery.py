@@ -16,7 +16,7 @@ app = Celery('mywebmarks')
 
 
 class CeleryConfig(AppConfig):
-    name = 'apps.taskapp'
+    name = 'apps.mywebmarks.tasks'
     verbose_name = 'Celery Config'
 
     def ready(self):
