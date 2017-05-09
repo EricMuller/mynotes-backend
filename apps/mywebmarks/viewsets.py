@@ -7,7 +7,8 @@ from apps.mywebmarks import models
 from apps.mywebmarks import serializers
 from apps.mywebmarks.cache import CustomListKeyConstructor
 from apps.mywebmarks.crawler import Crawler
-from apps.mywebmarks.filters import MediaFilter
+from apps.mywebmarks.filters import BookmarkFilter
+from apps.mywebmarks.filters import FolderFilter
 from apps.mywebmarks.managers import AggregateList
 from apps.mywebmarks.paginators import AggregateResultsViewSetPagination
 
@@ -53,7 +54,6 @@ class AggregatePaginationReponseMixin(object):
             aggregate_data = {}
 
         fields = self.serializer_class.Meta.fields
-
         return self.paginator.get_paginated_response(self.queryset.model,
                                                      fields,
                                                      data, aggregate_data)
@@ -66,21 +66,23 @@ class AggregateModelViewSet(AggregatePaginationReponseMixin,
     pass
 
 
-class ContainerViewSet(AggregateModelViewSet,
-                       DefaultsAuthentificationMixin):
+class FolderViewSet(AggregateModelViewSet,
+                    DefaultsAuthentificationMixin):
 
-    queryset = models.Container.objects.all()
-    serializer_class = serializers.ContainerSerializer
+    queryset = models.Folder.objects.all()
+    serializer_class = serializers.FolderSerializer
+    filter_backends = (filters.DjangoFilterBackend, filters.OrderingFilter)
+    filter_class = FolderFilter
 
     def get_queryset(self, *args, **kwargs):
         # print('user_id=' + str(self.request.user.id))
-        return models.Container.objects.filter(user_cre_id=self.request.user.id)
+        return models.Folder.objects.filter(user_cre_id=self.request.user.id)
 
 
-# class MediaViewSet(AggregateModelViewSet,
+# class BookmarkViewSet(AggregateModelViewSet,
 #                    DefaultsAuthentificationMixin):
 
-#     queryset = models.Media.objects.select_subclasses()
+#     queryset = models.Bookmark.objects.select_subclasses()
 #     serializer_class = serializers.MediaSerializer
 
 #     def get_serializer_class(self):
@@ -91,10 +93,10 @@ class ContainerViewSet(AggregateModelViewSet,
 #         return serializers.MediaSerializer
 
 
-class MediaViewSet(AggregateModelViewSet,
-                   DefaultsAuthentificationMixin):
+class BookmarkViewSet(AggregateModelViewSet,
+                      DefaultsAuthentificationMixin):
 
-    queryset = models.Media.objects.prefetch_related('tags')
+    queryset = models.Bookmark.objects.prefetch_related('tags')
 
     # .prefetch_related(
     #    'tags').prefetch_related('archive').values_list('title','rate')
@@ -102,23 +104,24 @@ class MediaViewSet(AggregateModelViewSet,
     # ('archive__note', 'id', 'title', 'url', 'description', 'updated_dt', 'created_dt',
     # 'user_cre', 'user_upd', 'archived_dt', 'rate', 'type', 'status', 'public', 'schedule_dt')
 
-    serializer_class = serializers.MediaSerializer
+    serializer_class = serializers.BookmarkSerializer
     filter_backends = (filters.DjangoFilterBackend, filters.OrderingFilter)
     # filter_fields = ('id', 'title', 'public', 'description', )
-    filter_class = MediaFilter
+    filter_class = BookmarkFilter
 
     @cache_response(key_func=CustomListKeyConstructor())
     def list(self, *args, **kwargs):
-        return super(MediaViewSet, self).list(*args, **kwargs)
+        return super(BookmarkViewSet, self).list(*args, **kwargs)
 
     def get_queryset(self, *args, **kwargs):
         # print('user_id=' + str(self.request.user.id))
-        return models.Media.objects.prefetch_related('tags').filter(user_cre_id=self.request.user.id)
+        return models.Bookmark.objects.prefetch_related('tags').filter(
+            user_cre_id=self.request.user.id)
 
     def get_serializer_class(self):
         # if self.action == 'list':
-        #    return serializers.NoteListSerializer  
-        return serializers.MediaSerializer
+        #    return serializers.NoteListSerializer
+        return serializers.BookmarkSerializer
 
     @detail_route(methods=['get'])
     def title(self, request, pk=None):
@@ -133,19 +136,19 @@ class MediaViewSet(AggregateModelViewSet,
 
     @detail_route(methods=['get'])
     def archive(self, request, pk):
-        media = self.get_object()
+        bookmark = self.get_object()
         stdlogger.debug(pk)
         crawler = Crawler()
         # url = base64.b64decode(pk)
         # stdlogger.info(url.decode())
-        crawler.crawl(media.url)
+        crawler.crawl(bookmark.url)
 
         archive = models.Archive.create(
-            media, crawler.content_type, crawler.html.encode())
+            bookmark, crawler.content_type, crawler.html.encode())
 
         archive.save()
-        media.archive_id = archive.id
-        media.save()
+        bookmark.archive_id = archive.id
+        bookmark.save()
         serializer = serializers.ArchiveSerializer(archive)
         return Response(serializer.data)
 

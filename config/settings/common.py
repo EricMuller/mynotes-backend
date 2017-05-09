@@ -134,7 +134,7 @@ MANAGERS = ADMINS
 # postgres://mynotes:mynotes@localhost:5432/mynotes
 # postgres:///mynotes
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='postgres://mynotes:mynotes@192.168.1.100:5432/mywebmarks'),
+    'default': env.db('DATABASE_URL', default='postgres://mynotes:mynotes@192.168.1.100:5432/mywebmarks2'),
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
 
@@ -403,7 +403,7 @@ if DEBUG:
             },
             'apps': {
                 'handlers': ['console'],
-                'level': 'INFO',
+                'level': 'DEBUG',
                 'propagate': True
             },
             'django.request': {

@@ -16,7 +16,7 @@ class ArchiveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Archive
-        fields = ('id', 'name', 'url', 'media',
+        fields = ('id', 'name', 'url', 'bookmark',
                   'data',  # 'user_cre', 'user_upd',
                   'created_dt', 'updated_dt')
 
@@ -47,7 +47,7 @@ class ModelSerializer(serializers.Serializer):
 #         fields = ('id', 'kind', 'url')
 
 
-class ContainerSerializer(serializers.ModelSerializer):
+class FolderSerializer(serializers.ModelSerializer):
 
     def validate(self, validated_data):
 
@@ -58,9 +58,21 @@ class ContainerSerializer(serializers.ModelSerializer):
 
         return validated_data
 
+    kind = serializers.CharField()
+    name = serializers.CharField()
+    user_cre_id = serializers.IntegerField(read_only=True)
+    user_upd_id = serializers.IntegerField(read_only=True)
+    parent_id = serializers.IntegerField(required=False)
+    tree_id = serializers.IntegerField(read_only=True)
+    level = serializers.IntegerField(read_only=True)
+    lft = serializers.IntegerField(read_only=True)
+    rght = serializers.IntegerField(read_only=True)
+
     class Meta:
-        model = models.Container
-        fields = ("id", "name",)
+        model = models.Folder
+        fields = ('id', 'name', 'kind', 'user_cre_id',
+                  'user_upd_id', 'parent_id', 'tree_id', 'lft', 'rght', 'level')
+        # fields = '__all__'
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -89,7 +101,7 @@ class TagSerializer(serializers.ModelSerializer):
         return validated_data
 
 
-class NoteTagSerializer(serializers.ModelSerializer):
+class BookmarkTagSerializer(serializers.ModelSerializer):
 
     id = serializers.IntegerField(required=False)
 
@@ -98,17 +110,17 @@ class NoteTagSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'public')
 
 
-class MediaSerializer(serializers.ModelSerializer):
+class BookmarkSerializer(serializers.ModelSerializer):
 
     # fields must be a models.DateTimeField
     schedule_dt = TimestampField()
     created_dt = TimestampField()
     updated_dt = TimestampField()
     # relations many
-    tags = NoteTagSerializer(read_only=False, many=True)
+    tags = BookmarkTagSerializer(read_only=False, many=True)
 
     class Meta:
-        model = models.Media
+        model = models.Bookmark
         fields = ('id', 'url', 'title', 'kind', 'rate', 'description',
                   'user_cre', 'user_upd', 'created_dt', 'updated_dt',
                   'tags', 'status', 'schedule_dt', 'archived_dt', 'archive_id', 'favorite')
@@ -129,7 +141,7 @@ class MediaSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
 
         tags_data = validated_data.pop('tags')
-        instance = super(MediaSerializer, self).create(validated_data)
+        instance = super(BookmarkSerializer, self).create(validated_data)
         # obj.save(foo=validated_data['foo'])
         for tag_data in tags_data:
             tag = models.Tag.objects.get(id=tag_data['id'])
@@ -140,7 +152,8 @@ class MediaSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         tags_data = validated_data.pop('tags')
-        instance = super(MediaSerializer, self).update(instance, validated_data)
+        instance = super(BookmarkSerializer, self).update(
+            instance, validated_data)
         instance.tags.clear()
         for tag_data in tags_data:
             tag = models.Tag.objects.get(id=tag_data['id'])

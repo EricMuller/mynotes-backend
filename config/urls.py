@@ -26,7 +26,7 @@ urlpatterns = [
     # Your stuff: custom urls includes go here
     # User management
     url(r'^users/', include('apps.users.urls', namespace='users')),
-    
+
     url(r'^mywebmarks/', include('apps.mywebmarks.urls',
                                  namespace='mywebmarks-back')),
     url(r'^swagger/$', schema_view_swagger),

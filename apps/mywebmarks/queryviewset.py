@@ -1,5 +1,5 @@
 
-# from apps.mywebmarks.models import Media
+# from apps.mywebmarks.models import Bookmark
 # from apps.mywebmarks.paginators import StandardResultsSetPagination
 # from apps.mywebmarks.serializers import MediaSerializer
 from django.db.models import Q

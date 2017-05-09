@@ -88,40 +88,47 @@ class AuditableModelMixin(models.Model):
         abstract = True
 
 
-class Container(MPTTModel, AuditableModelMixin):
-    parent = TreeForeignKey('self', null=True, blank=True)
-    name = models.CharField(max_length=256)
-
-    def __str__(self):
-        return self.libelle
-
-
-# class Media(AuditableModelMixin):
-
-#     objects = InheritanceManager()
-
-#     KINDS = (
-#         ('NOTE', 'Note'),
-#         ('TODO', 'Todo'),
-#         ('MAIL', 'Mail'),
-#         ('LINK', 'Link'),
-#     )
-
-#     kind = models.CharField(max_length=10, choices=KINDS, default='NOTE')
-#     container = models.ManyToManyField(
-#         Container, related_name="containers", blank=True)
-
-
-class Media(AuditableModelMixin):
-
-    objects = MediaManager()
+class Node(AuditableModelMixin):
 
     KINDS = (
         ('NOTE', 'Note'),
         ('TODO', 'Todo'),
         ('MAIL', 'Mail'),
         ('LINK', 'Link'),
+        ('FLDR', 'Folder'),
     )
+
+    kind = models.CharField(max_length=10, choices=KINDS, default='NOTE')
+    # type = models.ForeignKey(
+    #     TypeNote, verbose_name='TypeNote', null=True,
+    #     default=None, blank=True, related_name='TypeNote')
+
+    #     objects = InheritanceManager()
+
+    #     KINDS = (
+    #         ('NOTE', 'Note'),
+    #         ('TODO', 'Todo'),
+    #         ('MAIL', 'Mail'),
+    #         ('LINK', 'Link'),
+    #     )
+
+    #     kind = models.CharField(max_length=10, choices=KINDS, default='NOTE')
+    #     container = models.ManyToManyField(
+    #         Container, related_name="containers", blank=True)
+
+
+class Folder(MPTTModel, Node):
+
+    name = models.CharField(max_length=256)
+    parent = TreeForeignKey('self', null=True, blank=True)
+
+    def __str__(self):
+        return self.libelle
+
+
+class Bookmark(Node):
+
+    objects = MediaManager()
 
     STATUS = (
         ('D', 'Draft'),
@@ -129,21 +136,17 @@ class Media(AuditableModelMixin):
         ('T', 'Trash'),
     )
 
-    kind = models.CharField(max_length=10, choices=KINDS, default='NOTE')
-    container = models.ManyToManyField(
-        Container, related_name="containers", blank=True)
-
     title = models.CharField(max_length=256)
+
     url = models.CharField(max_length=2000, default=None, null=True)
+
     description = models.TextField(blank=True)
 
     archived_dt = models.DateTimeField(null=True)
 
     rate = models.IntegerField(default=0)
+
     favorite = models.BooleanField(default=False)
-    # type = models.ForeignKey(
-    #     TypeNote, verbose_name='TypeNote', null=True,
-    #     default=None, blank=True, related_name='TypeNote')
 
     status = models.CharField(max_length=1, choices=STATUS, default='D')
 
@@ -193,8 +196,8 @@ class Archive(models.Model):
         db_column='data',
         blank=True)
 
-    media = models.ForeignKey(
-        Media, related_name='archives', default=None, blank=True)
+    bookmark = models.ForeignKey(
+        Bookmark, related_name='archives', default=None, blank=True)
 
     @classmethod
     def create(cls, media, content_type, data):
@@ -206,7 +209,7 @@ class Archive(models.Model):
 
 class MediaAttachement(models.Model):
     name = models.CharField(max_length=255)
-    media = models.ForeignKey(Media)
+    bookmark = models.ForeignKey(Bookmark)
     updated_dt = models.DateTimeField(auto_now=True)
     created_dt = models.DateTimeField(auto_now_add=True)
 

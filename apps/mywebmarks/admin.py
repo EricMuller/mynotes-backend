@@ -3,7 +3,7 @@ from django.contrib import admin
 # Register your models here.
 
 from apps.mywebmarks.models import Model
-from apps.mywebmarks.models import Media
+from apps.mywebmarks.models import Bookmark
 from apps.mywebmarks.models import Tag
 from apps.mywebmarks.models import Search
 from apps.mywebmarks.models import FileUploader
@@ -21,4 +21,4 @@ class TagAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Tag, TagAdmin)
-admin.site.register(Media, SimpleHistoryAdmin)
+admin.site.register(Bookmark, SimpleHistoryAdmin)

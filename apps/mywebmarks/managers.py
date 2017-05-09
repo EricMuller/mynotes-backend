@@ -53,8 +53,8 @@ class TagManager(models.Manager):
             cursor.execute("""
                 SELECT mywebmarks_tag.id,mywebmarks_tag.name,count(*)
                 FROM mywebmarks_tag
-                left join  mywebmarks_media_tags
-                        on mywebmarks_tag.id = mywebmarks_media_tags.tag_id
+                left join  mywebmarks_bookmark_tags
+                        on mywebmarks_tag.id = mywebmarks_bookmark_tags.tag_id
                 where user_cre_id  = %s
                 group by mywebmarks_tag.id,mywebmarks_tag.name
                 order by mywebmarks_tag.name
