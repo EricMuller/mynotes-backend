@@ -9,6 +9,7 @@ from apps.mywebmarks.cache import CustomListKeyConstructor
 from apps.mywebmarks.crawler import Crawler
 from apps.mywebmarks.filters import BookmarkFilter
 from apps.mywebmarks.filters import FolderFilter
+from apps.mywebmarks.filters import TagFilter
 from apps.mywebmarks.managers import AggregateList
 from apps.mywebmarks.paginators import AggregateResultsViewSetPagination
 
@@ -106,7 +107,6 @@ class BookmarkViewSet(AggregateModelViewSet,
 
     serializer_class = serializers.BookmarkSerializer
     filter_backends = (filters.DjangoFilterBackend, filters.OrderingFilter)
-    # filter_fields = ('id', 'title', 'public', 'description', )
     filter_class = BookmarkFilter
 
     @cache_response(key_func=CustomListKeyConstructor())
@@ -157,26 +157,19 @@ class TagViewSet(AggregateModelViewSet, DefaultsAuthentificationMixin):
     queryset = models.Tag.objects.all()
     serializer_class = serializers.TagSerializer
     filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('id', 'name', 'public',)
+    filter_class = TagFilter
 
+    @list_route(methods=['get'])
+    def count(self, request):
+        queryset = models.Tag.objects.with_counts(user_cre_id=request.user.id)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = serializers.TagCountSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
 
-class TagCloudViewSet(AggregatePaginationReponseMixin,
-                      viewsets.ReadOnlyModelViewSet):
-    """tag with count"""
-    queryset = models.Tag.objects.with_counts(-1)
-    serializer_class = serializers.TagCloudSerializer
-    filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('id', 'name', 'public',)
-
-    def get_queryset(self, *args, **kwargs):
-
-        return models.Tag.objects.with_counts(user_cre_id=self.request.user.id)
-
-    @list_route(methods=['get', ])
-    def user_tag(self, request, pk=None):
-
-        snippet = pk
-        return Response(snippet)
+        serializer = self.get_serializer(queryset, many=True)
+        serializer = serializers.TagCountSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class SearchViewSet(AggregateModelViewSet, DefaultsAuthentificationMixin):
@@ -189,7 +182,6 @@ class FileUploaderViewSet(DefaultsAuthentificationMixin,
                           viewsets.ModelViewSet):
     serializer_class = serializers.FileUploaderSerializer
     parser_classes = (MultiPartParser, FormParser,)
-
     # overriding default query set
     queryset = models.FileUploader.objects.all()
 

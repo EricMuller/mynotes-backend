@@ -101,6 +101,16 @@ class TagSerializer(serializers.ModelSerializer):
         return validated_data
 
 
+class TagCountSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField(max_length=100)
+    count = serializers.IntegerField()
+
+    class Meta:
+        model = models.Tag
+        fields = ('id', 'name', 'count')
+
+
 class BookmarkTagSerializer(serializers.ModelSerializer):
 
     id = serializers.IntegerField(required=False)
@@ -167,16 +177,6 @@ class SearchSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Search
         fields = ('name', 'user_cre', 'created_dt', 'tags')
-
-
-class TagCloudSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
-    name = serializers.CharField(max_length=100)
-    count = serializers.IntegerField()
-
-    class Meta:
-        model = models.Tag
-        fields = ('id', 'name', 'count')
 
 
 class FileUploaderSerializer(serializers.ModelSerializer):
