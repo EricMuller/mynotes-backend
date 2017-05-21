@@ -10,9 +10,18 @@ from django.views import defaults as default_views
 # from django.views.decorators.csrf import csrf_exempt
 
 # from rest_framework.authtoken.views import obtain_auth_token
-from rest_framework_swagger.views import get_swagger_view
 
-schema_view_swagger = get_swagger_view(title='Django API')
+# from rest_framework_swagger.views import get_swagger_view
+
+from rest_framework.schemas import get_schema_view
+from rest_framework_swagger.renderers import SwaggerUIRenderer, OpenAPIRenderer
+
+from rest_framework.renderers import CoreJSONRenderer
+
+# schema_view_swagger = get_swagger_view(title='Django API')
+
+schema_view = get_schema_view(title='Webmarks API REST', renderer_classes=[
+                              OpenAPIRenderer, SwaggerUIRenderer])
 
 
 urlpatterns = [
@@ -24,20 +33,22 @@ urlpatterns = [
     url(settings.ADMIN_URL, include(admin.site.urls)),
     # url(r'^account/facebook/login/token/$', csrf_exempt(login_by_token)),
     # Your stuff: custom urls includes go here
-    # User management
-    url(r'^users/', include('apps.users.urls', namespace='users')),
+    url(r'^api/', include('webmarks.bookmarks.urls',
+                          namespace='bookmarks')),
+    url(r'^api/', include('webmarks.storage.urls',
+                          namespace='storage')),
 
-    url(r'^mywebmarks/', include('apps.mywebmarks.urls',
-                                 namespace='mywebmarks-back')),
-    url(r'^swagger/$', schema_view_swagger),
+    url(r'^api/', include('authentication.urls')),
+    # User management
+    url(r'^users/', include('webmarks.users.urls', namespace='users')),
+    url(r'^swagger/', schema_view),
     url(r'^$',
         TemplateView.as_view(template_name='index.html'), name='index'),
-
     # Ajout authentification pour browsable api need
     # include('rest_framework.urls')
     url(r'^rest_framework/', include('rest_framework.urls')),
     # http://django-rest-auth.readthedocs.io/en/latest/installation.html
-    url(r'^authentication/', include('apps.authentication.urls')),
+
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

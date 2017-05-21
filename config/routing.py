@@ -3,9 +3,9 @@
 #     "http.request": "drive.consumers.http_consumer"
 # }
 
-from apps.mywebmarks.channels.consumers import ws_receive
-from apps.mywebmarks.channels.consumers import ws_connect
-from apps.mywebmarks.channels.consumers import ws_disconnect
+from webmarks.bookmarks.channels.consumers import ws_receive
+from webmarks.bookmarks.channels.consumers import ws_connect
+from webmarks.bookmarks.channels.consumers import ws_disconnect
 
 channel_routing = {
     "websocket.connect": ws_connect,

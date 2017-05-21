@@ -4,7 +4,7 @@ from allauth.socialaccount.models import SocialToken
 from allauth.socialaccount.models import SocialApp
 from allauth.socialaccount.providers.facebook.views import fb_complete_login
 
-from apps.authentication.authentification import EverybodyCanAuthentication
+from .permissions import EverybodyCanAuthentication
 from rest_framework import parsers, renderers
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.serializers import AuthTokenSerializer

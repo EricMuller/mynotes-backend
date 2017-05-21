@@ -10,11 +10,20 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 """
 from __future__ import absolute_import, unicode_literals
 
+import os
 import environ
+import sys
 
 # (mywebmarks/config/settings/common.py - 3 = mywebmarks/)
 ROOT_DIR = environ.Path(__file__) - 3
 APPS_DIR = ROOT_DIR.path('apps')
+#APPS_DIR = APPS_DIR.path('webmarks')
+#PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
+#ROOT_DIR = os.path.dirname(PROJECT_DIR)
+# APPS_DIR = os.path.realpath(os.path.join(ROOT_DIR, 'apps'))
+# sys.path.APPEND_SLASH = True(str(APPS_DIR))
+
+sys.path.append(str(APPS_DIR))
 
 env = environ.Env()
 
@@ -68,10 +77,12 @@ THIRD_PARTY_APPS = (
 # Apps specific for this project go here.
 LOCAL_APPS = (
     # custom users app
-    'apps.users.apps.UsersConfig',
+    'webmarks.users.apps.UsersConfig',
     # Your stuff: custom apps go here
-    'apps.authentication.apps.AuthenticationConfig',
-    'apps.mywebmarks.apps.MyWebmarksConfig',
+    'authentication.apps.AuthConfig',
+    'webmarks.bookmarks.apps.BookmarksConfig',
+    'webmarks.upload.apps.UploadConfig',
+    'webmarks.storage.apps.StorageConfig',
     # 'apps.mywebmarks-frontend.apps.MynotesViewConfig',
 )
 
@@ -94,7 +105,7 @@ MIDDLEWARE_CLASSES = (
 # MIGRATIONS CONFIGURATION
 # ------------------------------------------------------------------------------
 MIGRATION_MODULES = {
-    'sites': 'apps.contrib.sites.migrations'
+    'sites': 'webmarks.contrib.sites.migrations'
 }
 
 # DEBUG
@@ -122,7 +133,7 @@ EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND',
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#admins
 ADMINS = (
-    ("""Eric Muller""", 'admin@webmarks.online'),
+    ("""Eric Muller""", 'admin@webmarks.net'),
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#managers
@@ -134,7 +145,7 @@ MANAGERS = ADMINS
 # postgres://mynotes:mynotes@localhost:5432/mynotes
 # postgres:///mynotes
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='postgres://mynotes:mynotes@192.168.1.100:5432/mywebmarks2'),
+    'default': env.db('DATABASE_URL', default='postgres://mynotes:mynotes@192.168.1.100:5432/webmarks'),
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
 
@@ -268,8 +279,8 @@ LOGIN_REDIRECT_URLNAME = "/"
 
 ACCOUNT_ALLOW_REGISTRATION = env.bool(
     'DJANGO_ACCOUNT_ALLOW_REGISTRATION', True)
-ACCOUNT_ADAPTER = 'apps.users.adapters.AccountAdapter'
-SOCIALACCOUNT_ADAPTER = 'apps.users.adapters.SocialAccountAdapter'
+ACCOUNT_ADAPTER = 'webmarks.users.adapters.AccountAdapter'
+SOCIALACCOUNT_ADAPTER = 'webmarks.users.adapters.SocialAccountAdapter'
 
 # Custom user app defaults
 # Select the correct user model
@@ -296,7 +307,7 @@ SOCIALACCOUNT_PROVIDERS = \
 AUTOSLUG_SLUGIFY_FUNCTION = 'slugify.slugify'
 
 # CELERY
-INSTALLED_APPS += ('apps.mywebmarks.tasks.celery.CeleryConfig',)
+INSTALLED_APPS += ('webmarks.bookmarks.tasks.celery.CeleryConfig',)
 # if you are not using the django database broker (e.g. rabbitmq, redis,
 # memcached), you can remove the next line.
 INSTALLED_APPS += ('kombu.transport.django',)
@@ -318,7 +329,6 @@ ADMIN_URL = r'^admin/'
 # ------------------------------------------------------------------------------
 
 SELECT2_JS = 'vendors/select2/vendor/select2/js/select2.min.js'
-
 SELECT2_CSS = 'vendors/select2/vendor/select2/css/select2.min.css'
 
 SELECT2_USE_BUNDLED_JQUERY = False
@@ -343,7 +353,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ),
     'PAGE_SIZE': 20,
-    'EXCEPTION_HANDLER': 'apps.handlers.custom_exception_handler'
+    'EXCEPTION_HANDLER': 'webmarks.handlers.custom_exception_handler'
 }
 
 
