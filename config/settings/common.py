@@ -17,11 +17,6 @@ import sys
 # (mywebmarks/config/settings/common.py - 3 = mywebmarks/)
 ROOT_DIR = environ.Path(__file__) - 3
 APPS_DIR = ROOT_DIR.path('apps')
-#APPS_DIR = APPS_DIR.path('webmarks')
-#PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
-#ROOT_DIR = os.path.dirname(PROJECT_DIR)
-# APPS_DIR = os.path.realpath(os.path.join(ROOT_DIR, 'apps'))
-# sys.path.APPEND_SLASH = True(str(APPS_DIR))
 
 sys.path.append(str(APPS_DIR))
 
@@ -83,7 +78,6 @@ LOCAL_APPS = (
     'webmarks.bookmarks.apps.BookmarksConfig',
     'webmarks.upload.apps.UploadConfig',
     'webmarks.storage.apps.StorageConfig',
-    # 'apps.mywebmarks-frontend.apps.MynotesViewConfig',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -371,65 +365,70 @@ SWAGGER_SETTINGS = {
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
 
-
-if DEBUG:
-
-    LOGGING = {
-        'version': 1,
-        'disable_existing_loggers': False,
-        'filters': {
-            'require_debug_false': {
-                '()': 'django.utils.log.RequireDebugFalse'
-            }
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'formatters': {
+        'verbose': {
+            'format': '[%(asctime)s] [%(levelname)s] [%(module)s.%(funcName)s] [%(lineno)d] '
+            '[%(process)d %(thread)d] %(message)s'
         },
-        'formatters': {
-            'verbose': {
-                'format': '%(levelname)s %(asctime)s %(module)s '
-                          '%(process)d %(thread)d %(message)s'
-            },
+    },
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
         },
-        'handlers': {
-            'mail_admins': {
-                'level': 'ERROR',
-                'filters': ['require_debug_false'],
-                'class': 'django.utils.log.AdminEmailHandler'
-            },
-            'console': {
-                'level': 'DEBUG',
-                'class': 'logging.StreamHandler',
-                'formatter': 'verbose',
-            },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
         },
-        'loggers': {
-            'django': {
-                'handlers': ['console'],
-                'level': 'ERROR',
-                'propagate': True
-            },
-            'django.db.backends': {
-                'handlers': ['console'],
-                'level': 'DEBUG',
-                'propagate': False,
-            },
-            'apps': {
-                'handlers': ['console'],
-                'level': 'DEBUG',
-                'propagate': True
-            },
-            'django.request': {
-                'handlers': ['mail_admins'],
-                'level': 'ERROR',
-                'propagate': True
-            },
-            'django.template': {
-                'level': 'ERROR',
-                'handlers': ['console', 'mail_admins'],
-                'propagate': True
-            },
-            'django.security.DisallowedHost': {
-                'level': 'ERROR',
-                'handlers': ['console', 'mail_admins'],
-                'propagate': True
-            }
+        'file-django': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/www/webmarks/logs/mywebmarks-backend-django.log',
+            'formatter': 'verbose'
+        },
+        'file-webmarks': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/www/webmarks/logs/mywebmarks-backend-webmarks.log',
+            'formatter': 'verbose'
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file-django'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+            'propagate': True
+        },
+        'channels': {
+            'handlers': ['console', 'file-django'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+            'propagate': True
+        },
+        'webmarks': {
+            'handlers': ['console', 'file-webmarks'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+            'propagate': True
+        },
+        'authentification': {
+            'handlers': ['console', 'file-webmarks'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+            'propagate': True
+        },
+        'django.request': {
+            # remove the one you don't want to use - no point having both.
+            'handlers': ['console', 'file-django'],
+            'propagate': False,
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR'),
         }
     }
+}
