@@ -16,7 +16,7 @@ cd $DJANGODIR
 source ./env/bin/activate
 export DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
 export PYTHONPATH=$DJANGODIR:$PYTHONPATH
-export DJANGO_DEBUG=False
+export DJANGO_DEBUG=True
 export BIND=163.172.48.36:8000
 
 # python /app/manage.py collectstatic --noinput
