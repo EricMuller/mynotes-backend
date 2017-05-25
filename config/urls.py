@@ -39,9 +39,9 @@ urlpatterns = [
                           namespace='storage')),
 
     url(r'^api/', include('authentication.urls')),
+    url(r'^api/', schema_view),
     # User management
     url(r'^users/', include('webmarks.users.urls', namespace='users')),
-    url(r'^swagger/', schema_view),
     url(r'^$',
         TemplateView.as_view(template_name='index.html'), name='index'),
     # Ajout authentification pour browsable api need
