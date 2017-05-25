@@ -17,7 +17,7 @@ source ./env/bin/activate
 export DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
 export PYTHONPATH=$DJANGODIR:$PYTHONPATH
 export DJANGO_DEBUG=False
-export BIND=webmarks.net:8000
+export BIND=163.172.48.36:8000
 
 # python /app/manage.py collectstatic --noinput
 # gunicorn config.wsgi -w $NUM_WORKERS -b 0.0.0.0:5000 --chdir=/app
