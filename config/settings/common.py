@@ -117,9 +117,9 @@ FIXTURE_DIRS = (
 # EMAIL CONFIGURATION
 # ------------------------------------------------------------------------------
 # EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND',
-# default='django.core.mail.backends.console.EmailBackend')
+# default='django.core.mail.backends.smtp.EmailBackend'
 EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND',
-                    default='django.core.mail.backends.smtp.EmailBackend')
+                    default='django.core.mail.backends.console.EmailBackend')
 # mailhog  http://iankent.uk/blog/introducing-go-mailhog/
 #
 
