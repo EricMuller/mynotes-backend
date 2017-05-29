@@ -15,13 +15,16 @@ import os
 
 from .common import *  # noqa
 
+HOST_NAME = env('HOST_NAME', default='127.0.0.1')
+
 # DEBUG
 # ------------------------------------------------------------------------------
 DEBUG = env.bool('DJANGO_DEBUG', default=True)
 TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
 
 ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=[
-    'localhost', '127.0.0.1', '192.168.0.100', '192.168.1.100'])
+                         HOST_NAME, 'localhost', '127.0.0.1'])
+
 if not DEBUG:
     print ("env variable DJANGO_DEBUG is False !!!")
     # start django with --insecure for static file
@@ -38,8 +41,15 @@ SECRET_KEY = env('DJANGO_SECRET_KEY',
 
 EMAIL_PORT = 1025
 
-EMAIL_HOST = env("EMAIL_HOST", default='localhost')
+EMAIL_HOST = env("EMAIL_HOST", default=HOST_NAME)
 
+EMAIL_HOST_USER = 'e.mul'
+EMAIL_HOST_PASSWORD = 'sdfghj35'
+EMAIL_USE_TLS = True
+# EMAIL_USE_SSL
+# EMAIL_TIMEOUT
+# EMAIL_SSL_KEYFILE
+# EMAIL_SSL_CERTFILE
 
 # CACHING
 # ------------------------------------------------------------------------------
@@ -52,7 +62,7 @@ EMAIL_HOST = env("EMAIL_HOST", default='localhost')
 # CACHING
 # ------------------------------------------------------------------------------
 REDIS_LOCATION = "redis://{}:{}/0".format(
-    env('REDIS_ENDPOINT_ADDRESS', default='127.0.0.1'),
+    env('REDIS_ENDPOINT_ADDRESS', default=HOST_NAME),
     env('REDIS_PORT', default=6379)
 )
 

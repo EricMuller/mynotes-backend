@@ -22,6 +22,8 @@ sys.path.append(str(APPS_DIR))
 
 env = environ.Env()
 
+HOST_NAME = env('HOST_NAME', default='127.0.0.1')
+print ("env variable HOST_NAME=" + HOST_NAME)
 # APP CONFIGURATION
 # ------------------------------------------------------------------------------
 DJANGO_APPS = (
@@ -127,7 +129,7 @@ EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND',
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#admins
 ADMINS = (
-    ("""Eric Muller""", 'admin@webmarks.net'),
+    ("""Eric Muller""", 'admin@' + HOST_NAME),
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#managers
@@ -138,11 +140,17 @@ MANAGERS = ADMINS
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 # postgres://mynotes:mynotes@localhost:5432/mynotes
 # postgres:///mynotes
+# default='postgres://mynotes:mynotes@192.168.1.100:5432/webmarks')
+USERNAME = env('USERNAME')
+DB_HOST_NAME = env('DB_HOST_NAME', default=HOST_NAME)
+DB_NAME = env('DB_NAME', default=USERNAME)
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='postgres://mynotes:mynotes@192.168.1.100:5432/webmarks'),
+    'default': env.db('DATABASE_URL', default='postgres://@' +
+                      DB_HOST_NAME + '/' + DB_NAME),
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
-
+print ("env variable DB_HOST_NAME/DB_NAME=" +
+       DATABASES['default']['HOST'] + '/' + DB_NAME)
 
 # GENERAL CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -261,7 +269,7 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-#
+
 SITE_ID = 1
 
 # Some really nice defaults
@@ -281,8 +289,9 @@ SOCIALACCOUNT_ADAPTER = 'webmarks.users.adapters.SocialAccountAdapter'
 AUTH_USER_MODEL = 'users.User'
 # LOGIN_REDIRECT_URL = 'users:redirect'
 # LOGIN_URL = 'account_login'
-LOGIN_URL = '/login'
-
+# LOGIN_URL = '/login'
+LOGIN_URL = 'rest_login'
+LOGOUT_URL = 'rest_logout'
 
 LOGIN_REDIRECT_URL = "/login"
 # test
@@ -322,10 +331,6 @@ ADMIN_URL = r'^admin/'
 # Your common stuff: Below this line define 3rd party library settings
 # ------------------------------------------------------------------------------
 
-SELECT2_JS = 'vendors/select2/vendor/select2/js/select2.min.js'
-SELECT2_CSS = 'vendors/select2/vendor/select2/css/select2.min.css'
-
-SELECT2_USE_BUNDLED_JQUERY = False
 
 STORE_ROOT = '/ged/store/'
 

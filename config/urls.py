@@ -39,6 +39,7 @@ urlpatterns = [
                           namespace='storage')),
 
     url(r'^api/', include('authentication.urls')),
+    # swagger
     url(r'^api/', schema_view),
     # User management
     url(r'^users/', include('webmarks.users.urls', namespace='users')),
