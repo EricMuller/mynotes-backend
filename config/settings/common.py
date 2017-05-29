@@ -141,7 +141,7 @@ MANAGERS = ADMINS
 # postgres://mynotes:mynotes@localhost:5432/mynotes
 # postgres:///mynotes
 # default='postgres://mynotes:mynotes@192.168.1.100:5432/webmarks')
-USERNAME = env('USERNAME')
+USERNAME = env('USER')
 DB_HOST_NAME = env('DB_HOST_NAME', default=HOST_NAME)
 DB_NAME = env('DB_NAME', default=USERNAME)
 DATABASES = {
