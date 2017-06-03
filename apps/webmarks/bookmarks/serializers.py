@@ -43,7 +43,7 @@ class FolderSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
     user_cre_id = serializers.IntegerField(read_only=True)
     user_upd_id = serializers.IntegerField(read_only=True)
-    parent_id = serializers.IntegerField(required=False)
+    parent_id = serializers.IntegerField(required=False, allow_null=True)
     tree_id = serializers.IntegerField(read_only=True)
     level = serializers.IntegerField(read_only=True)
     lft = serializers.IntegerField(read_only=True)

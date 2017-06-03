@@ -33,36 +33,6 @@ class Tag(models.Model):
         unique_together = ('name', 'user_cre',)
 
 
-# class Model(MPTTModel):
-
-#     parent = TreeForeignKey('self', null=True, blank=True)
-#     code = models.CharField(_("code"), max_length=64,
-#                             db_index=True)
-#     libelle = models.CharField(max_length=256)
-
-#     def __str__(self):
-#         return self.libelle
-
-
-# class Search(models.Model):
-#     name = models.CharField(max_length=256)
-#     tags = models.ManyToManyField(Tag, related_name="tags_search")
-#     updated_dt = models.DateTimeField(auto_now=True)
-#     created_dt = models.DateTimeField(auto_now_add=True)
-#     user_cre = models.ForeignKey(
-#         User, related_name='%(class)s_user_cre', blank=True)
-#     user_upd = models.ForeignKey(
-#         User, related_name='%(class)s_user_upd', blank=True)
-
-
-# class Favorite(models.Model):
-#     title = models.CharField(max_length=256)
-#     url = models.CharField(max_length=2000, default=None, null=True)
-#     add_dt = models.DateTimeField()
-#     icon = models.CharField(max_length=2000, default=None, null=True)
-
-
-
 class Node(AuditableModelMixin):
 
     KINDS = (
@@ -102,29 +72,18 @@ class Bookmark(Node):
         ('T', 'Trash'),
     )
 
-    title = models.CharField(max_length=256)
-
-    url = models.CharField(max_length=2000, default=None, null=True)
-
-    description = models.TextField(blank=True)
-
-    archived_dt = models.DateTimeField(null=True)
-
-    rate = models.IntegerField(default=0)
-
-    favorite = models.BooleanField(default=False)
-
-    status = models.CharField(max_length=1, choices=STATUS, default='D')
-
-    public = models.BooleanField(default=False)
-
-    tags = models.ManyToManyField(Tag, related_name="tags", blank=True)
-
-    schedule_dt = models.DateTimeField(null=True)
-
-    history = HistoricalRecords()
-
     archive_id = models.IntegerField(null=True)
+    archived_dt = models.DateTimeField(null=True)
+    description = models.TextField(blank=True)
+    favorite = models.BooleanField(default=False)
+    history = HistoricalRecords()
+    public = models.BooleanField(default=False)
+    rate = models.IntegerField(default=0)
+    schedule_dt = models.DateTimeField(null=True)
+    status = models.CharField(max_length=1, choices=STATUS, default='D')
+    tags = models.ManyToManyField(Tag, related_name="tags", blank=True)
+    title = models.CharField(max_length=256)
+    url = models.CharField(max_length=2000, default=None, null=True)
 
     def get_status_libelle(self):
         t = [item for item in self.STATUS if item[0] == self.status]
@@ -135,7 +94,6 @@ class Bookmark(Node):
         return '' if t is None else t[0][1]
 
     def tagsAsStr(self, sep=','):
-        # return ''
         return sep.join(s.name for s in self.tags.all())
 
     @classmethod
@@ -148,9 +106,7 @@ class Bookmark(Node):
             self.title + ';status=' + self.status
 
     class Meta:
-        # ws_serializer_class =
         pass
-
 
 
 # class MediaAttachement(models.Model):
