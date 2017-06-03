@@ -7,9 +7,9 @@ PIDFile=/run/gunicorn/pid
 User=webdev
 Group=webdev
 RuntimeDirectory=gunicorn
-#EnvironmentFile=/www/webmarks/mywebmarks-backend/compose/webmark/gunicorn-ip-local.env
+EnvironmentFile=/www/webmarks/mywebmarks-backend/compose/webmarks/systemd/gunicorn-ip-local.env
 WorkingDirectory=/www/webmarks/mywebmarks-backend
-Environment=DJANGO_DEBUG=false
+#Environment=DJANGO_DEBUG=false
 ExecStartPre=chdir /www/webmarks/mywebmarks-backend
 ExecStart=/www/webmarks/mywebmarks-backend/env/bin/gunicorn -b 163.172.48.36:8000  --pid /run/gunicorn/pid  -w 5 --threads 5 --env DJANGO_DEBUG=False --env DJANGO_SETTINGS_MODULE=config.settings.local config.wsgi
 ExecReload=/bin/kill -s HUP $MAINPID
