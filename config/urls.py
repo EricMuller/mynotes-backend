@@ -4,31 +4,23 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
-# from django.views.generic import RedirectView
 from django.views.generic import TemplateView
 from django.views import defaults as default_views
+# from django.views.generic import RedirectView
 # from django.views.decorators.csrf import csrf_exempt
-
 # from rest_framework.authtoken.views import obtain_auth_token
-
 # from rest_framework_swagger.views import get_swagger_view
 
 from rest_framework.schemas import get_schema_view
 from rest_framework_swagger.renderers import SwaggerUIRenderer, OpenAPIRenderer
 
-from rest_framework.renderers import CoreJSONRenderer
-
 # schema_view_swagger = get_swagger_view(title='Django API')
-
 schema_view = get_schema_view(title='Webmarks API REST', renderer_classes=[
                               OpenAPIRenderer, SwaggerUIRenderer])
-
 
 urlpatterns = [
     # url(r'^about/$',
     # TemplateView.as_view(template_name='pages/about.html'), name='about'),
-    # url(r'^test/$',
-    #     TemplateView.as_view(template_name='pages/test.html'), name='test'),
     # Django Admin, use {% url 'admin:index' %}
     url(settings.ADMIN_URL, include(admin.site.urls)),
     # url(r'^account/facebook/login/token/$', csrf_exempt(login_by_token)),
@@ -37,7 +29,6 @@ urlpatterns = [
                           namespace='bookmarks')),
     url(r'^api/', include('webmarks.storage.urls',
                           namespace='storage')),
-
     url(r'^api/', include('authentication.urls')),
     # swagger
     url(r'^api/', schema_view),

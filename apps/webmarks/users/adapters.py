@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 class MailError(Exception):
     """
-    The exception used for syntax errors during parsing or rendering.
+    The exception used for mail errors during send mail.
     """
     pass
 
@@ -26,6 +26,7 @@ class AccountAdapter(DefaultAccountAdapter):
         try:
             msg = self.render_mail(template_prefix, email, context)
             msg.send()
+
         except:
             raise MailError('Error while sending confirmation mail')
 

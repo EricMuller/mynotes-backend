@@ -51,7 +51,7 @@ class FolderViewSet(AggregateModelViewSet,
     filter_class = FolderFilter
 
     def get_queryset(self, *args, **kwargs):
-        # print('user_id=' + str(self.request.user.id))
+
         return models.Folder.objects.filter(user_cre_id=self.request.user.id)
 
 
