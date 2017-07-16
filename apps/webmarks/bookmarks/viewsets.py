@@ -1,6 +1,6 @@
 import base64
 import logging
-from authentication.permissions import DefaultsAuthentificationMixin
+from webmarks.rest_auth.permissions import DefaultsAuthentificationMixin
 from webmarks.bookmarks import models
 from webmarks.bookmarks import serializers
 from webmarks.drf_utils.cache import CustomListKeyConstructor

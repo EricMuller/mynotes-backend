@@ -23,7 +23,7 @@ sys.path.append(str(APPS_DIR))
 env = environ.Env()
 
 HOST_NAME = env('HOST_NAME', default='127.0.0.1')
-print ("env variable HOST_NAME=" + HOST_NAME)
+print("env variable HOST_NAME=" + HOST_NAME)
 # APP CONFIGURATION
 # ------------------------------------------------------------------------------
 DJANGO_APPS = (
@@ -37,7 +37,6 @@ DJANGO_APPS = (
 
     # Useful template tags:
     # 'django.contrib.humanize',
-
     # Admin
     'django.contrib.admin',
     'channels',
@@ -54,31 +53,26 @@ THIRD_PARTY_APPS = (
     # http://django-allauth.readthedocs.io/en/latest/providers.html
     'allauth.account',
     'rest_auth.registration',
+
     # https://console.developers.google.com/apis?project=snappy-bucksaw-146613
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.linkedin_oauth2',
     # 'allauth.socialaccount.providers.dropbox_oauth2',
     'jsonify',
     'mptt',
     'simple_history',
     'rest_framework_swagger',
-    # 'easy_select2',
-    # rest social authent
-    # 'oauth2_provider',
-    # 'social.apps.django_app.default',
-    # 'rest_framework_social_oauth2',
 
 )
 
 # Apps specific for this project go here.
 LOCAL_APPS = (
-    # custom users app
     'webmarks.users.apps.UsersConfig',
-    # Your stuff: custom apps go here
-    'authentication.apps.AuthConfig',
-    'webmarks.bookmarks.apps.BookmarksConfig',
+    'webmarks.rest_auth.apps.AuthConfig',
     'webmarks.upload.apps.UploadConfig',
+    'webmarks.bookmarks.apps.BookmarksConfig',
     'webmarks.storage.apps.StorageConfig',
 )
 
@@ -149,8 +143,8 @@ DATABASES = {
                       DB_HOST_NAME + '/' + DB_NAME),
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
-print ("env variable DB_HOST_NAME/DB_NAME=" +
-       DATABASES['default']['HOST'] + '/' + DB_NAME)
+print("env variable DB_HOST_NAME/DB_NAME=" +
+      DATABASES['default']['HOST'] + '/' + DB_NAME)
 
 # GENERAL CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -277,7 +271,10 @@ ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 # ACCOUNT_EMAIL_VERIFICATION = 'none'
-LOGIN_REDIRECT_URLNAME = "/"
+ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
+# ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
 ACCOUNT_ALLOW_REGISTRATION = env.bool(
     'DJANGO_ACCOUNT_ALLOW_REGISTRATION', True)
@@ -286,7 +283,7 @@ SOCIALACCOUNT_ADAPTER = 'webmarks.users.adapters.SocialAccountAdapter'
 
 # Custom user app defaults
 # Select the correct user model
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'webmarks_users.User'
 # LOGIN_REDIRECT_URL = 'users:redirect'
 # LOGIN_URL = 'account_login'
 # LOGIN_URL = '/login'
@@ -294,6 +291,7 @@ LOGIN_URL = 'rest_login'
 LOGOUT_URL = 'rest_logout'
 
 LOGIN_REDIRECT_URL = "/login"
+LOGIN_REDIRECT_URLNAME = "/"
 # test
 EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/login'
 # SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
@@ -303,8 +301,14 @@ EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/login'
 SOCIALACCOUNT_QUERY_EMAIL = True
 SOCIALACCOUNT_PROVIDERS = \
     {'google':
-     {'SCOPE': ['profile', 'email'],
-      'AUTH_PARAMS': {'access_type': 'online'}}}
+        {'SCOPE': ['profile', 'email'],
+         'AUTH_PARAMS': {'access_type': 'online'}
+         },
+     'linkedin':
+     {'SCOPE': ['r_emailaddress', 'r_basicprofile'],
+         'PROFILE_FIELDS': ['id', 'first-name', 'last-name', 'email-address', 'picture-url', 'public-profile-url', ]
+      }
+     }
 # /test
 # SLUGLIFIER
 AUTOSLUG_SLUGIFY_FUNCTION = 'slugify.slugify'
@@ -345,7 +349,7 @@ STORE_ROOT = '/ged/store/'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        #'rest_framework.authentication.SessionAuthentication',
 
     ),
     'DEFAULT_PERMISSION_CLASSES': (

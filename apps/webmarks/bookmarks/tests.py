@@ -49,12 +49,12 @@ class NoteAPITest(TestCase):
         self.api_client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
 
     def test_list(self):
-        base_url = reverse('mywebmarks-back:external_apis:bookmark-list')
+        base_url = reverse('bookmarks:external_apis:bookmark-list')
         response = self.api_client.get(base_url)
         self.assertEqual(response.status_code, 200)
 
     def test_create(self):
-        base_url = reverse('mywebmarks-back:external_apis:bookmark-list')
+        base_url = reverse('bookmarks:external_apis:bookmark-list')
         json = {'id': '', 'title': 'new item'}
 
         response = self.api_client.post(base_url, json)

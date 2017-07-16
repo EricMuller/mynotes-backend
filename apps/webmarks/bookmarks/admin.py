@@ -8,6 +8,7 @@ from webmarks.bookmarks.models import Tag
 
 from simple_history.admin import SimpleHistoryAdmin
 
+
 class TagAdmin(admin.ModelAdmin):
 
     list_display = ('id', 'name')

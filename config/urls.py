@@ -8,30 +8,60 @@ from django.views.generic import TemplateView
 from django.views import defaults as default_views
 # from django.views.generic import RedirectView
 # from django.views.decorators.csrf import csrf_exempt
-# from rest_framework.authtoken.views import obtain_auth_token
 # from rest_framework_swagger.views import get_swagger_view
 
 from rest_framework.schemas import get_schema_view
 from rest_framework_swagger.renderers import SwaggerUIRenderer, OpenAPIRenderer
+from rest_framework_swagger.views import get_swagger_view
+
+from rest_framework.renderers import CoreJSONRenderer
+
+
+schema_url_patterns = [
+    url(r'^api/', include('webmarks.bookmarks.urls',
+                          namespace='bookmarks')),
+]
+
+schema_url_patterns_auth = [
+    url(r'^api/', include('webmarks.rest_auth.urls',
+                                   namespace='rest_auth')),
+]
+
+schema_view = get_schema_view(
+    title='Webmarks API',
+    # url='https://webmarks.net/',
+    renderer_classes=[OpenAPIRenderer, SwaggerUIRenderer],
+    patterns=schema_url_patterns,
+)
+
+schema_view_auth = get_schema_view(
+    title='Rest Authentification API',
+    # url='https://webmarks.net/',
+    renderer_classes=[OpenAPIRenderer, SwaggerUIRenderer],
+    patterns=schema_url_patterns_auth,
+)
 
 # schema_view_swagger = get_swagger_view(title='Django API')
-schema_view = get_schema_view(title='Webmarks API REST', renderer_classes=[
-                              OpenAPIRenderer, SwaggerUIRenderer])
+# schema_view = get_schema_view(title='Webmarks API REST', renderer_classes=[
+
+# OpenAPIRenderer, SwaggerUIRenderer])
+# schema_view = get_swagger_view(title='My great API', url='')
 
 urlpatterns = [
     # url(r'^about/$',
     # TemplateView.as_view(template_name='pages/about.html'), name='about'),
     # Django Admin, use {% url 'admin:index' %}
     url(settings.ADMIN_URL, include(admin.site.urls)),
-    # url(r'^account/facebook/login/token/$', csrf_exempt(login_by_token)),
-    # Your stuff: custom urls includes go here
+    url(r'^api/$',
+        TemplateView.as_view(template_name='api/index.html'), name='index_api'),
     url(r'^api/', include('webmarks.bookmarks.urls',
                           namespace='bookmarks')),
     url(r'^api/', include('webmarks.storage.urls',
                           namespace='storage')),
-    url(r'^api/', include('authentication.urls')),
-    # swagger
-    url(r'^api/', schema_view),
+    url(r'^api/', include('webmarks.rest_auth.urls')),
+
+    url(r'^api/webmarks/', schema_view),
+    url(r'^api/rest_auth/', schema_view_auth),
     # User management
     url(r'^users/', include('webmarks.users.urls', namespace='users')),
     url(r'^$',

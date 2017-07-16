@@ -1,0 +1,1 @@
+python manage.py makemigrations webmarks_bookmarks webmarks_upload webmarks_storage webmarks_users

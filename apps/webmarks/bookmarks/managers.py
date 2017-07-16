@@ -37,17 +37,16 @@ class MediaManager(models.Manager):
 class TagManager(models.Manager):
 
     def with_counts(self, user_cre_id):
+        meta = self.model._meta
+        bookmark_tag = meta.app_label + '_' + meta.model_name
+        bookmark_tags = meta.app_label + '_' + 'bookmark_tags'
+        query = " SELECT {0}.id, {0}.name,count(*)  FROM {0}  left join  {1} \
+         on {0}.id =    {1}.tag_id  \
+                  where user_cre_id  = %s  group by {0}.id, {0}.name  order by\
+                   {0}.name  ".format(bookmark_tag, bookmark_tags)
 
         with connection.cursor() as cursor:
-            cursor.execute("""
-                SELECT bookmarks_tag.id, bookmarks_tag.name,count(*)
-                FROM bookmarks_tag
-                left join  bookmarks_bookmark_tags
-                        on bookmarks_tag.id = bookmarks_bookmark_tags.tag_id
-                where user_cre_id  = %s
-                group by bookmarks_tag.id,bookmarks_tag.name
-                order by bookmarks_tag.name
-                """, [user_cre_id])
+            cursor.execute(query, [user_cre_id])
             result_list = []
             max_count = 0
             for row in cursor.fetchall():
@@ -60,15 +59,4 @@ class TagManager(models.Manager):
 
         result = AggregateList(result_list, self.model,
                                {"max_count": max_count})
-
         return result
-
-    # def with_counts_test(self):
-
-    #     return self.raw("""
-    #             SELECT mynotes_tag.id, mynotes_tag.name, count(*) count , max()
-    #             FROM mynotes_note_tags , mynotes_tag
-    #             where mynotes_tag.id = mynotes_note_tags.tag_id
-    #             group by mynotes_tag.id, mynotes_tag.name
-    #             order by mynotes_tag.name
-    #             """)
