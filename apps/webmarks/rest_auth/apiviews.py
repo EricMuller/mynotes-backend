@@ -44,9 +44,7 @@ class Login(APIView):
         # return Response({'token': token.key, 'username': user.username, })
 
         return Response(status=200, data={
-            'success': True,
-            'token': token.key,
-            'username': user.username,
+            'key': token.key
         })
 
 

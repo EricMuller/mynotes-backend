@@ -9,13 +9,11 @@ class DefaultsAuthentificationMixin(object):
     filtering and pagination."""
 
     authentication_classes = (
-        authentication.BasicAuthentication,
         authentication.TokenAuthentication,
+        authentication.BasicAuthentication,
+    )
 
-    )
-    permission_classes = (
-        permissions.IsAuthenticated,
-    )
+    permission_classes = (permissions.IsAuthenticated,)
 
 
 class EverybodyCanAuthentication(SessionAuthentication):

@@ -18,13 +18,12 @@ from rest_framework.decorators import detail_route
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
 from rest_framework_extensions.cache.decorators import cache_response
-
+from rest_framework import permissions
 
 stdlogger = logging.getLogger(__name__)
 
 
-class FolderViewSet(AggregateModelViewSet,
-                    DefaultsAuthentificationMixin):
+class FolderViewSet(AggregateModelViewSet):
 
     """
     retrieve:
@@ -49,14 +48,14 @@ class FolderViewSet(AggregateModelViewSet,
     serializer_class = serializers.FolderSerializer
     filter_backends = (filters.DjangoFilterBackend, filters.OrderingFilter)
     filter_class = FolderFilter
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self, *args, **kwargs):
 
         return models.Folder.objects.filter(user_cre_id=self.request.user.id)
 
 
-class BookmarkViewSet(AggregateModelViewSet,
-                      DefaultsAuthentificationMixin):
+class BookmarkViewSet(AggregateModelViewSet):
 
     """
     retrieve:
@@ -82,6 +81,7 @@ class BookmarkViewSet(AggregateModelViewSet,
     serializer_class = serializers.BookmarkSerializer
     filter_backends = (filters.DjangoFilterBackend, filters.OrderingFilter)
     filter_class = BookmarkFilter
+    permission_classes = (permissions.IsAuthenticated,)
 
     # .prefetch_related(
     #    'tags').prefetch_related('archive').values_list('title','rate')
@@ -139,7 +139,7 @@ class BookmarkViewSet(AggregateModelViewSet,
         return Response(serializer.data)
 
 
-class TagViewSet(AggregateModelViewSet, DefaultsAuthentificationMixin):
+class TagViewSet(AggregateModelViewSet):
     """
     retrieve:
         Return a Tag instance.
@@ -163,6 +163,7 @@ class TagViewSet(AggregateModelViewSet, DefaultsAuthentificationMixin):
     serializer_class = serializers.TagSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = TagFilter
+    permission_classes = (permissions.IsAuthenticated,)
 
     @list_route(methods=['get'])
     def count(self, request):
@@ -178,6 +179,7 @@ class TagViewSet(AggregateModelViewSet, DefaultsAuthentificationMixin):
 
 
 class CrawlerViewSet(viewsets.ViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
 
     def retrieve(self, request, pk):
         crawler = Crawler()
