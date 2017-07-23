@@ -17,6 +17,14 @@ class TimestampField(serializers.ReadOnlyField):
 #     class Meta:
 #         fields = ('id')
 
+class NodeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Node
+        fields = '__all__'
+        # fields = ('id', 'name', 'kind', 'user_cre_id',
+        #          'user_upd_id', 'parent_id', 'tree_id', 'lft', 'rght', 'level')
+
 
 class CrawlSerializer(serializers.Serializer):
     url = serializers.CharField()
@@ -52,7 +60,8 @@ class FolderSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Folder
         fields = ('id', 'name', 'kind', 'user_cre_id',
-                  'user_upd_id', 'parent_id', 'tree_id', 'lft', 'rght', 'level')
+                  'user_upd_id', 'parent_id', 'tree_id',
+                  'lft', 'rght', 'level')
         # fields = '__all__'
 
 
@@ -101,6 +110,15 @@ class BookmarkTagSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'public')
 
 
+class IdSerializer(serializers.Serializer):
+
+    id = serializers.IntegerField(required=False)
+
+    class Meta:
+        model = models.Bookmark
+        fields = ('id')
+
+
 class BookmarkSerializer(serializers.ModelSerializer):
 
     # fields must be a models.DateTimeField
@@ -114,7 +132,8 @@ class BookmarkSerializer(serializers.ModelSerializer):
         model = models.Bookmark
         fields = ('id', 'url', 'title', 'kind', 'rate', 'description',
                   'user_cre', 'user_upd', 'created_dt', 'updated_dt',
-                  'tags', 'status', 'schedule_dt', 'archived_dt', 'archive_id', 'favorite')
+                  'tags', 'status', 'schedule_dt', 'archived_dt',
+                  'archive_id', 'favorite')
         read_only_fields = ('created_dt', 'updated_dt',
                             'archived_dt', 'archive_id')
         # https://github.com/tomchristie/django-rest-framework/issues/2760

@@ -9,6 +9,7 @@ from webmarks.bookmarks.filters import BookmarkFilter
 from webmarks.bookmarks.filters import FolderFilter
 from webmarks.bookmarks.filters import TagFilter
 from webmarks.drf_utils.viewsets import AggregateModelViewSet
+
 from webmarks.storage.models import Archive
 from webmarks.storage.serializers import ArchiveSerializer
 
@@ -53,6 +54,21 @@ class FolderViewSet(AggregateModelViewSet):
     def get_queryset(self, *args, **kwargs):
 
         return models.Folder.objects.filter(user_cre_id=self.request.user.id)
+
+    @detail_route(methods=['get'])
+    def bookmarks(self, request, pk):
+        """
+            Return all bookmarks of folder.
+        """
+        self.queryset = models.Bookmark.objects.filter(folders__in=[pk])
+
+        page = self.paginate_queryset(self.queryset)
+        if page is not None:
+            serializer = serializers.BookmarkSerializer(self.queryset, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = serializers.BookmarkSerializer(self.queryset, many=True)
+        return Response(serializer.data)
 
 
 class BookmarkViewSet(AggregateModelViewSet):

@@ -44,6 +44,8 @@ class Node(AuditableModelMixin):
     )
 
     kind = models.CharField(max_length=10, choices=KINDS, default='NOTE')
+    folders = models.ManyToManyField(
+        'Folder', related_name="nodes", blank=True)
     # type = models.ForeignKey(
     #     TypeNote, verbose_name='TypeNote', null=True,
     #     default=None, blank=True, related_name='TypeNote')
@@ -56,7 +58,8 @@ class Node(AuditableModelMixin):
 class Folder(MPTTModel, Node):
 
     name = models.CharField(max_length=256)
-    parent = TreeForeignKey('self', null=True, blank=True)
+    parent = TreeForeignKey(
+        'self', null=True, blank=True, related_name="children")
 
     def __str__(self):
         return self.libelle
@@ -81,7 +84,7 @@ class Bookmark(Node):
     rate = models.IntegerField(default=0)
     schedule_dt = models.DateTimeField(null=True)
     status = models.CharField(max_length=1, choices=STATUS, default='D')
-    tags = models.ManyToManyField(Tag, related_name="tags", blank=True)
+    tags = models.ManyToManyField(Tag, related_name="bookmarks", blank=True)
     title = models.CharField(max_length=256)
     url = models.CharField(max_length=2000, default=None, null=True)
 

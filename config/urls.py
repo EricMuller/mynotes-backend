@@ -13,7 +13,7 @@ from django.views import defaults as default_views
 from rest_framework.schemas import get_schema_view
 from rest_framework_swagger.renderers import SwaggerUIRenderer, OpenAPIRenderer
 from rest_framework_swagger.views import get_swagger_view
-
+from rest_framework import permissions
 from rest_framework.renderers import CoreJSONRenderer
 
 
@@ -24,7 +24,7 @@ schema_url_patterns = [
 
 schema_url_patterns_auth = [
     url(r'^api/', include('webmarks.rest_auth.urls',
-                                   namespace='rest_auth')),
+                          namespace='rest_auth')),
 ]
 
 schema_view = get_schema_view(
@@ -32,6 +32,7 @@ schema_view = get_schema_view(
     # url='https://webmarks.net/',
     renderer_classes=[OpenAPIRenderer, SwaggerUIRenderer],
     patterns=schema_url_patterns,
+    public=True,
 )
 
 schema_view_auth = get_schema_view(

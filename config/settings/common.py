@@ -85,7 +85,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -363,6 +363,21 @@ REST_FRAMEWORK = {
 SWAGGER_SETTINGS = {
     # for swagger / browsable api  should include('rest_framework.urls')
     'LOGIN_URL': 'rest_framework:login',
+    'USE_SESSION_AUTH': False,
+    'SUPPORTED_SUBMIT_METHOD': ['get', 'post', 'put', ],
+    'SECURITY_DEFINITIONS': {
+        'api_key': {
+            'type': 'apiKey',
+            'in': 'header',
+            'description': 'Token b1864fd5a29f6caa969be87fd5f52ccafd5ff477',
+            'name': 'Authorization'
+        },
+    },
+    'APIS_SORTER': 'alpha',
+    'SHOW_REQUEST_HEADERS': True,
+    # 'JSON_EDITOR': True,
+    'api_key': 'veristoken fbe16f3a4c292c774c54',  # An API key
+    # 'api_key': 'webdev',  # An API key
 }
 
 # LOGGING CONFIGURATION

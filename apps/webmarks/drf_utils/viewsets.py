@@ -37,3 +37,11 @@ class AggregateModelViewSet(AggregatePaginationReponseMixin,
     __metaclass__ = ABCMeta
 
     pass
+
+
+class RetrieveUpdateModelViewSet(viewsets.mixins.RetrieveModelMixin,
+                         viewsets.mixins.UpdateModelMixin,
+                         viewsets.GenericViewSet):
+    __metaclass__ = ABCMeta
+
+    pass

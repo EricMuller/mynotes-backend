@@ -56,7 +56,7 @@ class GoogleLogin(SocialLoginView):
     """
     Check the Gogle OAuth2 access_token and return the REST Token
     """
-    adapter_class = GoogleOAuth2Adapter
+    adapter_class = GoogleOAuth2Adapter 
 
 
 class LinkedInOAuth2Login(SocialLoginView):
