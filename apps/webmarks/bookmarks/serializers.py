@@ -133,7 +133,7 @@ class BookmarkSerializer(serializers.ModelSerializer):
         fields = ('id', 'url', 'title', 'kind', 'rate', 'description',
                   'user_cre', 'user_upd', 'created_dt', 'updated_dt',
                   'tags', 'status', 'schedule_dt', 'archived_dt',
-                  'archive_id', 'favorite')
+                  'archive_id', 'favorite', 'uuid')
         read_only_fields = ('created_dt', 'updated_dt',
                             'archived_dt', 'archive_id')
         # https://github.com/tomchristie/django-rest-framework/issues/2760
@@ -183,3 +183,11 @@ class PublishedModelSerializer(serializers.Serializer):
 #     class Meta:
 #         model = models.Search
 #         fields = ('name', 'user_cre', 'created_dt', 'tags')
+
+class ArchiveSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Archive
+        fields = ('id', 'name', 'url', 'bookmark',
+                  'data',  # 'user_cre', 'user_upd',
+                  'created_dt', 'updated_dt')

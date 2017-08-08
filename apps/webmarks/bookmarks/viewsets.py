@@ -1,18 +1,15 @@
-import base64
-import logging
-from webmarks.rest_auth.permissions import DefaultsAuthentificationMixin
+# from webmarks.rest_auth.permissions import DefaultsAuthentificationMixin
 from webmarks.bookmarks import models
 from webmarks.bookmarks import serializers
 from webmarks.drf_utils.cache import CustomListKeyConstructor
 from webmarks.storage.crawler import Crawler
+from webmarks.storage.storage import FileStore
 from webmarks.bookmarks.filters import BookmarkFilter
 from webmarks.bookmarks.filters import FolderFilter
 from webmarks.bookmarks.filters import TagFilter
 from webmarks.drf_utils.viewsets import AggregateModelViewSet
 
-from webmarks.storage.models import Archive
-from webmarks.storage.serializers import ArchiveSerializer
-
+# from webmarks.storage.models import Archive
 from rest_framework import filters
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route
@@ -20,7 +17,9 @@ from rest_framework.decorators import list_route
 from rest_framework.response import Response
 from rest_framework_extensions.cache.decorators import cache_response
 from rest_framework import permissions
-
+import base64
+import logging
+import uuid
 stdlogger = logging.getLogger(__name__)
 
 
@@ -64,7 +63,8 @@ class FolderViewSet(AggregateModelViewSet):
 
         page = self.paginate_queryset(self.queryset)
         if page is not None:
-            serializer = serializers.BookmarkSerializer(self.queryset, many=True)
+            serializer = serializers.BookmarkSerializer(
+                self.queryset, many=True)
             return self.get_paginated_response(serializer.data)
 
         serializer = serializers.BookmarkSerializer(self.queryset, many=True)
@@ -145,13 +145,17 @@ class BookmarkViewSet(AggregateModelViewSet):
         # stdlogger.info(url.decode())
         crawler.crawl(bookmark.url)
 
-        archive = Archive.create(
-            bookmark, crawler.content_type, crawler.html.encode())
+        user = request.user
 
+        FileStore().store(user.username, str(bookmark.uuid), crawler.html.encode())
+
+        archive = models.Archive.create(
+            bookmark, crawler.content_type, crawler.html.encode())
         archive.save()
+
         bookmark.archive_id = archive.id
         bookmark.save()
-        serializer = ArchiveSerializer(archive)
+        serializer = serializers.ArchiveSerializer(archive)
         return Response(serializer.data)
 
 
@@ -216,3 +220,57 @@ class CrawlerViewSet(viewsets.ViewSet):
         crawler.crawl_title(url.decode())
         serializer = serializers.CrawlSerializer(crawler)
         return Response(serializer.data)
+
+
+class ArchiveViewSet(AggregateModelViewSet):
+
+    """
+    retrieve:
+        Return a Archive instance.
+
+    list:
+        Return all Archives, ordered by most recently joined.
+
+    create:
+        Create a new Archive.
+
+    delete:
+        Remove an existing Archive.
+
+    partial_update:
+        Update one or more fields on an existing Archive.
+
+    update:
+        Update a Archive.
+    """
+
+    filter_backends = (filters.DjangoFilterBackend,)
+    queryset = models.Archive.objects.all()
+    serializer_class = serializers.ArchiveSerializer
+
+    # renderer_classes = (renderers.JSONRenderer, renderers.BrowsableAPIRenderer,
+    #                    renderers.StaticHTMLRenderer,)
+    permission_classes = (permissions.AllowAny,)
+
+    def retrieve(self, request, pk, format=None):
+        archive = get_object_or_404(models.Archive, pk=pk)
+        if request.accepted_renderer.format == 'html':
+            return Response(archive.data)
+
+        serializer = self.serializer_class(archive)
+        response = Response(serializer.data)
+        response['Cache-Control'] = 'no-cache'
+        return response
+
+    @detail_route(methods=['get'])
+    def download(self, request, pk):
+        """
+            Download Archive File.
+        """
+        archive = get_object_or_404(models.Archive, pk=pk)
+        # tmp = tempfile.NamedTemporaryFile(suffix=".note")
+        filename = archive.name.split('/')[-1]
+        resp = HttpResponse(
+            archive.data, content_type='application/text;charset=UTF-8')
+        resp['Content-Disposition'] = "attachment; filename=%s" % filename
+        return resp

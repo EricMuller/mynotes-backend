@@ -1,3 +1,4 @@
+
 from webmarks.bookmarks.managers import MediaManager
 from webmarks.bookmarks.managers import TagManager
 from webmarks.drf_utils.models import AuditableModelMixin
@@ -8,7 +9,8 @@ from django.utils.translation import ugettext_lazy as _
 # from mptt.managers import TreeManager
 from mptt.models import MPTTModel, TreeForeignKey
 from simple_history.models import HistoricalRecords
-
+from django.template.defaultfilters import slugify
+import uuid
 
 class Tag(models.Model):
 
@@ -46,6 +48,8 @@ class Node(AuditableModelMixin):
     kind = models.CharField(max_length=10, choices=KINDS, default='NOTE')
     folders = models.ManyToManyField(
         'Folder', related_name="nodes", blank=True)
+    indexed_dt = models.DateTimeField(null=True)
+    uuid = models.UUIDField( default=uuid.uuid4, editable=False, unique=True)
     # type = models.ForeignKey(
     #     TypeNote, verbose_name='TypeNote', null=True,
     #     default=None, blank=True, related_name='TypeNote')
@@ -111,6 +115,26 @@ class Bookmark(Node):
     class Meta:
         pass
 
+
+class Archive(models.Model):
+    name = models.SlugField(max_length=255)
+    url = models.SlugField(max_length=255)
+    content_type = models.CharField(max_length=255)
+    updated_dt = models.DateTimeField(auto_now=True)
+    created_dt = models.DateTimeField(auto_now_add=True)
+    data = models.TextField(
+        db_column='data',
+        blank=True)
+
+    bookmark = models.ForeignKey(
+        Bookmark, related_name='archives', default=None, blank=True)
+
+    @classmethod
+    def create(cls, bookmark, content_type, data):
+        slug = slugify(bookmark.url)
+        archive = cls(name=slug, url=bookmark.url, bookmark=bookmark,
+                      content_type=content_type, data=data)
+        return archive
 
 # class MediaAttachement(models.Model):
 #     name = models.CharField(max_length=255)
