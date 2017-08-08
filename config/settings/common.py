@@ -22,8 +22,8 @@ sys.path.append(str(APPS_DIR))
 
 env = environ.Env()
 
-HOST_NAME = env('HOST_NAME', default='127.0.0.1')
-print("env variable HOST_NAME=" + HOST_NAME)
+HOST_NAME = env('WEBMARK_HOST_NAME', default='127.0.0.1')
+print("env variable WEBMARK_HOST_NAME=" + HOST_NAME)
 # APP CONFIGURATION
 # ------------------------------------------------------------------------------
 DJANGO_APPS = (
@@ -114,7 +114,7 @@ FIXTURE_DIRS = (
 # ------------------------------------------------------------------------------
 # EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND',
 # default='django.core.mail.backends.smtp.EmailBackend'
-EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND',
+EMAIL_BACKEND = env('WEBMARK_EMAIL_BACKEND',
                     default='django.core.mail.backends.console.EmailBackend')
 # mailhog  http://iankent.uk/blog/introducing-go-mailhog/
 #
@@ -136,10 +136,10 @@ MANAGERS = ADMINS
 # postgres:///mynotes
 # default='postgres://mynotes:mynotes@192.168.1.100:5432/webmarks')
 USERNAME = env('USER')
-DB_HOST_NAME = env('DB_HOST_NAME', default=HOST_NAME)
-DB_NAME = env('DB_NAME', default=USERNAME)
+DB_HOST_NAME = env('WEBMARK_DB_HOST_NAME', default=HOST_NAME)
+DB_NAME = env('WEBMARK_DB_NAME', default=USERNAME)
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='postgres://@' +
+    'default': env.db('WEBMARK_DATABASE_URL', default='postgres://@' +
                       DB_HOST_NAME + '/' + DB_NAME),
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
@@ -277,7 +277,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 # ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
 ACCOUNT_ALLOW_REGISTRATION = env.bool(
-    'DJANGO_ACCOUNT_ALLOW_REGISTRATION', True)
+    'WEBMARK_ACCOUNT_ALLOW_REGISTRATION', True)
 ACCOUNT_ADAPTER = 'webmarks.users.adapters.AccountAdapter'
 SOCIALACCOUNT_ADAPTER = 'webmarks.users.adapters.SocialAccountAdapter'
 
@@ -336,7 +336,7 @@ ADMIN_URL = r'^admin/'
 # ------------------------------------------------------------------------------
 
 
-STORE_ROOT = '/ged/store/'
+FILE_STORE_ROOT = env('WEBMARK_FILE_STORE_ROOT')
 
 # REST_FRAMEWORK = {
 
@@ -369,7 +369,7 @@ SWAGGER_SETTINGS = {
         'api_key': {
             'type': 'apiKey',
             'in': 'header',
-            'description': 'Token b1864fd5a29f6caa969be87fd5f52ccafd5ff477',
+            # 'description': 'Token b1864fd5a29f6caa969be87fd5f52ccafd5ff477',
             'name': 'Authorization'
         },
     },

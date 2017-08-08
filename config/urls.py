@@ -22,6 +22,11 @@ schema_url_patterns = [
                           namespace='bookmarks')),
 ]
 
+schema_url_patterns_storage = [
+    url(r'^api/', include('webmarks.storage.urls',
+                          namespace='storage')),
+]
+
 schema_url_patterns_auth = [
     url(r'^api/', include('webmarks.rest_auth.urls',
                           namespace='rest_auth')),
@@ -32,6 +37,14 @@ schema_view = get_schema_view(
     # url='https://webmarks.net/',
     renderer_classes=[OpenAPIRenderer, SwaggerUIRenderer],
     patterns=schema_url_patterns,
+    public=True,
+)
+
+schema_view_storage = get_schema_view(
+    title='Storage API',
+    # url='https://webmarks.net/',
+    renderer_classes=[OpenAPIRenderer, SwaggerUIRenderer],
+    patterns=schema_url_patterns_storage,
     public=True,
 )
 
@@ -62,7 +75,9 @@ urlpatterns = [
     url(r'^api/', include('webmarks.rest_auth.urls')),
 
     url(r'^api/webmarks/', schema_view),
+    url(r'^api/storage/', schema_view_storage),
     url(r'^api/rest_auth/', schema_view_auth),
+
     # User management
     url(r'^users/', include('webmarks.users.urls', namespace='users')),
     url(r'^$',
