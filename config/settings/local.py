@@ -15,7 +15,7 @@ import os
 
 from .common import *  # noqa
 
-HOST_NAME = env('HOST_NAME', default='127.0.0.1')
+HOST_NAME = env('WEBMARK_HOST_NAME', default='127.0.0.1')
 
 # DEBUG
 # ------------------------------------------------------------------------------
