@@ -69,8 +69,10 @@ THIRD_PARTY_APPS = (
 
 # Apps specific for this project go here.
 LOCAL_APPS = (
-    'webmarks.users.apps.UsersConfig',
-    'webmarks.rest_auth.apps.AuthConfig',
+    'users.apps.UsersConfig',
+    'rest_api_auth.apps.AuthConfig',
+    'webmarks.core.apps.CoreConfig',
+    'webmarks.notes.apps.NotesConfig',
     'webmarks.upload.apps.UploadConfig',
     'webmarks.bookmarks.apps.BookmarksConfig',
     'webmarks.storage.apps.StorageConfig',
@@ -278,12 +280,12 @@ ACCOUNT_EMAIL_REQUIRED = True
 
 ACCOUNT_ALLOW_REGISTRATION = env.bool(
     'WEBMARK_ACCOUNT_ALLOW_REGISTRATION', True)
-ACCOUNT_ADAPTER = 'webmarks.users.adapters.AccountAdapter'
-SOCIALACCOUNT_ADAPTER = 'webmarks.users.adapters.SocialAccountAdapter'
+ACCOUNT_ADAPTER = 'users.adapters.AccountAdapter'
+SOCIALACCOUNT_ADAPTER = 'users.adapters.SocialAccountAdapter'
 
 # Custom user app defaults
 # Select the correct user model
-AUTH_USER_MODEL = 'webmarks_users.User'
+AUTH_USER_MODEL = 'users.User'
 # LOGIN_REDIRECT_URL = 'users:redirect'
 # LOGIN_URL = 'account_login'
 # LOGIN_URL = '/login'

@@ -2,7 +2,7 @@
 from django.db.models.signals import post_delete
 from django.db.models.signals import post_save
 from webmarks.bookmarks.models import Bookmark
-from webmarks.drf_utils.cache import cache_updated_api_at
+from contrib.django.cache import cache_updated_api_at
 from webmarks.bookmarks.channels.publishers import ws_model_saved_at
 from webmarks.bookmarks.channels.publishers import ws_model_deleted_at
 

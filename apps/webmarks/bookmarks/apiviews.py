@@ -11,8 +11,9 @@ from rest_framework.generics import DestroyAPIView
 from rest_framework.response import Response
 
 from rest_framework.views import APIView
-from webmarks.rest_auth.permissions import EverybodyCanAuthentication
+from rest_api_auth.permissions import EverybodyCanAuthentication
 from webmarks.bookmarks import models
+from webmarks.core.models import Folder
 from webmarks.bookmarks.serializers import IdSerializer
 
 
@@ -46,7 +47,7 @@ class addFoldertoBookmark(UpdateAPIView, DestroyAPIView):
     def delete(self, request, pk, id, *args, **kwargs):
 
         bookmark = models.Bookmark.objects.get(pk=pk)
-        folder = models.Folder.objects.get(pk=id)
+        folder = Folder.objects.get(pk=id)
 
         bookmark.folders.remove(folder)
         bookmark.save()
@@ -60,7 +61,7 @@ class addFoldertoBookmark(UpdateAPIView, DestroyAPIView):
         folderId = serializer.validated_data['id']
 
         bookmark = models.Bookmark.objects.get(pk=pk)
-        folder = models.Folder.objects.get(pk=folderId)
+        folder = Folder.objects.get(pk=folderId)
 
         bookmark.folders.add(folder)
         bookmark.save()

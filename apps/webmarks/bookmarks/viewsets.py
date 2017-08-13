@@ -1,13 +1,17 @@
 # from webmarks.rest_auth.permissions import DefaultsAuthentificationMixin
+from contrib.django.cache import CustomListKeyConstructor
+from contrib.django.viewsets import AggregateModelViewSet
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 from webmarks.bookmarks import models
 from webmarks.bookmarks import serializers
-from webmarks.drf_utils.cache import CustomListKeyConstructor
+from webmarks.bookmarks.filters import BookmarkFilter
+from webmarks.bookmarks.filters import TagFilter
+from webmarks.core.filters import FolderFilter
+from webmarks.core.models import Folder
+from webmarks.core.serializers import FolderSerializer
 from webmarks.storage.crawler import Crawler
 from webmarks.storage.storage import FileStore
-from webmarks.bookmarks.filters import BookmarkFilter
-from webmarks.bookmarks.filters import FolderFilter
-from webmarks.bookmarks.filters import TagFilter
-from webmarks.drf_utils.viewsets import AggregateModelViewSet
 
 # from webmarks.storage.models import Archive
 from rest_framework import filters
@@ -19,7 +23,7 @@ from rest_framework_extensions.cache.decorators import cache_response
 from rest_framework import permissions
 import base64
 import logging
-import uuid
+
 stdlogger = logging.getLogger(__name__)
 
 
@@ -44,15 +48,15 @@ class FolderViewSet(AggregateModelViewSet):
     update:
         Update a Folder.
     """
-    queryset = models.Folder.objects.all()
-    serializer_class = serializers.FolderSerializer
+    queryset = Folder.objects.all()
+    serializer_class = FolderSerializer
     filter_backends = (filters.DjangoFilterBackend, filters.OrderingFilter)
     filter_class = FolderFilter
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self, *args, **kwargs):
 
-        return models.Folder.objects.filter(user_cre_id=self.request.user.id)
+        return Folder.objects.filter(user_cre_id=self.request.user.id)
 
     @detail_route(methods=['get'])
     def bookmarks(self, request, pk):
@@ -144,15 +148,13 @@ class BookmarkViewSet(AggregateModelViewSet):
         # url = base64.b64decode(pk)
         # stdlogger.info(url.decode())
         crawler.crawl(bookmark.url)
-
-        user = request.user
-
-        FileStore().store(user.username, str(bookmark.uuid), crawler.html.encode())
-
+        # indexes = {"title": bookmark.title, "url": bookmark}
+        indexes = self.serializer_class(bookmark).data
+        FileStore().store(str(bookmark.uuid), request.user.username,
+                          crawler.html.encode(), indexes)
         archive = models.Archive.create(
             bookmark, crawler.content_type, crawler.html.encode())
         archive.save()
-
         bookmark.archive_id = archive.id
         bookmark.save()
         serializer = serializers.ArchiveSerializer(archive)
@@ -269,8 +271,10 @@ class ArchiveViewSet(AggregateModelViewSet):
         """
         archive = get_object_or_404(models.Archive, pk=pk)
         # tmp = tempfile.NamedTemporaryFile(suffix=".note")
-        filename = archive.name.split('/')[-1]
+        archive_name = FileStore().get_file_path(
+            request.user.username, str(archive.bookmark.uuid))
+        # filename = archive.name.split('/')[-1]
         resp = HttpResponse(
             archive.data, content_type='application/text;charset=UTF-8')
-        resp['Content-Disposition'] = "attachment; filename=%s" % filename
+        resp['Content-Disposition'] = "attachment; filename=%s" % archive_name
         return resp

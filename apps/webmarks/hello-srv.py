@@ -13,7 +13,7 @@ settings.configure(
 
 
 def index(request):
-    return HttpResponse('Hello, World')
+    return HttpResponse('Hello, World branche')
 
 
 urlpatterns = patterns('',

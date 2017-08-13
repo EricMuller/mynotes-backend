@@ -1,0 +1,3 @@
+"id","provider","name","client_id","secret","key"
+"2","linkedin_oauth2","linkedin_oauth2","77jyupgk7s70w1","CyKkHI6D5V5Hr6Nj",""
+"1","google","google","28025127281-bc876va0d6rvv0ltt6iflt8j4qrg033k.apps.googleusercontent.com","WnWXH5QYKBEZmYkB7dSylo2S",""

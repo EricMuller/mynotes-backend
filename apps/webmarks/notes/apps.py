@@ -1,8 +1,8 @@
 from django.apps import AppConfig
 
 
-class MyDriveConfig(AppConfig):
+class NotesConfig(AppConfig):
     name = 'webmarks.notes'
-    label = 'webmarks_mynotes'
+    label = 'webmarks_notes'
 
 

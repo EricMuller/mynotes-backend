@@ -1,0 +1,1029 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"ge",
+				"get_object_or_404"
+			],
+			[
+				"vi",
+				"viewsets	module"
+			],
+			[
+				"filter",
+				"filter_class"
+			],
+			[
+				"redonly",
+				"read_only"
+			],
+			[
+				"crea",
+				"create"
+			],
+			[
+				"pa",
+				"parse"
+			],
+			[
+				"NOe",
+				"None	instance"
+			],
+			[
+				"p",
+				"parse_dl	function"
+			],
+			[
+				"serial",
+				"serializer_class	statement"
+			],
+			[
+				"cre",
+				"create"
+			],
+			[
+				"STATIC",
+				"STATIC_URL"
+			],
+			[
+				"loa",
+				"loads	function"
+			],
+			[
+				"c",
+				"channels	module"
+			],
+			[
+				"m",
+				"mynotes	module"
+			],
+			[
+				"user",
+				"user_cre"
+			],
+			[
+				"archive",
+				"ArchiveSerializer	class"
+			],
+			[
+				"h",
+				"html"
+			],
+			[
+				"my",
+				"my_object	statement"
+			],
+			[
+				"page",
+				"page_url	forstmt"
+			],
+			[
+				"ROOT",
+				"ROOT_DIR"
+			],
+			[
+				"No",
+				"not	keyword"
+			],
+			[
+				"i",
+				"ipdb	ipdb debug tool"
+			],
+			[
+				"max",
+				"max_count	statement"
+			],
+			[
+				"auth",
+				"authentification	module"
+			],
+			[
+				"remove",
+				"removeClass"
+			],
+			[
+				"bored",
+				"border-left-color"
+			],
+			[
+				"padd",
+				"padding-top"
+			],
+			[
+				"next",
+				"next_url"
+			],
+			[
+				"fi",
+				"filename	param"
+			],
+			[
+				"pat",
+				"pathBuilder	param"
+			],
+			[
+				"path",
+				"pathBuilder"
+			],
+			[
+				"F",
+				"FileStore	class"
+			],
+			[
+				"on",
+				"onclick	Attr"
+			],
+			[
+				"table",
+				"table_note"
+			],
+			[
+				"MA",
+				"margin-bottom"
+			],
+			[
+				"no",
+				"note	statement"
+			],
+			[
+				"o",
+				"objects"
+			],
+			[
+				"form",
+				"formset	statement"
+			],
+			[
+				"da",
+				"dataSet	statement"
+			],
+			[
+				"ma",
+				"margin-top"
+			],
+			[
+				"roo",
+				"rootPath"
+			],
+			[
+				"root",
+				"rootPath	statement"
+			],
+			[
+				"get",
+				"get_default_type	function"
+			],
+			[
+				"Dr",
+				"DriveConstants	class"
+			],
+			[
+				"dr",
+				"DriveConstants	class"
+			],
+			[
+				"con",
+				"constants"
+			],
+			[
+				"dta",
+				"data_type	statement"
+			],
+			[
+				"Se",
+				"serializers"
+			],
+			[
+				"Mo",
+				"ModelAdmin	class"
+			],
+			[
+				"repo",
+				"repository	statement"
+			],
+			[
+				"pro",
+				"protocol"
+			],
+			[
+				"re",
+				"reload	function"
+			],
+			[
+				"la",
+				"lazy	param"
+			],
+			[
+				"getR",
+				"getRepositories"
+			],
+			[
+				"B",
+				"BASE_DIR	statement"
+			],
+			[
+				"D",
+				"DriveNode	class"
+			],
+			[
+				"ba",
+				"backdrive"
+			],
+			[
+				"fold",
+				"folders"
+			],
+			[
+				"b",
+				"_build"
+			],
+			[
+				"g",
+				"get"
+			],
+			[
+				"crete",
+				"createChild"
+			],
+			[
+				"creat",
+				"createRoot"
+			],
+			[
+				"node",
+				"nodeSelected"
+			],
+			[
+				"folder",
+				"folderId	statement"
+			],
+			[
+				"parent",
+				"parent_id"
+			],
+			[
+				"par",
+				"parent_id"
+			],
+			[
+				"name",
+				"name3"
+			],
+			[
+				"log",
+				"loginSvc"
+			],
+			[
+				"up",
+				"updateGlobals"
+			],
+			[
+				"Login",
+				"loginSvc"
+			],
+			[
+				"is",
+				"is_valid"
+			],
+			[
+				"pla",
+				"planSvc"
+			],
+			[
+				"ser",
+				"serializer"
+			],
+			[
+				"FOld",
+				"Folders	class"
+			],
+			[
+				"a",
+				"append"
+			],
+			[
+				"cont",
+				"contentType	param"
+			],
+			[
+				"conte",
+				"contentType"
+			],
+			[
+				"sc",
+				"script"
+			],
+			[
+				"in",
+				"include"
+			],
+			[
+				"code",
+				"code_id"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 35.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"Anaconda: Goto object definition"
+			],
+			[
+				"an",
+				"Anaconda: Goto object definition"
+			],
+			[
+				"ana",
+				"Anaconda: Autoformat PEP8 Errors"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Upgrade Package"
+			],
+			[
+				"Ens",
+				"Ensime: Project"
+			],
+			[
+				"pa",
+				"Package Control: Install Package"
+			],
+			[
+				"inde",
+				"Indentation: Reindent Lines"
+			],
+			[
+				"git",
+				"GitGutter: Compare Against Branch"
+			],
+			[
+				"co",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 451.0
+	},
+	"console":
+	{
+		"height": 110.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '2915d1851351e5ee549c20394736b442' + '8bc59f460fa1548d1514676163dafc88'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) ",
+			"print(\"t\")",
+			"print(t)",
+			"print \"t\"",
+			"print t",
+			"ls"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/handlers.py",
+		"/home/webdev/work/python/mywebmarks-backend/project.sublime-project",
+		"/usr/lib/python2.7/site-packages/django/template/response.py",
+		"/usr/lib/python2.7/site-packages/rest_framework/response.py",
+		"/home/webdev/.config/sublime-text-3/Packages/User/Virtualenv.sublime-settings",
+		"/home/webdev/.config/sublime-text-3/Packages/Virtualenv/README.md",
+		"/home/webdev/work/python/mywebmarks-backend/apps/authentication/apiviews.py",
+		"/home/webdev/.config/sublime-text-3/Packages/Default/Preferences.sublime-settings",
+		"/home/webdev/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
+		"/usr/lib/python2.7/site-packages/rest_framework/authtoken/serializers.py",
+		"/home/webdev/work/python/mywebmarks-backend/config/urls.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/bookmarks/viewsets.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/bookmarks/models.py",
+		"/home/webdev/work/python/mywebmarks-backend/config/settings/common.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/bookmarks/managers.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/upload/models.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/bookmarks/serializers.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/bookmarks/tests.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/bookmarks/admin.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/users/apps.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/upload/apps.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/bookmarks/apps.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/notes/apps.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/storage/apps.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/authentication/apps.py",
+		"/usr/lib/python2.7/site-packages/rest_framework/fields.py",
+		"/home/webdev/work/python/mywebmarks-backend/config/wsgi.py",
+		"/usr/lib/python2.7/site-packages/django/contrib/auth/models.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/users/adapters.py",
+		"/home/webdev/work/python/mywebmarks-backend/compose/webmarks/systemd/gunicorn-ip-local.service",
+		"/home/webdev/work/python/mywebmarks-backend/apps/authentication/urls.py",
+		"/home/webdev/work/python/mywebmarks-backend/config/settings/local.py",
+		"/home/webdev/work/python/mywebmarks-backend/env/lib/python3.5/site-packages/allauth/utils.py",
+		"/home/webdev/work/python/mywebmarks-backend/env/lib/python3.5/site-packages/rest_auth/registration/serializers.py",
+		"/home/webdev/work/python/mywebmarks-backend/env/lib/python3.5/site-packages/allauth/account/app_settings.py",
+		"/home/webdev/work/python/mywebmarks-backend/compose/webmarks/apache/webmarks.conf",
+		"/home/webdev/work/python/mywebmarks-backend/env/lib/python3.5/site-packages/allauth/account/adapter.py",
+		"/home/webdev/work/python/mywebmarks-backend/env/lib/python3.5/site-packages/allauth/account/utils.py",
+		"/usr/lib/python2.7/site-packages/django/template/exceptions.py",
+		"/usr/lib/python2.7/site-packages/rest_framework/views.py",
+		"/usr/lib/python2.7/site-packages/django/core/mail/__init__.py",
+		"/home/webdev/private/mmm.html",
+		"/usr/lib/python2.7/site-packages/rest_framework/serializers.py",
+		"/usr/lib/python2.7/site-packages/rest_framework/generics.py",
+		"/usr/lib/python2.7/site-packages/rest_framework/mixins.py",
+		"/home/webdev/work/python/mywebmarks-backend/config/settings/webmarks.py",
+		"/home/webdev/work/python/mywebmarks-backend/compose/webmarks/apache/httpd.conf",
+		"/home/webdev/work/python/mywebmarks-backend/compose/webmarks/apache/install.sh",
+		"/home/webdev/work/python/mywebmarks-backend/apps/authentication/permissions.py",
+		"/home/webdev/work/python/mywebmarks-backend/compose/webmarks/systemd/install-local.sh",
+		"/home/webdev/work/python/mywebmarks-backend/compose/webmarks/apache/api.webmark.conf",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/storage/viewsets.py",
+		"/home/webdev/work/python/mywebmarks-backend/compose/webmarks/profile.d/webmarks.sh",
+		"/home/webdev/work/python/mywebmarks-backend/compose/webmarks/gunicorn/gunicorn-ip-local.sh",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/storage/urls.py",
+		"/home/webdev/work/python/mywebmarks-backend/compose/brix/apache/webmark.conf",
+		"/home/webdev/work/python/mywebmarks-backend/compose/brix/apache/install.sh",
+		"/home/webdev/work/python/mywebmarks-backend/compose/centos/gunicorn-ip-local.service",
+		"/home/webdev/work/python/mywebmarks-backend/compose/centos/install-service.sh",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/bookmarks/urls.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/storage/models.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/storage/serializers.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/drf_utils/viewsets.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/bookmarks/channels/publishers.py",
+		"/home/webdev/work/python/mywebmarks-backend/README.rst",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/drf_utils/managers.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/drf_utils/models.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/drf_utils/serializers.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/drf_utils/serialisers.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/bookmarks/signals/handlers.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/upload/admin.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/bookmarks/migrations/0001_initial.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/upload/viewsets.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/storage/serialisers.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/utils/storage.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/utils/crawler.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/upload/serializers.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/drf_utils/paginators.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/upload/urls.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/drf_utils/middleware.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/bookmarks/storage/__init__.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/utils/__init__.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/drf_utils/__init__.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/notes/models.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/mydrive/urls.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/mydrive/admin.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/mydrive/apps.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/mydrive/managers.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/mydrive/tests.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/mydrive/settings.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/mydrive/serializers.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/mydrive/paginators.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/mydrive/models.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/mydrive/middleware.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/mydrive/viewsets.py",
+		"/usr/lib/python2.7/site-packages/django/conf/urls/__init__.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/bookmarks/apiviews.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/authentication/authentification.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/auth/apps.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/auth/urls.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/bookmarks/channels/consumers.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/users/urls.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/users/models.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/auth/authentification.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/contrib/sites/migrations/0001_initial.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/contrib/sites/migrations/0002_set_site_domain_and_name.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/contrib/sites/migrations/__init__.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/webmarks/contrib/sites/migrations/0003_auto_20161002_1251.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/auth/apiviews.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/__init__.py",
+		"/home/webdev/work/python/mywebmarks-backend/webmarks/users/views.py",
+		"/home/webdev/work/python/mywebmarks-backend/webmarks/authentication/apiviews.py",
+		"/home/webdev/work/python/mywebmarks-backend/webmarks/authentication/urls.py",
+		"/home/webdev/work/python/mywebmarks-backend/webmarks/bookmarks/admin.py",
+		"/home/webdev/work/python/mywebmarks-backend/webmarks/bookmarks/apps.py",
+		"/home/webdev/work/python/mywebmarks-backend/webmarks/bookmarks/channels/publishers.py",
+		"/home/webdev/work/python/mywebmarks-backend/webmarks/bookmarks/filters.py",
+		"/home/webdev/work/python/mywebmarks-backend/webmarks/bookmarks/models.py",
+		"/home/webdev/work/python/mywebmarks-backend/webmarks/bookmarks/serializers.py",
+		"/home/webdev/work/python/mywebmarks-backend/webmarks/bookmarks/tasks/celery.py",
+		"/home/webdev/work/python/mywebmarks-backend/webmarks/bookmarks/urls.py",
+		"/home/webdev/work/python/mywebmarks-backend/webmarks/bookmarks/viewsets.py",
+		"/home/webdev/work/python/mywebmarks-backend/webmarks/mydrive/apps.py",
+		"/home/webdev/work/python/mywebmarks-backend/webmarks/users/apps.py",
+		"/home/webdev/work/python/mywebmarks-backend/config/routing.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/bookmarks/apps.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/bookmarks/urls.py",
+		"/home/webdev/work/python/mywebmarks-backend/apps/users/views.py"
+	],
+	"find":
+	{
+		"height": 26.0
+	},
+	"find_in_files":
+	{
+		"height": 103.0,
+		"where_history":
+		[
+			"/home/webdev/work/python/mywebmarks-backend,*.py",
+			"/home/webdev/work/python/mywebmarks-backend,*.html",
+			"/home/webdev/work/python/mywebmarks-backend,*.py",
+			"/home/webdev/work/python/mywebmarks-backend,*.*",
+			"/home/webdev/work/python/mynotes-backend/,*.*",
+			"/home/webdev/work/python/mynotes-backend/,*.py",
+			"/home/webdev/work/python/mynotes-backend/,*.*",
+			"/home/webdev/work/python/mynotes-backend/,*.py",
+			"/home/webdev/work/python/mynotes-backend/**.py",
+			"/home/webdev/work/python/mynotes-backend",
+			"/home/webdev/work/python/mynotes-backend/config",
+			"/home/webdev/work/python/mynotes/apps,*.css",
+			"/home/webdev/work/python/mynotes/apps",
+			"/home/webdev/work/python/mydrive/apps/angular_drive/static/mydrive/assets,*.js",
+			"/home/webdev/work/python/mynotes,*.py",
+			"/home/webdev/work/python/mynotes,*.*",
+			"/home/webdev/work/python/mynotes,*.html",
+			"/home/webdev/work/python/mynotes,*.*",
+			"/home/webdev/work/python/mynotes,*.html",
+			"/home/webdev/work/python/mynotes,*.js",
+			"/home/webdev/work/python/mynotes,*.css",
+			"/home/webdev/work/python/mynotes,*.py",
+			"/home/webdev/work/python/mynotes,*.css",
+			"/home/webdev/work/python/mynotes,*.py",
+			"/home/webdev/work/python/mynotes/apps,*.py",
+			"/home/webdev/work/python/mynotes/apps,*.html",
+			"/home/webdev/work/python/mynotes/apps*.html",
+			"/home/webdev/work/python/mynotes/apps*.py",
+			"/home/webdev/work/python/mynotes/apps/templates,*.css",
+			"/home/webdev/work/python/mynotes/env/python3.5/lib/python3.5/site-packages/django/forms",
+			"/home/webdev/work/python/mynotes/,*.html,/home/webdev/work/tmp/gentelella/production,*.t",
+			"/home/webdev/work/python/mynotes/,*.html,/home/webdev/work/tmp/gentelella/production,*.*",
+			"/home/webdev/work/python/mynotes/,*.css,/home/webdev/work/tmp/gentelella/production,*.*",
+			"/home/webdev/work/python/mynotes/,*.css,/home/webdev/work/tmp/gentelella/production",
+			"/home/webdev/work/python/mynotes/,*.css",
+			"/home/webdev/work/python/mynotes/,*.html",
+			"/home/webdev/work/python/mynotes/,*.css",
+			"/home/webdev/work/python/mynotes/,*.py",
+			"/home/webdev/work/python/mynotes/",
+			"/home/webdev/work/python/mynotes/,*.py",
+			"/home/webdev/work/python/mynotes/config,*.py",
+			"/home/webdev/work/python/mytest/,*.py",
+			"/home/webdev/work/python/mynotes/,*.py",
+			"/home/webdev/work/python/mynotes/,*.*",
+			"/home/webdev/work/python/mydrive/,*.*",
+			"/home/webdev/work/python/mydrive/,*.js",
+			"/home/webdev/work/python/mydrive/,*.py",
+			"/home/webdev/work/python/mydrive/,*.*",
+			"/home/webdev/work/python/mydrive/,*.py",
+			"/home/webdev/work/python/mydrive/,*.js",
+			"/home/webdev/work/python/mydrive/,*.css",
+			"/home/webdev/work/python/mydrive/,*.js",
+			"/home/webdev/work/python/mydrive/,*.*",
+			"/home/webdev/work/python/mydrive/,*.html",
+			"/home/webdev/work/python/mydrive/,*.css",
+			"/home/webdev/work/python/mydrive/,*.py",
+			"/home/webdev/work/python/mydrive/,*.js",
+			"/home/webdev/work/python/mydrive/,*.py",
+			"/home/webdev/work/python/mydrive/,*.js",
+			"/home/webdev/work/python/mydrive/,*.py",
+			"/home/webdev/work/python/mydrive/,*.js",
+			"/home/webdev/work/python/mydrive/,*.py",
+			"/home/webdev/work/python/mydrive/,*.js",
+			"/home/webdev/work/python/mydrive/,*.css",
+			"/home/webdev/work/python/mydrive/,*.js",
+			"/home/webdev/work/python/mydrive/mydrive/,*.js",
+			"/home/webdev/work/python/mydrive/mydrive/,*.py",
+			"/home/webdev/work/python/mydrive/mydrive",
+			"/home/webdev/django/project/apps/webged/static/ged/js,*.js",
+			"/home/webdev/work/python/django/project/apps/,*.js",
+			"/home/webdev/work/python/django/project/apps/",
+			"/home/webdev/work/python/django/project/apps/ *.js",
+			"/home/webdev/work/python/django/project/apps/**.js**",
+			"/home/webdev/work/python/django/project/apps/*.js",
+			"/home/webdev/work/python/django/project/apps/**.js",
+			"/home/webdev/work/python/django/project/apps",
+			"/home/webdev/work/python/django/project/apps,/home/webdev/work/python/django/env/python3.5/lib/python3.5/site-packages",
+			"/home/webdev/work/python/django/project/apps",
+			"/home/webdev/work/python/django/mysite/mysite"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"AUTH_USER_MODEL",
+			"FileUploader",
+			"USER_NA",
+			"Confirm E-mail Address",
+			"\"\"\"\n",
+			"REST_AUTH_REGISTER_SERIALIZERS",
+			"db",
+			",'",
+			"HOST_NAME",
+			"validate_email",
+			"valid_email_or_none",
+			"validate_email",
+			"validators",
+			"ALLAUTH_SETTING_GETTER",
+			"ADAPTER",
+			"LOGIN_ATTEMPTS_TIMEOUT",
+			"ADAP",
+			"stdlogger",
+			"get_object_or_404",
+			"HttpResponse",
+			"JSONRenderer",
+			"media",
+			"Archive",
+			"models.Archive",
+			"Archive",
+			"AggregateList",
+			"ModelSerializer",
+			"account_confirm_email",
+			"apps.users",
+			"Archive",
+			"CustomListKeyConstructor",
+			"Tag",
+			"auth.",
+			"auth",
+			"webmarks.auth",
+			"APPS_DIR",
+			"apps.",
+			"mywebmarks",
+			"FilterSetMetaclass",
+			"model",
+			"StandardResultsSetPagination",
+			"Media",
+			"required",
+			"Model",
+			"HistoricalRecords",
+			"histo",
+			"mywebmarks",
+			"DL",
+			"/DT",
+			"apps.taskapp",
+			"apps.webmarks",
+			"complete_login",
+			"confirm_email",
+			"respond_email_verification_sent",
+			"account_email_verification_sent",
+			"get_email_confirmation_redirect_url",
+			"registration",
+			"AuthenticationBackend",
+			"allauth",
+			"account_email_verification_sent",
+			"account_confirm_email",
+			"account_email_verification_sent",
+			"account_confirm_email",
+			"Note",
+			"mynotes_tag",
+			"mynotes",
+			"mynote_tag",
+			"mynotes",
+			"NoteSerializer",
+			"Note",
+			"note",
+			"Note",
+			"             ",
+			"user_cre_id",
+			"client",
+			"ipdb",
+			"host",
+			"\n    ",
+			"user_cre",
+			"    \n",
+			"info(",
+			"\n    ",
+			"ws_connect",
+			"CACHE",
+			"                .",
+			"UpdatedAtKeyBit",
+			"DefaultListKeyConstructor",
+			"serializer_class",
+			"    \n",
+			"STAT",
+			"2",
+			"account/login",
+			"contact/login",
+			"A server error occurred.",
+			"A server error occurred.  Please contact the administrator",
+			"DEBUG",
+			"SITE",
+			"get_paginated_response",
+			"description",
+			"getattr",
+			"get_attribute",
+			"self.source_attrs",
+			"StaticHTMLRenderer",
+			"Scraping",
+			"crawlResult",
+			"CrawlData",
+			"                ,",
+			"time",
+			"url",
+			"print",
+			"STATICFILES",
+			"DJANGO_AWS_ACCESS_KEY_ID",
+			"SECRET_KEY",
+			"user",
+			"usr",
+			"hide-sm",
+			"INSTALLED_APPS",
+			"print(",
+			"LOGGING",
+			"LOGING",
+			"DEBUG",
+			"head",
+			"img",
+			"update",
+			"DefaultsAuthentificationMixin",
+			"tree",
+			"                                                     ",
+			"get_next_link"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"BookMark",
+			"Archive",
+			"CrawlResult",
+			"mynotes:",
+			"/mydrive/assets/images",
+			"/",
+			"/mydrive/assets/css/skell/",
+			"/mydrive/assets/css/",
+			"/mydrive/assets/js/",
+			"/mydrive/",
+			"",
+			"/",
+			"/static/",
+			"drive",
+			"mydrive/",
+			"webdrive.",
+			"backdrive.",
+			"../../images/treeview",
+			"",
+			"notes"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": true,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 26.0
+	},
+	"input":
+	{
+		"height": 35.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "Packages/Virtualenv/Python + Virtualenv.sublime-build",
+	"project": "project.sublime-project",
+	"replace":
+	{
+		"height": 48.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"/managers.py",
+				"apps/mywebmarks/managers.py"
+			],
+			[
+				"index",
+				"apps/templates/mynotes/index.html"
+			],
+			[
+				"login",
+				"apps/templates/account/login.html"
+			],
+			[
+				"models",
+				"apps/mynotes/models.py"
+			],
+			[
+				"form",
+				"apps/mynotes/forms.py"
+			],
+			[
+				"mode",
+				"apps/mynotes/models.py"
+			],
+			[
+				"base",
+				"apps/templates/base.html"
+			],
+			[
+				"nprogress.j",
+				"apps/static/vendors/nprogress/nprogress.js"
+			],
+			[
+				"select2multiple",
+				"staticfiles/vendors/select2/tests/selection/multiple-tests.js"
+			],
+			[
+				"provider_list",
+				"env/python3.5/lib/python3.5/site-packages/allauth/templates/socialaccount/snippets/provider_list.html"
+			],
+			[
+				"config.py",
+				"env/python3.5/lib/python3.5/site-packages/django/apps/config.py"
+			],
+			[
+				"admin",
+				"apps/drive/admin.py"
+			],
+			[
+				"doc",
+				"apps/mydrive/static/mydrive/js/app/documents/documents.ctrl.js"
+			],
+			[
+				"index.html",
+				"mysite/templates/index.html"
+			],
+			[
+				"inde",
+				"apps/svi-front-frontend/app/index.html"
+			],
+			[
+				"upload",
+				"apps/webged/templates/ged/partials/uploads.html"
+			],
+			[
+				"uploads",
+				"apps/webged/templates/ged/partials/uploads.html"
+			],
+			[
+				"fileuplo",
+				"apps/svi-front-frontend/app/bower_components/angular-file-upload/angular-file-upload.js"
+			],
+			[
+				"mo",
+				"apps/ged/models.py"
+			],
+			[
+				"sett",
+				"mysite/settings.py"
+			],
+			[
+				"app",
+				"apps/webged/static/ged/js/app/app.js"
+			],
+			[
+				"ind",
+				"apps/webged/templates/ged/index.html"
+			],
+			[
+				"setting",
+				"mysite/settings.py"
+			],
+			[
+				"i",
+				"apps/webged/templates/ged/index.html"
+			],
+			[
+				"log",
+				"apps/webged/static/ged/js/app/login/login.ctrl.js"
+			],
+			[
+				"in",
+				"apps/webged/templates/ged/index.html"
+			],
+			[
+				"serialis",
+				"apps/ged/serializers.py"
+			],
+			[
+				"m",
+				"apps/ged/models.py"
+			],
+			[
+				"file",
+				"apps/webged/templates/ged/partials/fileplan.html"
+			],
+			[
+				"u",
+				"apps/webged/templates/ged/partials/upload.html"
+			],
+			[
+				"fil",
+				"apps/webged/templates/ged/partials/fileplan.html"
+			],
+			[
+				"se",
+				"mysite/settings.py"
+			],
+			[
+				"up",
+				"apps/webged/templates/ged/partials/upload.html"
+			],
+			[
+				"arc",
+				"apps/webged/templates/ged/partials/archives.html"
+			],
+			[
+				"uplo",
+				"apps/webged/templates/ged/partials/upload.html"
+			],
+			[
+				"basketviewset",
+				"env/python3.5/lib/python3.5/site-packages/rest_framework/viewsets.py"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 550.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"~/.config/sublime-text-3/Packages/django.sublime-workspace"
+			]
+		],
+		"width": 418.0
+	},
+	"select_symbol":
+	{
+		"height": 432.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 586.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": false,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 329.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

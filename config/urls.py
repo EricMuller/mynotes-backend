@@ -28,8 +28,8 @@ schema_url_patterns_storage = [
 ]
 
 schema_url_patterns_auth = [
-    url(r'^api/', include('webmarks.rest_auth.urls',
-                          namespace='rest_auth')),
+    url(r'^api/', include('rest_api_auth.urls',
+                          namespace='rest_api_auth')),
 ]
 
 schema_view = get_schema_view(
@@ -72,14 +72,14 @@ urlpatterns = [
                           namespace='bookmarks')),
     url(r'^api/', include('webmarks.storage.urls',
                           namespace='storage')),
-    url(r'^api/', include('webmarks.rest_auth.urls')),
+    url(r'^api/', include('rest_api_auth.urls')),
 
     url(r'^api/webmarks/', schema_view),
     url(r'^api/storage/', schema_view_storage),
     url(r'^api/rest_auth/', schema_view_auth),
 
     # User management
-    url(r'^users/', include('webmarks.users.urls', namespace='users')),
+    url(r'^users/', include('users.urls', namespace='users')),
     url(r'^$',
         TemplateView.as_view(template_name='index.html'), name='index'),
     # Ajout authentification pour browsable api need

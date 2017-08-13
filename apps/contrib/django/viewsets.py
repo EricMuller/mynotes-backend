@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from abc import ABCMeta
 from .paginators import AggregateResultsViewSetPagination
-from .managers import AggregateList
+from contrib.lists import AggregateList
 
 
 def get_or_none(classmodel, **kwargs):

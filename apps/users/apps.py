@@ -2,9 +2,9 @@ from django.apps import AppConfig
 
 
 class UsersConfig(AppConfig):
-    name = 'webmarks.users'
+    name = 'users'
     verbose_name = 'Users'
-    label = 'webmarks_users'
+    label = 'users'
 
     def ready(self):
         """Override this to put in:

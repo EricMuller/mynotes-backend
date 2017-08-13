@@ -1,16 +1,18 @@
 
 from webmarks.bookmarks.managers import MediaManager
 from webmarks.bookmarks.managers import TagManager
-from webmarks.drf_utils.models import AuditableModelMixin
-from webmarks.users.models import User
+from contrib.django.models import AuditableModelMixin
+from users.models import User
+from webmarks.core.models import Node
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 # from model_utils.managers import InheritanceManager
 # from mptt.managers import TreeManager
-from mptt.models import MPTTModel, TreeForeignKey
+
 from simple_history.models import HistoricalRecords
 from django.template.defaultfilters import slugify
 import uuid
+
 
 class Tag(models.Model):
 
@@ -35,41 +37,14 @@ class Tag(models.Model):
         unique_together = ('name', 'user_cre',)
 
 
-class Node(AuditableModelMixin):
 
-    KINDS = (
-        ('NOTE', 'Note'),
-        ('TODO', 'Todo'),
-        ('MAIL', 'Mail'),
-        ('LINK', 'Link'),
-        ('FLDR', 'Folder'),
-    )
-
-    kind = models.CharField(max_length=10, choices=KINDS, default='NOTE')
-    folders = models.ManyToManyField(
-        'Folder', related_name="nodes", blank=True)
-    indexed_dt = models.DateTimeField(null=True)
-    uuid = models.UUIDField( default=uuid.uuid4, editable=False, unique=True)
-    # type = models.ForeignKey(
-    #     TypeNote, verbose_name='TypeNote', null=True,
-    #     default=None, blank=True, related_name='TypeNote')
-    #     objects = InheritanceManager()
-    #     kind = models.CharField(max_length=10, choices=KINDS, default='NOTE')
-    #     container = models.ManyToManyField(
-    #         Container, related_name="containers", blank=True)
-
-
-class Folder(MPTTModel, Node):
-
-    name = models.CharField(max_length=256)
-    parent = TreeForeignKey(
-        'self', null=True, blank=True, related_name="children")
-
-    def __str__(self):
-        return self.libelle
+class Task(Node):
+    schedule_dt = models.DateTimeField(null=True)
+    pass
 
 
 class Bookmark(Node):
+    """ any kind of Bookmark """
 
     objects = MediaManager()
 
@@ -79,18 +54,19 @@ class Bookmark(Node):
         ('T', 'Trash'),
     )
 
-    archive_id = models.IntegerField(null=True)
-    archived_dt = models.DateTimeField(null=True)
-    description = models.TextField(blank=True)
-    favorite = models.BooleanField(default=False)
-    history = HistoricalRecords()
-    public = models.BooleanField(default=False)
-    rate = models.IntegerField(default=0)
-    schedule_dt = models.DateTimeField(null=True)
-    status = models.CharField(max_length=1, choices=STATUS, default='D')
-    tags = models.ManyToManyField(Tag, related_name="bookmarks", blank=True)
     title = models.CharField(max_length=256)
     url = models.CharField(max_length=2000, default=None, null=True)
+    description = models.TextField(blank=True)
+
+    tags = models.ManyToManyField(Tag, related_name="bookmarks", blank=True)
+
+    rate = models.IntegerField(default=0)
+    favorite = models.BooleanField(default=False)
+
+    status = models.CharField(max_length=1, choices=STATUS, default='D')
+    archive_id = models.IntegerField(null=True)
+    archived_dt = models.DateTimeField(null=True)
+    history = HistoricalRecords()
 
     def get_status_libelle(self):
         t = [item for item in self.STATUS if item[0] == self.status]
@@ -127,7 +103,7 @@ class Archive(models.Model):
         blank=True)
 
     bookmark = models.ForeignKey(
-        Bookmark, related_name='archives', default=None, blank=True)
+        Bookmark, related_name='%(class)s_archives', default=None, blank=True)
 
     @classmethod
     def create(cls, bookmark, content_type, data):

@@ -1,4 +1,4 @@
-from webmarks.users.models import User
+from users.models import User
 from webmarks.bookmarks.models import Folder
 
 from django.test import TestCase

@@ -1,7 +1,8 @@
+import codecs
 import errno
 import tempfile
 import os
-
+import json
 # from datetime import datetime
 # from random import randint
 from django.conf import settings
@@ -13,29 +14,30 @@ STORE_ROOT = getattr(
 )
 
 
-class PathResolver():
-
-    def resolvePath(self, id, filename):
-        file_name, file_extension = os.path.splitext(filename)
-        new_full_name = file_name
-        return os.path.join(STORE_ROOT, str(id), new_full_name)
-
-
 class PathIdResolver():
 
-    def resolvePath(self, uiid, user ):
-        return os.path.join(STORE_ROOT, user, uiid)
+    def resolvePath(self, uiid, user_name):
+        index = 0
+        dir_file_name = user_name + '/'
+        # import ipdb; ipdb.set_trace()
+        for character in uiid:
+            if index == 4:
+                dir_file_name += '/'
+                index = 0
+            dir_file_name += character
+            index = index + 1
+
+        return os.path.join(STORE_ROOT, dir_file_name, uiid)
 
 
 class FileStore():
-
-    _pathResolver = PathResolver()
     _pathIdResolver = PathIdResolver()
-    
 
-    def store_file(self, user, uiid, file):
-        
-        store_file_name = self._pathResolver.resolvePath(uiid, user)
+    def get_file_path(self, uiid, user_name):
+        return self._pathIdResolver.resolvePath(uiid, user_name)
+
+    def store(self, uiid, user_name, str_bytes, indexs):
+        store_file_name = self.get_file_path(uiid, user_name)
         if not os.path.exists(os.path.dirname(store_file_name)):
             try:
                 os.makedirs(os.path.dirname(store_file_name))
@@ -43,22 +45,11 @@ class FileStore():
                 if exc.errno != errno.EEXIST:
                     raise
 
-        store_file = open(store_file_name, 'wb+')
-        for chunk in file.chunks():
-            store_file.write(chunk)
-        store_file.close()
-        return store_file_name
+        with open(store_file_name, 'wb+') as store_file:
+            store_file.write(str_bytes)
 
-    def store(self, user, uiid, str_bytes):
-        store_file_name = self._pathIdResolver.resolvePath(uiid, user)
-        if not os.path.exists(os.path.dirname(store_file_name)):
-            try:
-                os.makedirs(os.path.dirname(store_file_name))
-            except OSError as exc:  # Guard against race condition
-                if exc.errno != errno.EEXIST:
-                    raise
+        with open(store_file_name + '.idx', 'wb+') as index_file:
+            json.dump(indexs, codecs.getwriter('utf-8')
+                      (index_file), ensure_ascii=False)
 
-        store_file = open(store_file_name, 'wb+')
-        store_file.write(str_bytes)
-        store_file.close()
         return store_file_name

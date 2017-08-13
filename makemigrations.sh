@@ -1,1 +1,1 @@
-python manage.py makemigrations webmarks_bookmarks webmarks_upload webmarks_storage webmarks_users
+python manage.py makemigrations  webmarks_core webmarks_bookmarks webmarks_notes webmarks_upload webmarks_storage 

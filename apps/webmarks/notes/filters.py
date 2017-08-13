@@ -1,24 +1,17 @@
+
 import django_filters
 from rest_framework import filters
-from webmarks.bookmarks.models import Bookmark
-from webmarks.bookmarks.models import Tag
-from webmarks.core.filters import MultipleFilter
-
-class TagFilter(django_filters.FilterSet):
-
-    class Meta:
-        model = Tag
-        fields = ['id', 'name', 'public']
+from webmarks.bookmarks.models import Note
 
 
-class BookmarkFilter(filters.FilterSet):
+class NoteFilter(filters.FilterSet):
     # min_price = django_filters.NumberFilter(name="price", lookup_expr='gte')
     # max_price = django_filters.NumberFilter(name="price", lookup_expr='lte')
 
-    tags = MultipleFilter(lookup_expr='in')
+    # tags = MultipleFilter(lookup_expr='in')
 
     class Meta:
-        model = Bookmark
+        model = Note
         fields = ['id', 'title', 'public', 'description',
                   'kind', 'tags', 'updated_dt', 'status']
         ordering_fields = ('updated_dt')
