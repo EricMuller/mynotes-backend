@@ -1,7 +1,7 @@
 from django.db import models
 from django.db import connection
 
-from contrib.lists import AggregateList
+from webmarks.contrib.django.lists import AggregateList
 
 
 class QueryMixin():

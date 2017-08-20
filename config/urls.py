@@ -28,8 +28,8 @@ schema_url_patterns_storage = [
 ]
 
 schema_url_patterns_auth = [
-    url(r'^api/', include('rest_api_auth.urls',
-                          namespace='rest_api_auth')),
+    url(r'^api/', include('webmarks.authentication.urls',
+                          namespace='authentication')),
 ]
 
 schema_view = get_schema_view(
@@ -42,7 +42,6 @@ schema_view = get_schema_view(
 
 schema_view_storage = get_schema_view(
     title='Storage API',
-    # url='https://webmarks.net/',
     renderer_classes=[OpenAPIRenderer, SwaggerUIRenderer],
     patterns=schema_url_patterns_storage,
     public=True,
@@ -50,16 +49,9 @@ schema_view_storage = get_schema_view(
 
 schema_view_auth = get_schema_view(
     title='Rest Authentification API',
-    # url='https://webmarks.net/',
     renderer_classes=[OpenAPIRenderer, SwaggerUIRenderer],
     patterns=schema_url_patterns_auth,
 )
-
-# schema_view_swagger = get_swagger_view(title='Django API')
-# schema_view = get_schema_view(title='Webmarks API REST', renderer_classes=[
-
-# OpenAPIRenderer, SwaggerUIRenderer])
-# schema_view = get_swagger_view(title='My great API', url='')
 
 urlpatterns = [
     # url(r'^about/$',
@@ -72,14 +64,14 @@ urlpatterns = [
                           namespace='bookmarks')),
     url(r'^api/', include('webmarks.storage.urls',
                           namespace='storage')),
-    url(r'^api/', include('rest_api_auth.urls')),
+    url(r'^api/', include('webmarks.authentication.urls')),
 
     url(r'^api/webmarks/', schema_view),
     url(r'^api/storage/', schema_view_storage),
     url(r'^api/rest_auth/', schema_view_auth),
 
     # User management
-    url(r'^users/', include('users.urls', namespace='users')),
+    url(r'^users/', include('webmarks.users.urls', namespace='users')),
     url(r'^$',
         TemplateView.as_view(template_name='index.html'), name='index'),
     # Ajout authentification pour browsable api need

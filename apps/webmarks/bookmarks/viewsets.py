@@ -1,19 +1,18 @@
 # from webmarks.rest_auth.permissions import DefaultsAuthentificationMixin
-from contrib.django.cache import CustomListKeyConstructor
-from contrib.django.viewsets import AggregateModelViewSet
+from webmarks.contrib.django.cache import CustomListKeyConstructor
+from webmarks.contrib.django.viewsets import AggregateModelViewSet
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from webmarks.bookmarks import models
 from webmarks.bookmarks import serializers
 from webmarks.bookmarks.filters import BookmarkFilter
 from webmarks.bookmarks.filters import TagFilter
-from webmarks.core.filters import FolderFilter
-from webmarks.core.models import Folder
-from webmarks.core.serializers import FolderSerializer
-from webmarks.storage.crawler import Crawler
+from webmarks.base.filters import FolderFilter
+from webmarks.base.models import Folder
+from webmarks.base.serializers import FolderSerializer
+from webmarks.contrib.crawler.crawler import Crawler
 from webmarks.storage.storage import FileStore
 
-# from webmarks.storage.models import Archive
 from rest_framework import filters
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route

@@ -68,16 +68,25 @@ THIRD_PARTY_APPS = (
 )
 
 # Apps specific for this project go here.
-LOCAL_APPS = (
-    'users.apps.UsersConfig',
-    'rest_api_auth.apps.AuthConfig',
-    'webmarks.core.apps.CoreConfig',
-    'webmarks.notes.apps.NotesConfig',
-    'webmarks.upload.apps.UploadConfig',
-    'webmarks.bookmarks.apps.BookmarksConfig',
+LOCAL_APPS1 = (
+    'webmarks.users.apps.UsersConfig',
+    'webmarks.authentication.apps.AuthConfig',
+    'webmarks.base.apps.BaseConfig',
     'webmarks.storage.apps.StorageConfig',
+    'webmarks.uploader.apps.UploadConfig',
+    'webmarks.notes.apps.NotesConfig',
+    'webmarks.bookmarks.apps.BookmarksConfig',
 )
 
+LOCAL_APPS = (
+    'webmarks.users',
+    'webmarks.authentication',
+    'webmarks.base',
+    'webmarks.storage',
+    'webmarks.uploader',
+    'webmarks.notes',
+    'webmarks.bookmarks',
+)
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
@@ -280,8 +289,8 @@ ACCOUNT_EMAIL_REQUIRED = True
 
 ACCOUNT_ALLOW_REGISTRATION = env.bool(
     'WEBMARK_ACCOUNT_ALLOW_REGISTRATION', True)
-ACCOUNT_ADAPTER = 'users.adapters.AccountAdapter'
-SOCIALACCOUNT_ADAPTER = 'users.adapters.SocialAccountAdapter'
+ACCOUNT_ADAPTER = 'webmarks.users.adapters.AccountAdapter'
+SOCIALACCOUNT_ADAPTER = 'webmarks.users.adapters.SocialAccountAdapter'
 
 # Custom user app defaults
 # Select the correct user model

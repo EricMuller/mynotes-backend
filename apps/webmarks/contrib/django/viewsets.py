@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from abc import ABCMeta
 from .paginators import AggregateResultsViewSetPagination
-from contrib.lists import AggregateList
+from .lists import AggregateList
 
 
 def get_or_none(classmodel, **kwargs):
@@ -40,8 +40,8 @@ class AggregateModelViewSet(AggregatePaginationReponseMixin,
 
 
 class RetrieveUpdateModelViewSet(viewsets.mixins.RetrieveModelMixin,
-                         viewsets.mixins.UpdateModelMixin,
-                         viewsets.GenericViewSet):
+                                 viewsets.mixins.UpdateModelMixin,
+                                 viewsets.GenericViewSet):
     __metaclass__ = ABCMeta
 
     pass

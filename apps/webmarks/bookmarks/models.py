@@ -1,9 +1,8 @@
 
 from webmarks.bookmarks.managers import MediaManager
 from webmarks.bookmarks.managers import TagManager
-from contrib.django.models import AuditableModelMixin
-from users.models import User
-from webmarks.core.models import Node
+from webmarks.users.models import User
+from webmarks.base.models import Node
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 # from model_utils.managers import InheritanceManager
@@ -11,7 +10,6 @@ from django.utils.translation import ugettext_lazy as _
 
 from simple_history.models import HistoricalRecords
 from django.template.defaultfilters import slugify
-import uuid
 
 
 class Tag(models.Model):
@@ -35,7 +33,6 @@ class Tag(models.Model):
 
     class Meta:
         unique_together = ('name', 'user_cre',)
-
 
 
 class Task(Node):

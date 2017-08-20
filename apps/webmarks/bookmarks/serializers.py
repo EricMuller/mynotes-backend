@@ -17,14 +17,6 @@ class TimestampField(serializers.ReadOnlyField):
 #     class Meta:
 #         fields = ('id')
 
-class NodeSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.Node
-        fields = '__all__'
-        # fields = ('id', 'name', 'kind', 'user_cre_id',
-        #          'user_upd_id', 'parent_id', 'tree_id', 'lft', 'rght', 'level')
-
 
 class CrawlSerializer(serializers.Serializer):
     url = serializers.CharField()
@@ -34,7 +26,6 @@ class CrawlSerializer(serializers.Serializer):
 
     class Meta:
         fields = ('url', 'html', 'title', 'content_type')
-
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -155,6 +146,7 @@ class PublishedModelSerializer(serializers.Serializer):
 #     class Meta:
 #         model = models.Search
 #         fields = ('name', 'user_cre', 'created_dt', 'tags')
+
 
 class ArchiveSerializer(serializers.ModelSerializer):
 

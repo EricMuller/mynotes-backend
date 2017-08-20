@@ -11,9 +11,9 @@ from rest_framework.generics import DestroyAPIView
 from rest_framework.response import Response
 
 from rest_framework.views import APIView
-from rest_api_auth.permissions import EverybodyCanAuthentication
+from webmarks.authentication.permissions import EverybodyCanAuthentication
 from webmarks.bookmarks import models
-from webmarks.core.models import Folder
+from webmarks.base.models import Folder
 from webmarks.bookmarks.serializers import IdSerializer
 
 

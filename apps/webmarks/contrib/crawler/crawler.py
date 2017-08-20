@@ -2,7 +2,6 @@
 import asyncio
 import aiohttp
 import base64
-import gevent
 import logging
 import re
 import sys

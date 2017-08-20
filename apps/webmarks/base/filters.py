@@ -2,7 +2,7 @@
 import django_filters
 from django.forms.fields import MultipleChoiceField
 from django_filters.filters import MultipleChoiceFilter
-from webmarks.core import models
+from webmarks.base import models
 
 from rest_framework import filters
 

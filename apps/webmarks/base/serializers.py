@@ -1,6 +1,6 @@
 
 import time
-from webmarks.core import models
+from webmarks.base import models
 from rest_framework import serializers
 
 
@@ -10,7 +10,7 @@ class NodeSerializer(serializers.ModelSerializer):
         model = models.Node
         fields = '__all__'
         # fields = ('id', 'name', 'kind', 'user_cre_id',
-        #          'user_upd_id', 'parent_id', 'tree_id', 'lft', 'rght', 'level')
+        # 'user_upd_id', 'parent_id', 'tree_id', 'lft', 'rght', 'level')
 
 
 class FolderSerializer(serializers.ModelSerializer):
