@@ -5,7 +5,7 @@ from rest_framework import permissions
 from rest_framework import renderers
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.serializers import AuthTokenSerializer
-from rest_framework.generics import UpdateAPIView
+from rest_framework.generics import CreateAPIView
 from rest_framework.generics import DestroyAPIView
 
 from rest_framework.response import Response
@@ -33,9 +33,14 @@ class seachNoteView(APIView):
         return Response({'token': token})
 
 
-class addFoldertoBookmark(UpdateAPIView, DestroyAPIView):
+class addFoldertoBookmark(CreateAPIView, DestroyAPIView):
     """
-    Add folder to Bookmark
+    post:
+        Add folder to Bookmark.
+
+    delete:
+        Remove folder to Bookmark.
+
     """
     querySet = models.Bookmark.objects.all()
     throttle_classes = ()
@@ -54,7 +59,7 @@ class addFoldertoBookmark(UpdateAPIView, DestroyAPIView):
 
         return Response({'result': 'OK'})
 
-    def update(self, request, pk, *args, **kwargs):
+    def post(self, request, pk, *args, **kwargs):
 
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)

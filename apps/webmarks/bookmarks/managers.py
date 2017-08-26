@@ -1,6 +1,6 @@
 from django.db import models
 from django.db import connection
-
+# from itertools import izip
 from webmarks.contrib.django.lists import AggregateList
 
 

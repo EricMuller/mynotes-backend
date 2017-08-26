@@ -8,11 +8,6 @@ apiRouter = routers.DefaultRouter()
 apiRouter.register(r'folders', viewsets.FolderViewSet)
 apiRouter.register(r'bookmarks', viewsets.BookmarkViewSet)
 apiRouter.register(r'tags', viewsets.TagViewSet)
-apiRouter.register(r'archives', viewsets.ArchiveViewSet, base_name='archive')
-# apiRouter.register(r'search', viewsets.SearchViewSet)
-# apiRouter.register(r'upload', viewsets.FileUploaderViewSet)
-# apiRouter.register(r'crawler', viewsets.CrawlerViewSet, base_name='crawler')
-# apiRouter.register(r'archive', viewsets.ArchiveViewSet, base_name='archive')
 
 urlpatterns = [
     # API V1

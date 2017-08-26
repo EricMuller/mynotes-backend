@@ -37,7 +37,6 @@ class NoteViewSet(AggregateModelViewSet):
     queryset = models.BookmarkSerializer.objects.prefetch_related('tags')
     serializer_class = serializers.BookmarkSerializer
     filter_backends = (filters.DjangoFilterBackend, filters.OrderingFilter)
-    filter_class = BookmarkFilter
     permission_classes = (permissions.IsAuthenticated,)
 
     @cache_response(key_func=CustomListKeyConstructor())

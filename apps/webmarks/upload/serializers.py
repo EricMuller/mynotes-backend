@@ -4,10 +4,10 @@ from webmarks.upload import models
 from rest_framework import serializers
 
 
-class FileUploaderSerializer(serializers.ModelSerializer):
+class UploadSerializer(serializers.ModelSerializer):
     # overwrite = serializers.BooleanField()
     class Meta:
-        model = models.FileUploader
+        model = models.Upload
         fields = ('id', 'file', 'name', 'version', 'upload_date', 'size')
         read_only_fields = ('name', 'version', 'owner', 'upload_date', 'size')
 
@@ -21,4 +21,4 @@ class FileUploaderSerializer(serializers.ModelSerializer):
         return validated_data
 
     def create(self, validated_data):
-        return models.FileUploader.objects.create(**validated_data)
+        return models.Upload.objects.create(**validated_data)

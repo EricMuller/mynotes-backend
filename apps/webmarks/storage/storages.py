@@ -6,6 +6,7 @@ import json
 # from datetime import datetime
 # from random import randint
 from django.conf import settings
+import os
 
 STORE_ROOT = getattr(
     settings,
@@ -18,7 +19,7 @@ class PathIdResolver():
 
     def resolvePath(self, uiid, user_name):
         index = 0
-        dir_file_name = user_name + '/'
+        dir_file_name = 'datas' + '/'
         # import ipdb; ipdb.set_trace()
         for character in uiid:
             if index == 4:
@@ -27,7 +28,7 @@ class PathIdResolver():
             dir_file_name += character
             index = index + 1
 
-        return os.path.join(STORE_ROOT, dir_file_name, uiid)
+        return STORE_ROOT + dir_file_name + uiid
 
 
 class FileStore():

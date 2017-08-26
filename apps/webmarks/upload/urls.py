@@ -3,10 +3,8 @@ from django.conf.urls import include
 from rest_framework import routers
 from webmarks.bookmarks import viewsets
 
-
 apiRouter = routers.DefaultRouter()
-apiRouter.register(r'upload', viewsets.FileUploaderViewSet)
-
+apiRouter.register(r'upload', viewsets.UploadViewSet)
 
 urlpatterns = [
     # API V1

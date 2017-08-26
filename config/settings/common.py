@@ -34,10 +34,9 @@ DJANGO_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     # Useful template tags:
     # 'django.contrib.humanize',
-    # Admin
+    # Default Django Admin
     'django.contrib.admin',
     'channels',
 )
@@ -59,23 +58,11 @@ THIRD_PARTY_APPS = (
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.linkedin_oauth2',
-    # 'allauth.socialaccount.providers.dropbox_oauth2',
+
     'jsonify',
     'mptt',
     'simple_history',
     'rest_framework_swagger',
-
-)
-
-# Apps specific for this project go here.
-LOCAL_APPS1 = (
-    'webmarks.users.apps.UsersConfig',
-    'webmarks.authentication.apps.AuthConfig',
-    'webmarks.base.apps.BaseConfig',
-    'webmarks.storage.apps.StorageConfig',
-    'webmarks.uploader.apps.UploadConfig',
-    'webmarks.notes.apps.NotesConfig',
-    'webmarks.bookmarks.apps.BookmarksConfig',
 )
 
 LOCAL_APPS = (
@@ -83,7 +70,7 @@ LOCAL_APPS = (
     'webmarks.authentication',
     'webmarks.base',
     'webmarks.storage',
-    'webmarks.uploader',
+    'webmarks.upload',
     'webmarks.notes',
     'webmarks.bookmarks',
 )
@@ -232,11 +219,12 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # STATIC FILE CONFIGURATION
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-root
-STATIC_ROOT = str(ROOT_DIR('staticfiles'))
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-url
 STATIC_URL = '/static/'
 # STATIC_URL = 'http://192.168.0.100/static/mywebmarks/'
+
+STATIC_ROOT = str(ROOT_DIR('staticfiles'))
 
 # See:
 # https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
@@ -317,7 +305,9 @@ SOCIALACCOUNT_PROVIDERS = \
          },
      'linkedin':
      {'SCOPE': ['r_emailaddress', 'r_basicprofile'],
-         'PROFILE_FIELDS': ['id', 'first-name', 'last-name', 'email-address', 'picture-url', 'public-profile-url', ]
+         'PROFILE_FIELDS': ['id', 'first-name', 'last-name',
+                            'email-address', 'picture-url',
+                            'public-profile-url', ]
       }
      }
 # /test
@@ -346,11 +336,9 @@ ADMIN_URL = r'^admin/'
 # Your common stuff: Below this line define 3rd party library settings
 # ------------------------------------------------------------------------------
 
-
 FILE_STORE_ROOT = env('WEBMARK_FILE_STORE_ROOT')
 
 # REST_FRAMEWORK = {
-
 #     'DEFAULT_AUTHENTICATION_CLASSES': (
 #         'oauth2_provider.ext.rest_framework.OAuth2Authentication',
 #         'rest_framework_social_oauth2.authentication.SocialAuthentication',
@@ -360,7 +348,7 @@ FILE_STORE_ROOT = env('WEBMARK_FILE_STORE_ROOT')
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
-        #'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
 
     ),
     'DEFAULT_PERMISSION_CLASSES': (

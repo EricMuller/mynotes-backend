@@ -1,8 +1,5 @@
-# from webmarks.rest_auth.permissions import DefaultsAuthentificationMixin
 from webmarks.contrib.django.cache import CustomListKeyConstructor
 from webmarks.contrib.django.viewsets import AggregateModelViewSet
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
 from webmarks.bookmarks import models
 from webmarks.bookmarks import serializers
 from webmarks.bookmarks.filters import BookmarkFilter
@@ -11,10 +8,9 @@ from webmarks.base.filters import FolderFilter
 from webmarks.base.models import Folder
 from webmarks.base.serializers import FolderSerializer
 from webmarks.contrib.crawler.crawler import Crawler
-from webmarks.storage.storage import FileStore
+from webmarks.storage.storages import FileStore
 
 from rest_framework import filters
-from rest_framework import viewsets
 from rest_framework.decorators import detail_route
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
@@ -23,11 +19,14 @@ from rest_framework import permissions
 import base64
 import logging
 
+from webmarks.storage.models import DataStorage
+from webmarks.storage.models import Store
+from webmarks.storage.serializers import DataStorageSerializer
+
 stdlogger = logging.getLogger(__name__)
 
 
 class FolderViewSet(AggregateModelViewSet):
-
     """
     retrieve:
         Return a Folder instance.
@@ -102,12 +101,6 @@ class BookmarkViewSet(AggregateModelViewSet):
     filter_class = BookmarkFilter
     permission_classes = (permissions.IsAuthenticated,)
 
-    # .prefetch_related(
-    #    'tags').prefetch_related('archive').values_list('title','rate')
-    # queryset = models.Note.objects.prefetch_related('tags').values
-    # ('archive__note', 'id', 'title', 'url', 'description', 'updated_dt', 'created_dt',
-    # 'user_cre', 'user_upd', 'archived_dt', 'rate', 'type', 'status', 'public', 'schedule_dt')
-
     @cache_response(key_func=CustomListKeyConstructor())
     def list(self, *args, **kwargs):
         return super(BookmarkViewSet, self).list(*args, **kwargs)
@@ -128,7 +121,6 @@ class BookmarkViewSet(AggregateModelViewSet):
             Return the title of url's Page Bookmark.
         """
         crawler = Crawler()
-
         stdlogger.debug(pk)
         url = base64.b64decode(pk)
         stdlogger.info(url.decode())
@@ -137,9 +129,9 @@ class BookmarkViewSet(AggregateModelViewSet):
         return Response(serializer.data)
 
     @detail_route(methods=['get'])
-    def archive(self, request, pk):
+    def store(self, request, pk):
         """
-            Archive the Bookmark Page.
+            Crawl and Archive the Url Bookmark Page.
         """
         bookmark = self.get_object()
         stdlogger.debug(pk)
@@ -148,15 +140,24 @@ class BookmarkViewSet(AggregateModelViewSet):
         # stdlogger.info(url.decode())
         crawler.crawl(bookmark.url)
         # indexes = {"title": bookmark.title, "url": bookmark}
-        indexes = self.serializer_class(bookmark).data
-        FileStore().store(str(bookmark.uuid), request.user.username,
-                          crawler.html.encode(), indexes)
-        archive = models.Archive.create(
-            bookmark, crawler.content_type, crawler.html.encode())
+        try:
+            store = Store.objects.filter(
+                user_uuid=request.user.uuid).get(kind=Store.WBM_STORE)
+        except Store.DoesNotExist:
+            store = Store.create(Store.WBM_STORE, request.user.uuid)
+            store.save()
+
+        archive = DataStorage.create(
+            bookmark.uuid, crawler.content_type, store)
         archive.save()
+
+        indexes = self.serializer_class(bookmark).data
+        FileStore().store(str(archive.id), request.user.username,
+                          crawler.html.encode(), indexes)
+
         bookmark.archive_id = archive.id
         bookmark.save()
-        serializer = serializers.ArchiveSerializer(archive)
+        serializer = DataStorageSerializer(archive)
         return Response(serializer.data)
 
 
@@ -197,83 +198,3 @@ class TagViewSet(AggregateModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         serializer = serializers.TagCountSerializer(queryset, many=True)
         return Response(serializer.data)
-
-
-class CrawlerViewSet(viewsets.ViewSet):
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def retrieve(self, request, pk):
-        crawler = Crawler()
-        stdlogger.debug(pk)
-        url = base64.b64decode(pk)
-        stdlogger.info(url.decode())
-        data = crawler.crawl(url.decode())
-        serializer = serializers.CrawlSerializer(data)
-        return Response(serializer.data)
-
-    @detail_route(methods=['get'])
-    def title(self, request, pk=None):
-        crawler = Crawler()
-
-        stdlogger.debug(pk)
-        url = base64.b64decode(pk)
-        stdlogger.info(url.decode())
-        crawler.crawl_title(url.decode())
-        serializer = serializers.CrawlSerializer(crawler)
-        return Response(serializer.data)
-
-
-class ArchiveViewSet(AggregateModelViewSet):
-
-    """
-    retrieve:
-        Return a Archive instance.
-
-    list:
-        Return all Archives, ordered by most recently joined.
-
-    create:
-        Create a new Archive.
-
-    delete:
-        Remove an existing Archive.
-
-    partial_update:
-        Update one or more fields on an existing Archive.
-
-    update:
-        Update a Archive.
-    """
-
-    filter_backends = (filters.DjangoFilterBackend,)
-    queryset = models.Archive.objects.all()
-    serializer_class = serializers.ArchiveSerializer
-
-    # renderer_classes = (renderers.JSONRenderer, renderers.BrowsableAPIRenderer,
-    #                    renderers.StaticHTMLRenderer,)
-    permission_classes = (permissions.AllowAny,)
-
-    def retrieve(self, request, pk, format=None):
-        archive = get_object_or_404(models.Archive, pk=pk)
-        if request.accepted_renderer.format == 'html':
-            return Response(archive.data)
-
-        serializer = self.serializer_class(archive)
-        response = Response(serializer.data)
-        response['Cache-Control'] = 'no-cache'
-        return response
-
-    @detail_route(methods=['get'])
-    def download(self, request, pk):
-        """
-            Download Archive File.
-        """
-        archive = get_object_or_404(models.Archive, pk=pk)
-        # tmp = tempfile.NamedTemporaryFile(suffix=".note")
-        archive_name = FileStore().get_file_path(
-            request.user.username, str(archive.bookmark.uuid))
-        # filename = archive.name.split('/')[-1]
-        resp = HttpResponse(
-            archive.data, content_type='application/text;charset=UTF-8')
-        resp['Content-Disposition'] = "attachment; filename=%s" % archive_name
-        return resp

@@ -2,7 +2,7 @@ from webmarks.users.models import User
 from django.db import models
 
 
-class FileUploader(models.Model):
+class Upload(models.Model):
     TYPES = (
         ('FAVORITE', 'Favorite'),
     )

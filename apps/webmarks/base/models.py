@@ -1,9 +1,9 @@
 
 from django.db import models
-import uuid
 from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
 from webmarks.users.models import User
+import uuid
 
 
 class AuditableModelMixin(models.Model):
@@ -34,13 +34,6 @@ class Node(AuditableModelMixin):
     indexed_dt = models.DateTimeField(null=True)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     public = models.BooleanField(default=False)
-    # type = models.ForeignKey(
-    #     TypeNote, verbose_name='TypeNote', null=True,
-    #     default=None, blank=True, related_name='TypeNote')
-    #     objects = InheritanceManager()
-    #     kind = models.CharField(max_length=10, choices=KINDS, default='NOTE')
-    #     container = models.ManyToManyField(
-    #         Container, related_name="containers", blank=True)
 
 
 class Folder(MPTTModel, Node):

@@ -11,13 +11,6 @@ class TimestampField(serializers.ReadOnlyField):
         return int(time.mktime(value.timetuple()) * 1000)
 
 
-# class ModelSerializer(serializers.Serializer):
-#     id = serializers.IntegerField()
-
-#     class Meta:
-#         fields = ('id')
-
-
 class CrawlSerializer(serializers.Serializer):
     url = serializers.CharField()
     html = serializers.CharField()
@@ -44,8 +37,8 @@ class TagSerializer(serializers.ModelSerializer):
         validated_data['user_upd'] = self.context['request'].user
 
         try:
-            models.Tag.objects.get(name=validated_data[
-                                   'name'], user_cre=validated_data['user_cre'])
+            models.Tag.objects.get(name=validated_data['name'],
+                                   user_cre=validated_data['user_cre'])
         except models.Tag.DoesNotExist:
             pass
         else:
@@ -140,18 +133,3 @@ class PublishedModelSerializer(serializers.Serializer):
 
     class Meta:
         fields = ('id')
-
-# class SearchSerializer(serializers.ModelSerializer):
-
-#     class Meta:
-#         model = models.Search
-#         fields = ('name', 'user_cre', 'created_dt', 'tags')
-
-
-class ArchiveSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.Archive
-        fields = ('id', 'name', 'url', 'bookmark',
-                  'data',  # 'user_cre', 'user_upd',
-                  'created_dt', 'updated_dt')

@@ -1,13 +1,8 @@
-
-# from apps.bookmarks.models import Bookmark
-# from apps.bookmarks.paginators import StandardResultsSetPagination
-# from apps.bookmarks.serializers import MediaSerializer
 from django.db.models import Q
 # from django.db.models import F
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-# from rest_framework.views import APIView
 from apps.bookmarks.authentification import DefaultsAuthentificationMixin
 
 
