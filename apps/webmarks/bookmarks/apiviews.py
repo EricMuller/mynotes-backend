@@ -1,5 +1,3 @@
-
-
 from rest_framework import parsers
 from rest_framework import permissions
 from rest_framework import renderers
@@ -17,7 +15,7 @@ from webmarks.base.models import Folder
 from webmarks.bookmarks.serializers import IdSerializer
 
 
-class seachNoteView(APIView):
+class SeachNoteView(APIView):
     throttle_classes = ()
     permission_classes = (EverybodyCanAuthentication)
     parser_classes = (parsers.JSONParser,)
@@ -33,7 +31,7 @@ class seachNoteView(APIView):
         return Response({'token': token})
 
 
-class addFoldertoBookmark(CreateAPIView, DestroyAPIView):
+class AddFoldertoBookmark(CreateAPIView, DestroyAPIView):
     """
     post:
         Add folder to Bookmark.
@@ -74,4 +72,4 @@ class addFoldertoBookmark(CreateAPIView, DestroyAPIView):
         return Response(serializer.data)
 
 
-add_folder_bookmark_view = addFoldertoBookmark.as_view()
+add_folder_bookmark_view = AddFoldertoBookmark.as_view()

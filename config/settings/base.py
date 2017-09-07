@@ -13,10 +13,16 @@ from __future__ import absolute_import, unicode_literals
 import os
 import environ
 import sys
+from os.path import dirname
+from os.path import join
 
 # (mywebmarks/config/settings/common.py - 3 = mywebmarks/)
-ROOT_DIR = environ.Path(__file__) - 3
-APPS_DIR = ROOT_DIR.path('apps')
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = dirname(dirname(os.path.abspath(__file__)))
+
+ROOT_DIR = dirname(environ.Path(__file__) - 2)
+
+APPS_DIR = os.path.join(ROOT_DIR, 'apps')
 
 sys.path.append(str(APPS_DIR))
 
@@ -27,16 +33,12 @@ print("env variable WEBMARK_HOST_NAME=" + HOST_NAME)
 # APP CONFIGURATION
 # ------------------------------------------------------------------------------
 DJANGO_APPS = (
-    # Default Django apps:
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Useful template tags:
-    # 'django.contrib.humanize',
-    # Default Django Admin
     'django.contrib.admin',
     'channels',
 )
@@ -61,7 +63,7 @@ THIRD_PARTY_APPS = (
 
     'jsonify',
     'mptt',
-    'simple_history',
+    # 'simple_history',
     'rest_framework_swagger',
 )
 
@@ -74,6 +76,7 @@ LOCAL_APPS = (
     'webmarks.notes',
     'webmarks.bookmarks',
 )
+
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
@@ -87,7 +90,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'simple_history.middleware.HistoryRequestMiddleware',
 )
 
 # MIGRATIONS CONFIGURATION
@@ -100,12 +102,13 @@ MIGRATION_MODULES = {
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#debug
 DEBUG = env.bool('DJANGO_DEBUG', default=True)
+
 # FIXTURE CONFIGURATION
 # ------------------------------------------------------------------------------
 # See:
 # https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-FIXTURE_DIRS
 FIXTURE_DIRS = (
-    str(APPS_DIR.path('fixtures')),
+    join(APPS_DIR, 'fixtures'),
 )
 
 # EMAIL CONFIGURATION
@@ -116,7 +119,6 @@ EMAIL_BACKEND = env('WEBMARK_EMAIL_BACKEND',
                     default='django.core.mail.backends.console.EmailBackend')
 # mailhog  http://iankent.uk/blog/introducing-go-mailhog/
 #
-
 # MANAGER CONFIGURATION
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#admins
@@ -127,22 +129,14 @@ ADMINS = (
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#managers
 MANAGERS = ADMINS
 
-# DATABASE CONFIGURATION
-# ------------------------------------------------------------------------------
-# See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
-# postgres://mynotes:mynotes@localhost:5432/mynotes
-# postgres:///mynotes
-# default='postgres://mynotes:mynotes@192.168.1.100:5432/webmarks')
-USERNAME = env('USER')
-DB_HOST_NAME = env('WEBMARK_DB_HOST_NAME', default=HOST_NAME)
-DB_NAME = env('WEBMARK_DB_NAME', default=USERNAME)
+# Database
+# https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 DATABASES = {
-    'default': env.db('WEBMARK_DATABASE_URL', default='postgres://@' +
-                      DB_HOST_NAME + '/' + DB_NAME),
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': join(ROOT_DIR, 'db.sqlite3'),
+    }
 }
-DATABASES['default']['ATOMIC_REQUESTS'] = True
-print("env variable DB_HOST_NAME/DB_NAME=" +
-      DATABASES['default']['HOST'] + '/' + DB_NAME)
 
 # GENERAL CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -178,7 +172,7 @@ TEMPLATES = [
         # See:
         # https://docs.djangoproject.com/en/dev/ref/settings/#template-dirs
         'DIRS': [
-            str(APPS_DIR.path('templates')),
+            join(APPS_DIR, 'templates'),
         ],
         'OPTIONS': {
             # See:
@@ -218,18 +212,12 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # STATIC FILE CONFIGURATION
 # ------------------------------------------------------------------------------
-# See: https://docs.djangoproject.com/en/dev/ref/settings/#static-root
-
-# See: https://docs.djangoproject.com/en/dev/ref/settings/#static-url
 STATIC_URL = '/static/'
-# STATIC_URL = 'http://192.168.0.100/static/mywebmarks/'
 
-STATIC_ROOT = str(ROOT_DIR('staticfiles'))
+STATIC_ROOT = join(ROOT_DIR, 'staticfiles')
 
-# See:
-# https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
 STATICFILES_DIRS = (
-    str(APPS_DIR.path('static')),
+    join(APPS_DIR, 'static'),
 )
 
 # See:
@@ -242,8 +230,7 @@ STATICFILES_FINDERS = (
 # MEDIA CONFIGURATION
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#media-root
-# MEDIA_ROOT = str(APPS_DIR('media'))
-MEDIA_ROOT = str(ROOT_DIR('media'))
+MEDIA_ROOT = join(ROOT_DIR, 'media')
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#media-url
 MEDIA_URL = '/media/'
@@ -262,10 +249,10 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
+# ALLAUT CONFIGURATION
+# ------------------------------------------------------------------------------
+AUTH_USER_MODEL = 'users.User'
 
-SITE_ID = 1
-
-# Some really nice defaults
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
@@ -274,29 +261,25 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
 # ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_REQUIRED = True
 # ACCOUNT_AUTHENTICATION_METHOD = 'email'
-
 ACCOUNT_ALLOW_REGISTRATION = env.bool(
     'WEBMARK_ACCOUNT_ALLOW_REGISTRATION', True)
 ACCOUNT_ADAPTER = 'webmarks.users.adapters.AccountAdapter'
-SOCIALACCOUNT_ADAPTER = 'webmarks.users.adapters.SocialAccountAdapter'
 
-# Custom user app defaults
-# Select the correct user model
-AUTH_USER_MODEL = 'users.User'
+# ALLAUT REDIRECT
+LOGIN_URL = 'rest_login'
+LOGOUT_URL = 'rest_logout'
+LOGIN_REDIRECT_URL = "/login"
+LOGIN_REDIRECT_URLNAME = "/"
 # LOGIN_REDIRECT_URL = 'users:redirect'
 # LOGIN_URL = 'account_login'
 # LOGIN_URL = '/login'
-LOGIN_URL = 'rest_login'
-LOGOUT_URL = 'rest_logout'
 
-LOGIN_REDIRECT_URL = "/login"
-LOGIN_REDIRECT_URLNAME = "/"
 # test
 EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/login'
-# SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
-# SOCIALACCOUNT_EMAIL_REQUIRED = False
-# SOCIALACCOUNT_QUERY_EMAIL = False
 
+# SOCIAL CONFIGURATION
+# ------------------------------------------------------------------------------
+SOCIALACCOUNT_ADAPTER = 'webmarks.users.adapters.SocialAccountAdapter'
 SOCIALACCOUNT_QUERY_EMAIL = True
 SOCIALACCOUNT_PROVIDERS = \
     {'google':
@@ -304,17 +287,24 @@ SOCIALACCOUNT_PROVIDERS = \
          'AUTH_PARAMS': {'access_type': 'online'}
          },
      'linkedin':
-     {'SCOPE': ['r_emailaddress', 'r_basicprofile'],
+        {'SCOPE': ['r_basicprofile', 'r_emailaddress'],
          'PROFILE_FIELDS': ['id', 'first-name', 'last-name',
                             'email-address', 'picture-url',
                             'public-profile-url', ]
-      }
+         }
      }
-# /test
+# SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
+# SOCIALACCOUNT_EMAIL_REQUIRED = False
+# SOCIALACCOUNT_QUERY_EMAIL = False
+
+
 # SLUGLIFIER
+# ------------------------------------------------------------------------------
 AUTOSLUG_SLUGIFY_FUNCTION = 'slugify.slugify'
 
-# CELERY
+
+# CELERY CONFIGURATION
+# ------------------------------------------------------------------------------
 INSTALLED_APPS += ('webmarks.bookmarks.tasks.celery.CeleryConfig',)
 # if you are not using the django database broker (e.g. rabbitmq, redis,
 # memcached), you can remove the next line.
@@ -324,32 +314,29 @@ if BROKER_URL == 'django://':
     CELERY_RESULT_BACKEND = 'redis://'
 else:
     CELERY_RESULT_BACKEND = BROKER_URL
-# END CELERY
-# django-compressor
+
+# COMPRESSOR  CONFIGURATION
 # ------------------------------------------------------------------------------
 INSTALLED_APPS += ("compressor", )
+
 STATICFILES_FINDERS += ("compressor.finders.CompressorFinder", )
 
 # Location of root django.contrib.admin URL, use {% url 'admin:index' %}
 ADMIN_URL = r'^admin/'
 
-# Your common stuff: Below this line define 3rd party library settings
+
+# YOUR STUFF CONFIGURATION
 # ------------------------------------------------------------------------------
 
 FILE_STORE_ROOT = env('WEBMARK_FILE_STORE_ROOT')
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'oauth2_provider.ext.rest_framework.OAuth2Authentication',
-#         'rest_framework_social_oauth2.authentication.SocialAuthentication',
-#     ),
-# }
 
+# SWAGGER CONFIGURATION
+# ------------------------------------------------------------------------------
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
-
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
@@ -359,6 +346,14 @@ REST_FRAMEWORK = {
 }
 
 
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'oauth2_provider.ext.rest_framework.OAuth2Authentication',
+#         'rest_framework_social_oauth2.authentication.SocialAuthentication',
+#     ),
+
+
+# SWAGGER CONFIGURATION
+# ------------------------------------------------------------------------------
 SWAGGER_SETTINGS = {
     # for swagger / browsable api  should include('rest_framework.urls')
     'LOGIN_URL': 'rest_framework:login',

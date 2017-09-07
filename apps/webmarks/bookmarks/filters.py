@@ -4,6 +4,7 @@ from webmarks.bookmarks.models import Bookmark
 from webmarks.bookmarks.models import Tag
 from webmarks.base.filters import MultipleFilter
 
+
 class TagFilter(django_filters.FilterSet):
 
     class Meta:

@@ -1,7 +1,6 @@
 
 from django.db import models
 
-from webmarks.bookmarks.managers import MediaManager
 from webmarks.bookmarks.managers import TagManager
 from webmarks.users.models import User
 from webmarks.base.models import Node
@@ -32,8 +31,6 @@ class Tag(models.Model):
 
 class Bookmark(Node):
     """ any kind of Bookmark """
-
-    objects = MediaManager()
 
     STATUS = (
         ('D', 'Draft'),

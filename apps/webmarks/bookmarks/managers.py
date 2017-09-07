@@ -30,10 +30,6 @@ class ScrapingManager(models.Manager):
         return scraping
 
 
-class MediaManager(models.Manager):
-    pass
-
-
 class TagManager(models.Manager):
 
     def with_counts(self, user_cre_id):
