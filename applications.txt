@@ -1,0 +1,6 @@
+users
+base
+bookmarks
+notes
+upload
+storage 
