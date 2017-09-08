@@ -27,9 +27,15 @@ APPS_DIR = os.path.join(ROOT_DIR, 'apps')
 sys.path.append(str(APPS_DIR))
 
 env = environ.Env()
+# Ideally move env file should be outside the git repo
+# i.e. BASE_DIR.parent.parent
+env_file = os.path.join(dirname(__file__), 'local.env')
+if os.path.exists(env_file):
+    environ.Env.read_env(str(env_file))
 
-HOST_NAME = env('WEBMARK_HOST_NAME', default='127.0.0.1')
-print("env variable WEBMARK_HOST_NAME=" + HOST_NAME)
+
+HOST_NAME = env('HOST_NAME', default='127.0.0.1')
+print("env variable HOST_NAME=" + HOST_NAME)
 # APP CONFIGURATION
 # ------------------------------------------------------------------------------
 DJANGO_APPS = (
@@ -115,7 +121,7 @@ FIXTURE_DIRS = (
 # ------------------------------------------------------------------------------
 # EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND',
 # default='django.core.mail.backends.smtp.EmailBackend'
-EMAIL_BACKEND = env('WEBMARK_EMAIL_BACKEND',
+EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND',
                     default='django.core.mail.backends.console.EmailBackend')
 # mailhog  http://iankent.uk/blog/introducing-go-mailhog/
 #
@@ -328,7 +334,7 @@ ADMIN_URL = r'^admin/'
 # YOUR STUFF CONFIGURATION
 # ------------------------------------------------------------------------------
 
-FILE_STORE_ROOT = env('WEBMARK_FILE_STORE_ROOT')
+FILE_STORE_ROOT = env('FILE_STORE_ROOT')
 
 
 # SWAGGER CONFIGURATION
