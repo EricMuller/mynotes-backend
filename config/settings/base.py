@@ -220,7 +220,10 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # ------------------------------------------------------------------------------
 STATIC_URL = '/static/'
 
-STATIC_ROOT = join(ROOT_DIR, 'staticfiles')
+DEFAULT_STATIC_ROOT = join(ROOT_DIR, 'staticfiles')
+
+STATIC_ROOT = env('STATIC_ROOT', default=DEFAULT_STATIC_ROOT)
+
 
 STATICFILES_DIRS = (
     join(APPS_DIR, 'static'),
