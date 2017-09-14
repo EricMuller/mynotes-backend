@@ -16,7 +16,6 @@ import sys
 from os.path import dirname
 from os.path import join
 
-# (mywebmarks/config/settings/common.py - 3 = mywebmarks/)
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = dirname(dirname(os.path.abspath(__file__)))
 
@@ -27,16 +26,16 @@ APPS_DIR = os.path.join(ROOT_DIR, 'apps')
 sys.path.append(str(APPS_DIR))
 
 env = environ.Env()
-# Ideally move env file should be outside the git repo
-# i.e. BASE_DIR.parent.parent
 env_file = os.path.join(dirname(__file__), 'local.env')
 if os.path.exists(env_file):
     environ.Env.read_env(str(env_file))
 
 
 HOST_NAME = env('HOST_NAME', default='127.0.0.1')
+
 print("env variable HOST_NAME=" + HOST_NAME)
-# APP CONFIGURATION
+
+# APPLICATIONS CONFIGURATION
 # ------------------------------------------------------------------------------
 DJANGO_APPS = (
     'django.contrib.auth',
@@ -135,13 +134,10 @@ ADMINS = (
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#managers
 MANAGERS = ADMINS
 
-# Database
-# https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': join(ROOT_DIR, 'db.sqlite3'),
-    }
+    # Raises ImproperlyConfigured exception if DATABASE_URL not in
+    # os.environ
+    'default': env.db(),
 }
 
 # GENERAL CONFIGURATION
@@ -339,7 +335,6 @@ ADMIN_URL = r'^admin/'
 
 FILE_STORE_ROOT = env('FILE_STORE_ROOT')
 
-
 # SWAGGER CONFIGURATION
 # ------------------------------------------------------------------------------
 REST_FRAMEWORK = {
@@ -392,6 +387,9 @@ SWAGGER_SETTINGS = {
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
 
+
+DJANGO_LOG_ROOT = env('DJANGO_LOG_ROOT', default=ROOT_DIR)
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -420,13 +418,13 @@ LOGGING = {
         'file-django': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/www/webmarks/logs/mywebmarks-backend-django.log',
+            'filename': join(DJANGO_LOG_ROOT, 'django.log'),
             'formatter': 'verbose'
         },
         'file-webmarks': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/www/webmarks/logs/mywebmarks-backend-webmarks.log',
+            'filename': join(DJANGO_LOG_ROOT, 'webmarks.log'),
             'formatter': 'verbose'
         },
     },
