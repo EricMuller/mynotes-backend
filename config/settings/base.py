@@ -19,6 +19,7 @@ from os.path import join
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = dirname(dirname(os.path.abspath(__file__)))
 
+
 ROOT_DIR = dirname(environ.Path(__file__) - 2)
 
 APPS_DIR = os.path.join(ROOT_DIR, 'apps')
@@ -73,13 +74,13 @@ THIRD_PARTY_APPS = (
 )
 
 LOCAL_APPS = (
-    'webmarks.users',
-    'webmarks.authentication',
-    'webmarks.base',
-    'webmarks.storage',
-    'webmarks.upload',
-    'webmarks.notes',
-    'webmarks.bookmarks',
+    'webmarks',
+    'webmarks_users',
+    'webmarks_rest_auth',
+    'webmarks_storage',
+    'webmarks_upload',
+    'webmarks_notes',
+    'webmarks_bookmarks',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -100,7 +101,7 @@ MIDDLEWARE_CLASSES = (
 # MIGRATIONS CONFIGURATION
 # ------------------------------------------------------------------------------
 MIGRATION_MODULES = {
-    'sites': 'webmarks.contrib.sites.migrations'
+    'sites': 'contrib.sites.migrations'
 }
 
 # DEBUG
@@ -254,10 +255,12 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
+
 # ALLAUT CONFIGURATION
 # ------------------------------------------------------------------------------
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'webmarks_users.User'
 
+ACCOUNT_ADAPTER = 'webmarks_users.adapters.AccountAdapter'
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
@@ -268,7 +271,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 # ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_ALLOW_REGISTRATION = env.bool(
     'WEBMARK_ACCOUNT_ALLOW_REGISTRATION', True)
-ACCOUNT_ADAPTER = 'webmarks.users.adapters.AccountAdapter'
+
 
 # ALLAUT REDIRECT
 LOGIN_URL = 'rest_login'
@@ -284,7 +287,7 @@ EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/login'
 
 # SOCIAL CONFIGURATION
 # ------------------------------------------------------------------------------
-SOCIALACCOUNT_ADAPTER = 'webmarks.users.adapters.SocialAccountAdapter'
+SOCIALACCOUNT_ADAPTER = 'webmarks_users.adapters.SocialAccountAdapter'
 SOCIALACCOUNT_QUERY_EMAIL = True
 SOCIALACCOUNT_PROVIDERS = \
     {'google':
@@ -310,7 +313,7 @@ AUTOSLUG_SLUGIFY_FUNCTION = 'slugify.slugify'
 
 # CELERY CONFIGURATION
 # ------------------------------------------------------------------------------
-INSTALLED_APPS += ('webmarks.bookmarks.tasks.celery.CeleryConfig',)
+INSTALLED_APPS += ('webmarks_bookmarks.tasks.celery.CeleryConfig',)
 # if you are not using the django database broker (e.g. rabbitmq, redis,
 # memcached), you can remove the next line.
 INSTALLED_APPS += ('kombu.transport.django',)
@@ -346,7 +349,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ),
     'PAGE_SIZE': 20,
-    'EXCEPTION_HANDLER': 'webmarks.handlers.custom_exception_handler'
+    'EXCEPTION_HANDLER': 'handlers.custom_exception_handler'
 }
 
 
@@ -390,6 +393,7 @@ SWAGGER_SETTINGS = {
 
 DJANGO_LOG_ROOT = env('DJANGO_LOG_ROOT', default=ROOT_DIR)
 
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -424,7 +428,7 @@ LOGGING = {
         'file-webmarks': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': join(DJANGO_LOG_ROOT, 'webmarks.log'),
+            'filename': join(DJANGO_LOG_ROOT, 'log'),
             'formatter': 'verbose'
         },
     },
@@ -439,11 +443,11 @@ LOGGING = {
             'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
             'propagate': True
         },
-        'webmarks': {
-            'handlers': ['console', 'file-webmarks'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
-            'propagate': True
-        },
+#        'webmarks': {
+#            'handlers': ['console', 'file-webmarks'],
+#            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+#            'propagate': True
+#        },
         'authentification': {
             'handlers': ['console', 'file-webmarks'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),

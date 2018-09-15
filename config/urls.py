@@ -12,23 +12,23 @@ from rest_framework_swagger.renderers import SwaggerUIRenderer
 from rest_framework_swagger.renderers import OpenAPIRenderer
 
 schema_url_patterns = [
-    url(r'^api/', include('webmarks.bookmarks.urls',
+    url(r'^api/', include('webmarks_bookmarks.urls',
                           namespace='bookmarks')),
 ]
 
 schema_url_patterns_storage = [
-    url(r'^api/', include('webmarks.storage.urls',
+    url(r'^api/', include('webmarks_storage.urls',
                           namespace='storage')),
 ]
 
 schema_url_patterns_auth = [
-    url(r'^api/', include('webmarks.authentication.urls',
+    url(r'^api/', include('webmarks_rest_auth.urls',
                           namespace='authentication')),
 ]
 
 schema_view = get_schema_view(
     title='Bookmark API',
-    # url='https://webmarks.net/',
+    # url='https://net/',
     renderer_classes=[OpenAPIRenderer, SwaggerUIRenderer],
     patterns=schema_url_patterns,
     public=True,
@@ -52,11 +52,11 @@ urlpatterns = [
         TemplateView.as_view(template_name='index.html'), name='index'),
     url(settings.ADMIN_URL, include(admin.site.urls)),
     # webmarks api
-    url(r'^api/', include('webmarks.bookmarks.urls',
+    url(r'^api/', include('webmarks_bookmarks.urls',
                           namespace='bookmarks')),
-    url(r'^api/', include('webmarks.storage.urls',
+    url(r'^api/', include('webmarks_storage.urls',
                           namespace='storage')),
-    url(r'^api/', include('webmarks.authentication.urls')),
+    url(r'^api/', include('webmarks_rest_auth.urls')),
     # swagger
     url(r'^api/$',
         TemplateView.as_view(template_name='api/index.html'),

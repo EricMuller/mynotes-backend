@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-import socket
-import os
+
 from .base import *  # noqa
 
 # DEBUG
@@ -10,7 +9,7 @@ DEBUG = env.bool('DJANGO_DEBUG', default=True)
 TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
 
 ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=[
-    'localhost', '127.0.0.1', 'webmarks.net'])
+    'localhost', '127.0.0.1', 'net'])
 if not DEBUG:
     print ("env variable DJANGO_DEBUG is False !!!")
     # start django with --insecure for static file
@@ -25,7 +24,7 @@ SECRET_KEY = env('DJANGO_SECRET_KEY',
 # Mail settings
 # ------------------------------------------------------------------------------
 
-EMAIL_PORT = 1025
+EMAIL_PORT = env("EMAIL_PORT", default=1024)
 
 EMAIL_HOST = env("EMAIL_HOST", default='localhost')
 
@@ -72,33 +71,24 @@ CHANNEL_LAYERS = {
 #         "BACKEND": "asgi_redis.RedisChannelLayer",
 #         "ROUTING": "config.routing.channel_routing",
 #         # "CONFIG": {
-#         #     "hosts": [("redis-channel-1", 6379), ("redis-channel-2", 6379)],
+#         # "hosts": [("redis-channel-1", 6379), ("redis-channel-2", 6379)],
 #         # },
 #     },
 # }
 
 # DATABASE CONFIGURATION
 # ------------------------------------------------------------------------------
-# See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
-# postgres://mynotes:mynotes@localhost:5432/mynotes
-# postgres:///mynotes
-# default='postgres://mynotes:mynotes@192.168.1.100:5432/webmarks')
-USERNAME = env('USER')
-DB_HOST_NAME = env('WEBMARK_DB_HOST_NAME', default=HOST_NAME)
-DB_NAME = env('WEBMARK_DB_NAME', default=USERNAME)
+
+print("env variable DATABASE_URL=" + env.db('DATABASE_URL'))
+
 DATABASES = {
-    'default': env.db('WEBMARK_DATABASE_URL', default='postgres://@' +
-                      DB_HOST_NAME + '/' + DB_NAME),
+    'default': env.db('DATABASE_URL')
 }
+
+
 DATABASES['default']['ATOMIC_REQUESTS'] = True
-print("env variable DB_HOST_NAME/DB_NAME=" +
-      DATABASES['default']['HOST'] + '/' + DB_NAME)
 
 
-
-
-# django-extensions
-# ------------------------------------------------------------------------------
 INSTALLED_APPS += ('django_extensions', )
 
 
