@@ -1,6 +1,6 @@
 
 import time
-from webmarks import models
+from webmarks_folders import models
 from rest_framework import serializers
 
 

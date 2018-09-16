@@ -74,8 +74,10 @@ THIRD_PARTY_APPS = (
 )
 
 LOCAL_APPS = (
-    'webmarks',
     'webmarks_users',
+    'webmarks_django_contrib',
+    'webmarks_crawler',
+    'webmarks_folders',
     'webmarks_rest_auth',
     'webmarks_storage',
     'webmarks_upload',
@@ -101,7 +103,7 @@ MIDDLEWARE_CLASSES = (
 # MIGRATIONS CONFIGURATION
 # ------------------------------------------------------------------------------
 MIGRATION_MODULES = {
-    'sites': 'contrib.sites.migrations'
+    'sites': 'webmarks_django_contrib.sites.migrations'
 }
 
 # DEBUG
@@ -349,7 +351,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ),
     'PAGE_SIZE': 20,
-    'EXCEPTION_HANDLER': 'handlers.custom_exception_handler'
+    'EXCEPTION_HANDLER': 'webmarks_django_contrib.handlers.custom_exception_handler'
 }
 
 
@@ -443,11 +445,11 @@ LOGGING = {
             'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
             'propagate': True
         },
-#        'webmarks': {
-#            'handlers': ['console', 'file-webmarks'],
-#            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
-#            'propagate': True
-#        },
+        #        'webmarks': {
+        #            'handlers': ['console', 'file-webmarks'],
+        #            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+        #            'propagate': True
+        #        },
         'authentification': {
             'handlers': ['console', 'file-webmarks'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),

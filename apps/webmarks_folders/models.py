@@ -1,23 +1,9 @@
 
 from django.db import models
-from django.conf import settings
 from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
 import uuid
-
-
-class AuditableModelMixin(models.Model):
-    updated_dt = models.DateTimeField(auto_now=True)
-    created_dt = models.DateTimeField(auto_now_add=True)
-    user_cre = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        related_name='%(class)s_user_cre', default=None)
-    user_upd = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        related_name='%(class)s_user_upd', default=None, blank=True)
-
-    class Meta:
-        abstract = True
+from webmarks_django_contrib.models import AuditableModelMixin
 
 
 class Node(AuditableModelMixin):
@@ -32,7 +18,7 @@ class Node(AuditableModelMixin):
 
     kind = models.CharField(max_length=10, choices=KINDS, default='LINK')
     folders = models.ManyToManyField(
-        'webmarks.Folder', related_name="nodes", blank=True)
+        'webmarks_folders.Folder', related_name="nodes", blank=True)
     indexed_dt = models.DateTimeField(null=True)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     public = models.BooleanField(default=False)

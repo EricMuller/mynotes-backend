@@ -3,8 +3,8 @@ from rest_framework import viewsets
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 from rest_framework import permissions
-from crawler import serializers
-from contrib.crawler.crawler import Crawler
+from . import serializers
+from . import Crawler
 import base64
 import logging
 

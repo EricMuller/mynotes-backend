@@ -1,6 +1,6 @@
 import django_filters
 from rest_framework import filters
-from webmarks.filters import MultipleFilter
+from webmarks_django_contrib.filters import MultipleFilter
 from webmarks_bookmarks.models import Bookmark
 from webmarks_bookmarks.models import Tag
 

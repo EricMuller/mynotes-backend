@@ -12,7 +12,7 @@ from rest_framework.response import Response
 from webmarks_storage import serializers
 from webmarks_storage import models
 from webmarks_storage.storages import FileStore
-from contrib.django.viewsets import AggregateModelViewSet
+from webmarks_django_contrib.viewsets import AggregateModelViewSet
 
 
 class FileStorageViewSet(viewsets.ModelViewSet):
