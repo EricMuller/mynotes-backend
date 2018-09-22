@@ -3,4 +3,3 @@ staticfiles
 docs/pdf
 **/*.pyc
 requirements/twisted/Twisted-17.1.0/build
-migrations
