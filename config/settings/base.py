@@ -19,8 +19,8 @@ from os.path import join
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = dirname(dirname(os.path.abspath(__file__)))
 
-
-ROOT_DIR = dirname(environ.Path(__file__) - 2)
+root = environ.Path(__file__) - 2
+ROOT_DIR = dirname(root.__str__())
 
 APPS_DIR = os.path.join(ROOT_DIR, 'apps')
 
