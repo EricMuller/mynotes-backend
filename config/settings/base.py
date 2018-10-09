@@ -77,7 +77,7 @@ LOCAL_APPS = (
     'webmarks_users',
     'webmarks_django_contrib',
     'webmarks_crawler',
-    'webmarks_folders',
+    'webmarks_directory',
     'webmarks_rest_auth',
     'webmarks_storage',
     'webmarks_upload',

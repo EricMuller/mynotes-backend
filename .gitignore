@@ -4,3 +4,8 @@ docs/pdf
 **/*.pyc
 requirements/twisted/Twisted-17.1.0/build
 /.idea/
+/apps/webmarks_bookmarks/migrations/
+/apps/webmarks_directory/migrations/
+/apps/webmarks_storage/migrations/
+/apps/webmarks_upload/migrations/
+/apps/webmarks_users/migrations/

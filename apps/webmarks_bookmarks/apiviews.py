@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from webmarks_rest_auth.permissions import EverybodyCanAuthentication
 from webmarks_bookmarks import models
-from webmarks_folders.models import Folder
+from webmarks_directory.models import Folder
 from webmarks_bookmarks.serializers import IdSerializer
 
 

@@ -5,9 +5,9 @@ from webmarks_bookmarks import models
 from webmarks_bookmarks import serializers
 from webmarks_bookmarks.filters import BookmarkFilter
 from webmarks_bookmarks.filters import TagFilter
-from webmarks_folders.filters import FolderFilter
-from webmarks_folders.models import Folder
-from webmarks_folders.serializers import FolderSerializer
+from webmarks_directory.filters import FolderFilter
+from webmarks_directory.models import Folder
+from webmarks_directory.serializers import FolderSerializer
 from webmarks_storage.storages import FileStore
 from rest_framework import filters
 from rest_framework.decorators import detail_route

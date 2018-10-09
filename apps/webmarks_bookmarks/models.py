@@ -1,7 +1,7 @@
 
 from django.db import models
 from django.conf import settings
-from webmarks_folders.models import Node
+from webmarks_directory.models import Node
 from webmarks_bookmarks.managers import TagManager
 
 
