@@ -2,7 +2,9 @@ env
 staticfiles
 docs/pdf
 **/*.pyc
-**/*log
+**/*.log
+**/*.iml
+
 requirements/twisted/Twisted-17.1.0/build
 /.idea/
 /apps/webmarks_bookmarks/migrations/
