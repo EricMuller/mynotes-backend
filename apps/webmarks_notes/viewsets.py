@@ -1,18 +1,20 @@
 # from rest_auth.permissions import DefaultsAuthentificationMixin
-from bookmarks import models
-from bookmarks import serializers
-from drf_utils.cache import CustomListKeyConstructor
-from drf_utils.viewsets import AggregateModelViewSet
+import logging
 
 from rest_framework import filters
-from rest_framework_extensions.cache.decorators import cache_response
 from rest_framework import permissions
-import logging
+from rest_framework.viewsets import ModelViewSet
+from rest_framework_extensions.cache.decorators import cache_response
+
+from webmarks_bookmarks.models import Bookmark
+from webmarks_bookmarks.serializers import BookmarkSerializer
+from webmarks_django_contrib.cache import CustomListKeyConstructor
+from webmarks_django_contrib.paginators import SpringSetPagination
 
 stdlogger = logging.getLogger(__name__)
 
 
-class NoteViewSet(AggregateModelViewSet):
+class NoteViewSet(ModelViewSet):
 
     """
     retrieve:
@@ -34,10 +36,11 @@ class NoteViewSet(AggregateModelViewSet):
         Update a Note.
     """
 
-    queryset = models.BookmarkSerializer.objects.prefetch_related('tags')
-    serializer_class = serializers.BookmarkSerializer
+    queryset = BookmarkSerializer.objects.prefetch_related('tags')
+    serializer_class = BookmarkSerializer
     filter_backends = (filters.DjangoFilterBackend, filters.OrderingFilter)
     permission_classes = (permissions.IsAuthenticated,)
+    pagination_class = SpringSetPagination
 
     @cache_response(key_func=CustomListKeyConstructor())
     def list(self, *args, **kwargs):
@@ -45,10 +48,10 @@ class NoteViewSet(AggregateModelViewSet):
 
     def get_queryset(self, *args, **kwargs):
         # print('user_id=' + str(self.request.user.id))
-        return models.Bookmark.objects.prefetch_related('tags').filter(
+        return Bookmark.objects.prefetch_related('tags').filter(
             user_cre_id=self.request.user.id)
 
     def get_serializer_class(self):
         # if self.action == 'list':
         #    return serializers.NoteListSerializer
-        return serializers.BookmarkSerializer
+        return BookmarkSerializer

@@ -1,31 +1,32 @@
-from webmarks_django_contrib.cache import CustomListKeyConstructor
-from webmarks_django_contrib.viewsets import AggregateModelViewSet
-from webmarks_crawler.crawler import Crawler
-from webmarks_bookmarks import models
-from webmarks_bookmarks import serializers
-from webmarks_bookmarks.filters import BookmarkFilter
-from webmarks_bookmarks.filters import TagFilter
-from webmarks_directory.filters import FolderFilter
-from webmarks_directory.models import Folder
-from webmarks_directory.serializers import FolderSerializer
-from webmarks_storage.storages import FileStore
-from rest_framework import filters
-from rest_framework.decorators import detail_route
-from rest_framework.decorators import list_route
-from rest_framework.response import Response
-from rest_framework_extensions.cache.decorators import cache_response
-from rest_framework import permissions
 import base64
 import logging
 
+from rest_framework import filters
+from rest_framework import permissions
+from rest_framework.decorators import detail_route
+from rest_framework.decorators import list_route
+from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
+
+from webmarks_bookmarks import models
+from webmarks_bookmarks import serializers
+from webmarks_bookmarks.filters import BookmarkFilter, CategoryFilter
+from webmarks_bookmarks.filters import TagFilter
+from webmarks_bookmarks.models import Category
+from webmarks_crawler.crawler import Crawler
+from webmarks_directory.filters import FolderFilter
+from webmarks_directory.models import Folder
+from webmarks_directory.serializers import FolderSerializer
+from webmarks_django_contrib.paginators import SpringSetPagination
 from webmarks_storage.models import DataStorage
 from webmarks_storage.models import Store
 from webmarks_storage.serializers import DataStorageSerializer
+from webmarks_storage.storages import FileStore
 
 stdlogger = logging.getLogger(__name__)
 
 
-class FolderViewSet(AggregateModelViewSet):
+class FolderViewSet(ModelViewSet):
     """
     retrieve:
         Return a Folder instance.
@@ -50,9 +51,9 @@ class FolderViewSet(AggregateModelViewSet):
     filter_backends = (filters.DjangoFilterBackend, filters.OrderingFilter)
     filter_class = FolderFilter
     permission_classes = (permissions.IsAuthenticated,)
+    pagination_class = SpringSetPagination
 
     def get_queryset(self, *args, **kwargs):
-
         return Folder.objects.filter(user_cre_id=self.request.user.id)
 
     @detail_route(methods=['get'])
@@ -72,8 +73,7 @@ class FolderViewSet(AggregateModelViewSet):
         return Response(serializer.data)
 
 
-class BookmarkViewSet(AggregateModelViewSet):
-
+class BookmarkViewSet(ModelViewSet):
     """
     retrieve:
         Return a Bookmark instance.
@@ -99,8 +99,9 @@ class BookmarkViewSet(AggregateModelViewSet):
     filter_backends = (filters.DjangoFilterBackend, filters.OrderingFilter)
     filter_class = BookmarkFilter
     permission_classes = (permissions.IsAuthenticated,)
+    pagination_class = SpringSetPagination
 
-    @cache_response(key_func=CustomListKeyConstructor())
+    # @cache_response(key_func=CustomListKeyConstructor())
     def list(self, *args, **kwargs):
         return super(BookmarkViewSet, self).list(*args, **kwargs)
 
@@ -121,9 +122,13 @@ class BookmarkViewSet(AggregateModelViewSet):
         """
         crawler = Crawler()
         stdlogger.debug(pk)
-        url = base64.b64decode(pk)
-        stdlogger.info(url.decode())
-        crawler.crawl_title(url.decode())
+        # url = base64.b64decode(pk)
+        # stdlogger.info(url.decode())
+        # crawler.crawl_title(url.decode())
+        bookmark = self.get_object()
+
+        crawler.crawl_title(bookmark.url)
+
         serializer = serializers.CrawlSerializer(crawler)
         return Response(serializer.data)
 
@@ -160,7 +165,7 @@ class BookmarkViewSet(AggregateModelViewSet):
         return Response(serializer.data)
 
 
-class TagViewSet(AggregateModelViewSet):
+class TagViewSet(ModelViewSet):
     """
     retrieve:
         Return a Tag instance.
@@ -185,6 +190,7 @@ class TagViewSet(AggregateModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = TagFilter
     permission_classes = (permissions.IsAuthenticated,)
+    pagination_class = SpringSetPagination
 
     @list_route(methods=['get'])
     def count(self, request):
@@ -194,6 +200,37 @@ class TagViewSet(AggregateModelViewSet):
             serializer = serializers.TagCountSerializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        serializer = self.get_serializer(queryset, many=True)
+        # serializer = self.get_serializer(queryset, many=True)
         serializer = serializers.TagCountSerializer(queryset, many=True)
         return Response(serializer.data)
+
+
+class CategoryViewSet(ModelViewSet):
+    """
+    retrieve:
+        Return a Category instance.
+
+    list:
+        Return all Category instance , ordered by most recently created.
+
+    create:
+        Create a new Category.
+
+    delete:
+        Remove an existing Category.
+
+    partial_update:
+        Update one or more fields on an existing Category.
+
+    update:
+        Update a Category.
+    """
+    queryset = models.Category.objects.all()
+    serializer_class = serializers.CategorySerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_class = CategoryFilter
+    permission_classes = (permissions.IsAuthenticated,)
+    pagination_class = SpringSetPagination
+
+    def get_queryset(self, *args, **kwargs):
+        return Category.objects.filter(user_cre_id=self.request.user.id)

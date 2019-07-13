@@ -1,4 +1,3 @@
-
 from .permissions import EverybodyCanAuthentication
 from rest_framework import parsers, renderers
 from rest_framework.authtoken.models import Token
@@ -9,10 +8,7 @@ from rest_framework.views import APIView
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from .providers.linkedin_oauth2.views import LinkedInOAuth2Adapter
 
-
 from rest_auth.registration.views import SocialLoginView
-
-# from rest_framework.response import Response
 
 
 def confirm_email(self, request, email_address):
@@ -35,7 +31,6 @@ class Login(APIView):
     authentication_classes = (EverybodyCanAuthentication,)
 
     def post(self, request, *args, **kwargs):
-
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
@@ -49,6 +44,8 @@ class Login(APIView):
 
 
 login_view = Login.as_view()
+
+
 # Check the credentials and return the REST Token
 
 
@@ -56,7 +53,7 @@ class GoogleLogin(SocialLoginView):
     """
     Check the Gogle OAuth2 access_token and return the REST Token
     """
-    adapter_class = GoogleOAuth2Adapter 
+    adapter_class = GoogleOAuth2Adapter
 
 
 class LinkedInOAuth2Login(SocialLoginView):

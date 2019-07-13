@@ -1,37 +1,36 @@
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
-
-
 from rest_framework import filters
 from rest_framework import permissions
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route
 from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 
-from webmarks_storage import serializers
+from webmarks_django_contrib.paginators import SpringSetPagination
+
 from webmarks_storage import models
+from webmarks_storage import serializers
 from webmarks_storage.storages import FileStore
-from webmarks_django_contrib.viewsets import AggregateModelViewSet
 
 
 class FileStorageViewSet(viewsets.ModelViewSet):
-
     parser_classes = (FileUploadParser)
     permission_classes = (permissions.IsAuthenticated,)
     # overriding default query set
 
 
-class StoreViewSet(AggregateModelViewSet):
+class StoreViewSet(ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     queryset = models.Store.objects.all()
     serializer_class = serializers.StoreSerializer
 
     permission_classes = (permissions.AllowAny,)
+    pagination_class = SpringSetPagination
 
 
-class DataStorageViewSet(AggregateModelViewSet):
-
+class DataStorageViewSet(ModelViewSet):
     """
     retrieve:
         Return a Archive instance.
@@ -57,6 +56,7 @@ class DataStorageViewSet(AggregateModelViewSet):
     serializer_class = serializers.DataStorageSerializer
 
     permission_classes = (permissions.AllowAny,)
+    pagination_class = SpringSetPagination
 
     def retrieve(self, request, pk, format=None):
         archive = get_object_or_404(models.DataStorage, pk=pk)

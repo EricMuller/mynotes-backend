@@ -1,12 +1,17 @@
 import django_filters
 from rest_framework import filters
 from webmarks_django_contrib.filters import MultipleFilter
-from webmarks_bookmarks.models import Bookmark
+from webmarks_bookmarks.models import Bookmark, Category
 from webmarks_bookmarks.models import Tag
 
 
-class TagFilter(django_filters.FilterSet):
+class CategoryFilter(django_filters.FilterSet):
+    class Meta:
+        model = Category
+        fields = ['id', 'name']
 
+
+class TagFilter(django_filters.FilterSet):
     class Meta:
         model = Tag
         fields = ['id', 'name', 'public']
@@ -20,7 +25,7 @@ class BookmarkFilter(filters.FilterSet):
 
     class Meta:
         model = Bookmark
-        fields = ['id', 'title', 'public', 'description',
+        fields = ['id', 'name', 'public', 'description',
                   'kind', 'tags', 'updated_dt', 'status']
         ordering_fields = ('updated_dt')
         # ordering = ('username',)

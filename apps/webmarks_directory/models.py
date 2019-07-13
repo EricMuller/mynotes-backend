@@ -6,18 +6,18 @@ import uuid
 from webmarks_django_contrib.mixins import AuditableModelMixin
 
 
-class Category(AuditableModelMixin):
-    name = models.CharField(max_length=255)
-    public = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.name
-
-    def __unicode__(self):
-        return str(self.name)
-
-    class Meta:
-        unique_together = ('name', 'user_cre',)
+# class Category(AuditableModelMixin):
+#     name = models.CharField(max_length=255)
+#     public = models.BooleanField(default=False)
+#
+#     def __str__(self):
+#         return self.name
+#
+#     def __unicode__(self):
+#         return str(self.name)
+#
+#     class Meta:
+#         unique_together = ('name', 'user_cre',)
 
 
 class Node(AuditableModelMixin):

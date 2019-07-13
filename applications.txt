@@ -1,1 +1,1 @@
-webmarks_users webmarks_django_contrib webmarks_folders webmarks_bookmarks webmarks_notes webmarks_upload webmarks_storage 
+webmarks_social webmarks_django_contrib webmarks_folders webmarks_bookmarks webmarks_notes webmarks_upload webmarks_storage

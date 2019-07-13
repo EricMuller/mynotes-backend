@@ -2,7 +2,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
-
 {% block content %}
 
 <div id="swagger-ui-container" class="swagger-ui-wrap">
@@ -45,6 +44,20 @@
         </li>
       </ul>
     </div> 
+</div>
+
+<div id="swagger-ui-container" class="swagger-ui-wrap">
+    <div class="heading">
+        <h2>Social API</h2>
+        <ul class="options">
+            <li>
+                <a href="api/social" class="toggleEndpointList">Swagger</a>
+            </li>
+            <li>
+                <a href="api/social?format=openapi">Open API</a>
+            </li>
+        </ul>
+    </div>
 </div>
 
 {% endblock %}

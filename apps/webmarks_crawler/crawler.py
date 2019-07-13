@@ -154,7 +154,12 @@ if __name__ == "__main__":
     for page_url in args:
 
         soup = Crawler()
+        soup.crawl_title(page_url)
+        stdlogger.info(soup.title)
+
+
         soup.crawl(page_url)
+
         output_filename = options.output
         if soup.html is not '':
             stdlogger.info("Writing results to " + output_filename)

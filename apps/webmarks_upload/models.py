@@ -1,4 +1,4 @@
-from webmarks_users.models import User
+from webmarks_social.models import User
 from django.db import models
 
 

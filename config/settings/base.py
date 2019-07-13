@@ -74,7 +74,7 @@ THIRD_PARTY_APPS = (
 )
 
 LOCAL_APPS = (
-    'webmarks_users',
+    'webmarks_social',
     'webmarks_django_contrib',
     'webmarks_crawler',
     'webmarks_directory',
@@ -260,9 +260,9 @@ AUTHENTICATION_BACKENDS = (
 
 # ALLAUT CONFIGURATION
 # ------------------------------------------------------------------------------
-AUTH_USER_MODEL = 'webmarks_users.User'
+AUTH_USER_MODEL = 'webmarks_social.User'
 
-ACCOUNT_ADAPTER = 'webmarks_users.adapters.AccountAdapter'
+ACCOUNT_ADAPTER = 'webmarks_social.adapters.AccountAdapter'
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
@@ -289,7 +289,7 @@ EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/login'
 
 # SOCIAL CONFIGURATION
 # ------------------------------------------------------------------------------
-SOCIALACCOUNT_ADAPTER = 'webmarks_users.adapters.SocialAccountAdapter'
+SOCIALACCOUNT_ADAPTER = 'webmarks_social.adapters.SocialAccountAdapter'
 SOCIALACCOUNT_QUERY_EMAIL = True
 SOCIALACCOUNT_PROVIDERS = \
     {'google':

@@ -3,7 +3,6 @@ from django.db.models import Q
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-from webmarks_bookmarks.authentification import DefaultsAuthentificationMixin
 
 
 class DefaultQueryFilter(object):
@@ -62,7 +61,6 @@ class Filter(object):
 
     @staticmethod
     def create_filter_from_query_params(request):
-
         qset = Q(user_cre=request.user)
         params = request.query_params
         # import ipdb; ipdb.set_trace()
@@ -107,13 +105,14 @@ class QueryStandardResultsSetPagination(PageNumberPagination):
 
         return page_number
 
+
 # EverybodyCanAuthentication
 
 
 class QueryModelViewSet(DefaultsAuthentificationMixin, viewsets.ModelViewSet):
-
     pagination_class = QueryStandardResultsSetPagination
     filter_class = QueryUserFilter
+
     # renderer_classes = (JSONRenderer, HTMLFormRenderer
     #    , BrowsableAPIRenderer )
 

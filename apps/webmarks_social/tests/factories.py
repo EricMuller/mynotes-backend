@@ -7,5 +7,5 @@ class UserFactory(factory.django.DjangoModelFactory):
     password = factory.PostGenerationMethodCall('set_password', 'password')
 
     class Meta:
-        model = 'webmarks_users.User'
+        model = 'webmarks_social.User'
         django_get_or_create = ('username', )

@@ -1,13 +1,15 @@
-from webmarks_bookmarks.apiviews import add_folder_bookmark_view
-from webmarks_bookmarks import viewsets
 from django.conf.urls import include
 from django.conf.urls import url
 from rest_framework import routers
+
+from webmarks_bookmarks import viewsets
+from webmarks_bookmarks.apiviews import add_folder_bookmark_view
 
 apiRouter = routers.DefaultRouter()
 apiRouter.register(r'folders', viewsets.FolderViewSet)
 apiRouter.register(r'bookmarks', viewsets.BookmarkViewSet)
 apiRouter.register(r'tags', viewsets.TagViewSet)
+apiRouter.register(r'categories', viewsets.CategoryViewSet)
 
 urlpatterns = [
     # API V1

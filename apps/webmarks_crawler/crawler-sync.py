@@ -120,6 +120,7 @@ if __name__ == "__main__":
         soup = Crawler()
         tmps1 = time.time()
         html = soup.convert_url_to_html(page_url)
+        # html = soup.crawl_title(page_url).title
         tmps2 = time.time() - tmps1
         print("Temps d'execution = %d\n" % (tmps2))
 

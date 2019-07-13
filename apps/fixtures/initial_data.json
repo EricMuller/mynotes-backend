@@ -602,7 +602,7 @@
       }
    },
    {
-      "model":"webmarks_users.user",
+      "model":"webmarks_social.user",
       "pk":1,
       "fields":{
          "password":"pbkdf2_sha256$36000$3FoKduOsJoPX$NkWV2EewnKbcxBOT0NwWT8EFO6zNW5uN+GQM209+mhc=",

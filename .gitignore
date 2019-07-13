@@ -11,4 +11,4 @@ requirements/twisted/Twisted-17.1.0/build
 /apps/webmarks_directory/migrations/
 /apps/webmarks_storage/migrations/
 /apps/webmarks_upload/migrations/
-/apps/webmarks_users/migrations/
+/apps/webmarks_social/migrations/

@@ -1,7 +1,8 @@
-
 import time
-from webmarks_bookmarks import models
+
 from rest_framework import serializers
+
+from webmarks_bookmarks import models
 
 
 class TimestampField(serializers.ReadOnlyField):
@@ -22,7 +23,6 @@ class CrawlSerializer(serializers.Serializer):
 
 
 class TagSerializer(serializers.ModelSerializer):
-
     id = serializers.IntegerField(required=False)
 
     class Meta:
@@ -47,6 +47,31 @@ class TagSerializer(serializers.ModelSerializer):
         return validated_data
 
 
+class CategorySerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+
+    class Meta:
+        model = models.Category
+        fields = ('id', 'name', 'slug')
+
+    def validate(self, validated_data):
+
+        if 'id' not in validated_data:
+            validated_data['user_cre'] = self.context['request'].user
+
+        validated_data['user_upd'] = self.context['request'].user
+
+        try:
+            models.Category.objects.get(name=validated_data['name'],
+                                        user_cre=validated_data['user_cre'])
+        except models.Category.DoesNotExist:
+            pass
+        else:
+            raise serializers.ValidationError('Category already exists')
+
+        return validated_data
+
+
 class TagCountSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     name = serializers.CharField(max_length=100)
@@ -58,7 +83,6 @@ class TagCountSerializer(serializers.Serializer):
 
 
 class BookmarkTagSerializer(serializers.ModelSerializer):
-
     id = serializers.IntegerField(required=False)
 
     class Meta:
@@ -66,8 +90,15 @@ class BookmarkTagSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'public')
 
 
-class IdSerializer(serializers.Serializer):
+class BookmarkCategorySerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
 
+    class Meta:
+        model = models.Category
+        fields = ('id', 'name', 'slug')
+
+
+class IdSerializer(serializers.Serializer):
     id = serializers.IntegerField(required=False)
 
     class Meta:
@@ -76,7 +107,6 @@ class IdSerializer(serializers.Serializer):
 
 
 class BookmarkSerializer(serializers.ModelSerializer):
-
     # fields must be a models.DateTimeField
     schedule_dt = TimestampField()
     created_dt = TimestampField()
@@ -84,11 +114,13 @@ class BookmarkSerializer(serializers.ModelSerializer):
     # relations many
     tags = BookmarkTagSerializer(read_only=False, many=True)
 
+    category = BookmarkCategorySerializer(required=False, read_only=False)
+
     class Meta:
         model = models.Bookmark
-        fields = ('id', 'url', 'title', 'kind', 'rate', 'description',
+        fields = ('id', 'url', 'name', 'kind', 'rate', 'description',
                   'user_cre', 'user_upd', 'created_dt', 'updated_dt',
-                  'tags', 'status', 'schedule_dt', 'archived_dt',
+                  'tags', 'category', 'status', 'schedule_dt', 'archived_dt',
                   'archive_id', 'favorite', 'uuid')
         read_only_fields = ('created_dt', 'updated_dt',
                             'archived_dt', 'archive_id')
@@ -107,24 +139,38 @@ class BookmarkSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
 
         tags_data = validated_data.pop('tags')
+        category_data = validated_data.pop('category')
+
         instance = super(BookmarkSerializer, self).create(validated_data)
-        # obj.save(foo=validated_data['foo'])
+
         for tag_data in tags_data:
             tag = models.Tag.objects.get(id=tag_data['id'])
             if tag is not None:
                 instance.tags.add(tag)
-        # instance.save()
+
+        category_instance = models.Category.objects.get(id=category_data.get('id'))
+        if category_instance is not None:
+            instance.category = category_instance
+
+        instance.save()
         return instance
 
     def update(self, instance, validated_data):
         tags_data = validated_data.pop('tags')
-        instance = super(BookmarkSerializer, self).update(
-            instance, validated_data)
+        category_data = validated_data.pop('category')
+
+        instance = super(BookmarkSerializer, self).update(instance, validated_data)
         instance.tags.clear()
         for tag_data in tags_data:
             tag = models.Tag.objects.get(id=tag_data['id'])
             if tag is not None:
                 instance.tags.add(tag)
+
+        category_instance = models.Category.objects.get(id=category_data.get('id'))
+        if category_instance is not None:
+            instance.category = category_instance
+
+        instance.save()
         return instance
 
 
